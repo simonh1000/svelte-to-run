@@ -1,6 +1,7 @@
 port module Main exposing (..)
 
 import Browser
+import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
@@ -9,12 +10,12 @@ import List as L
 import List.Zipper as Zipper
 import Model exposing (..)
 import Task
-import Time exposing (Posix)
+import Time exposing (Posix, Zone)
 
 
 init : Int -> ( Model, Cmd Msg )
 init flags =
-    ( blankModel, Cmd.none )
+    ( blankModel, Time.here |> Task.perform OnTimeZone )
 
 
 port toJs : Value -> Cmd msg
@@ -32,10 +33,15 @@ type Msg
     | Pause
     | OnEachSecond Posix
     | Stop
+    | OnTimeZone Zone
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
+    let
+        cmd =
+            toJs Encode.null
+    in
     case message of
         Start ->
             ( model, Time.now |> Task.perform OnStartTime )
@@ -43,7 +49,7 @@ update message model =
         OnStartTime now ->
             case model.state of
                 Ready { activity } ->
-                    ( { state = Active <| mkActiveModel activity now }, Cmd.none )
+                    ( { model | state = Active <| mkActiveModel activity now }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -51,10 +57,16 @@ update message model =
         OnEachSecond now ->
             case model.state of
                 Active state ->
-                    ( Model <| Active { state | current = now }, toJs Encode.null )
+                    ( { model | state = Active { state | current = now } }
+                    , toJs Encode.null
+                      --, Cmd.none
+                    )
 
                 _ ->
                     ( model, Cmd.none )
+
+        OnTimeZone zone ->
+            ( { model | zone = zone }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -73,22 +85,24 @@ view model =
             div [ class "container" ]
                 [ h1 [] [ text "Ready" ]
                 , viewActivity activity
-                , button [ onClick Start ] [ text "Start" ]
+                , button [ onClick Start, id "start-button" ] [ text "Start" ]
                 ]
 
         Active state ->
             div [ class "container" ]
                 [ h1 [] [ text "Active" ]
                 , state.activity |> Zipper.toList |> viewActivity
-                , text <| String.fromInt <| (Time.posixToMillis state.current // 1000)
-                , button [ onClick Stop ] [ text "Stop" ]
+
+                --, text <| String.fromInt <| (Time.posixToMillis state.current // 1000)
+                , div [] [ text <| DF.format [ DF.minuteFixed, DF.text ":", DF.secondFixed ] model.zone state.begin ]
+                , div [] [ text <| DF.format [ DF.secondFixed ] model.zone state.current ]
+                , div [] [ button [ onClick Stop, id "start-button" ] [ text "Stop" ] ]
                 ]
 
         Finished finishedModel ->
             text "TBC"
 
 
-viewActivity : List ( Float, Activity ) -> Html msg
 viewActivity activity =
     let
         mkItem ( flt, elem ) =

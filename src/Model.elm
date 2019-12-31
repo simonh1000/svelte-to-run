@@ -7,12 +7,14 @@ import Time exposing (Posix)
 
 
 type alias Model =
-    { state : State }
+    { state : State
+    , zone : Time.Zone
+    }
 
 
 blankModel : Model
 blankModel =
-    { state = Ready { activity = day1 } }
+    { state = Ready { activity = day1 }, zone = Time.utc }
 
 
 type State
@@ -31,10 +33,15 @@ type alias ReadyModel =
 
 
 --
+{-
+   Needs ability to:
+
+       - pause
+-}
 
 
 type alias ActiveModel =
-    { activity : Zipper ( Float, Activity )
+    { activity : Zipper ( Posix, Activity ) -- time that each part will be finished by
     , wayPoints : List WayPoint
     , begin : Posix
     , current : Posix
@@ -43,11 +50,22 @@ type alias ActiveModel =
 
 mkActiveModel : List ( Float, Activity ) -> Posix -> ActiveModel
 mkActiveModel list posix =
-    { activity = Zipper.fromList list |> Maybe.withDefault (Zipper.singleton ( 1, Walking ))
-    , wayPoints = []
-    , begin = posix
-    , current = posix
-    }
+    let
+        mbActivity =
+            list
+                |> L.map (Tuple.mapFirst (\mins -> mins * 60 * 1000 |> round |> Time.millisToPosix))
+                |> Zipper.fromList
+    in
+    case mbActivity of
+        Just activity ->
+            { activity = activity
+            , wayPoints = []
+            , begin = posix
+            , current = posix
+            }
+
+        Nothing ->
+            Debug.todo "mkActiveModel"
 
 
 
