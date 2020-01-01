@@ -57,10 +57,34 @@ update message model =
         OnEachSecond now ->
             case model.state of
                 Active state ->
-                    ( { model | state = Active { state | current = now } }
-                    , toJs Encode.null
-                      --, Cmd.none
-                    )
+                    let
+                        elapsed =
+                            toFloat (Time.posixToMillis now - Time.posixToMillis state.begin)
+
+                        state_ =
+                            { state | elapsed = elapsed }
+                    in
+                    if elapsed > Tuple.first (Zipper.current state.activity) then
+                        case Zipper.next state.activity of
+                            Just activity ->
+                                ( { model | state = Active { state_ | activity = activity } }
+                                , toJs Encode.null
+                                )
+
+                            Nothing ->
+                                let
+                                    state2 =
+                                        { wayPoints = []
+                                        , begin = state.begin
+                                        , end = now
+                                        }
+                                in
+                                ( { model | state = Finished state2 }
+                                , toJs Encode.null
+                                )
+
+                    else
+                        ( { model | state = Active state_ }, Cmd.none )
 
                 _ ->
                     ( model, Cmd.none )
@@ -84,18 +108,28 @@ view model =
         Ready { activity } ->
             div [ class "container" ]
                 [ h1 [] [ text "Ready" ]
-                , viewActivity activity
+                , activity
+                    |> L.map (viewActivity "")
+                    |> ul []
                 , button [ onClick Start, id "start-button" ] [ text "Start" ]
                 ]
 
         Active state ->
+            let
+                before =
+                    Zipper.before state.activity |> L.map (viewActivity "before")
+
+                current =
+                    Zipper.current state.activity |> viewActivity "current"
+
+                after =
+                    Zipper.after state.activity |> L.map (viewActivity "after")
+            in
             div [ class "container" ]
                 [ h1 [] [ text "Active" ]
-                , state.activity |> Zipper.toList |> viewActivity
-
-                --, text <| String.fromInt <| (Time.posixToMillis state.current // 1000)
+                , before ++ current :: after |> ul []
                 , div [] [ text <| DF.format [ DF.minuteFixed, DF.text ":", DF.secondFixed ] model.zone state.begin ]
-                , div [] [ text <| DF.format [ DF.secondFixed ] model.zone state.current ]
+                , div [] [ text <| String.fromFloat state.elapsed ]
                 , div [] [ button [ onClick Stop, id "start-button" ] [ text "Stop" ] ]
                 ]
 
@@ -103,14 +137,9 @@ view model =
             text "TBC"
 
 
-viewActivity activity =
-    let
-        mkItem ( flt, elem ) =
-            div [] [ text <| Debug.toString ( flt, elem ) ]
-    in
-    activity
-        |> L.map mkItem
-        |> div []
+viewActivity : String -> ( Float, Activity ) -> Html msg
+viewActivity cls item =
+    li [ class cls ] [ text <| Debug.toString item ]
 
 
 

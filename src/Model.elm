@@ -14,7 +14,9 @@ type alias Model =
 
 blankModel : Model
 blankModel =
-    { state = Ready { activity = day1 }, zone = Time.utc }
+    { state = Ready { activity = day1 }
+    , zone = Time.utc
+    }
 
 
 type State
@@ -41,27 +43,33 @@ type alias ReadyModel =
 
 
 type alias ActiveModel =
-    { activity : Zipper ( Posix, Activity ) -- time that each part will be finished by
+    { activity : Zipper ( Float, Activity ) -- time that each part will be finished by
     , wayPoints : List WayPoint
     , begin : Posix
-    , current : Posix
+    , elapsed : Float
     }
 
 
 mkActiveModel : List ( Float, Activity ) -> Posix -> ActiveModel
-mkActiveModel list posix =
+mkActiveModel list begin =
     let
+        go : ( Float, Activity ) -> ( Float, List ( Float, Activity ) ) -> ( Float, List ( Float, Activity ) )
+        go ( len, activity ) ( total, acc ) =
+            ( len + total, ( len + total, activity ) :: acc )
+
         mbActivity =
             list
-                |> L.map (Tuple.mapFirst (\mins -> mins * 60 * 1000 |> round |> Time.millisToPosix))
+                |> L.foldl go ( 0, [] )
+                |> Tuple.second
+                |> L.reverse
                 |> Zipper.fromList
     in
     case mbActivity of
         Just activity ->
             { activity = activity
             , wayPoints = []
-            , begin = posix
-            , current = posix
+            , begin = begin
+            , elapsed = 0
             }
 
         Nothing ->
@@ -96,7 +104,11 @@ type Activity
 
 
 day1 =
-    L.repeat 5 ( 1, Running )
-        |> L.intersperse ( 1, Walking )
-        |> (::) ( 5, Walking )
-        |> flip (++) [ ( 5, Walking ) ]
+    L.repeat 5 ( min, Running )
+        |> L.intersperse ( min, Walking )
+        |> (::) ( min, Walking )
+        |> flip (++) [ ( min, Walking ) ]
+
+
+min =
+    10 * 1000
