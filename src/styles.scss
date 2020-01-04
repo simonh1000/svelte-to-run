@@ -10,7 +10,18 @@
 .pure-menu-list {
     li {
         padding: 10px 0;
+        display: flex;
     }
+}
+
+.xl {
+    font-size: 72pt;
+}
+.bg-red {
+    background-color: #ff4444;
+}
+.bg-white {
+    background-color: #ffffff;
 }
 .feint {
     color: #333;

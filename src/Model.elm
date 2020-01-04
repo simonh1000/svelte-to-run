@@ -59,9 +59,9 @@ type alias ReadyModel =
     }
 
 
-mkReadyModel : List Float -> ReadyModel
-mkReadyModel floats =
-    { activity = mkSchema floats
+mkReadyModel : List SchemaElement -> ReadyModel
+mkReadyModel schema =
+    { activity = schema
     , position = Nothing
     }
 
@@ -113,12 +113,12 @@ type alias SchemaElement =
     }
 
 
-mkActiveModel : List SchemaElement -> Posix -> ActiveModel
-mkActiveModel list begin =
-    case Zipper.fromList list of
+mkActiveModel : ReadyModel -> Posix -> ActiveModel
+mkActiveModel m begin =
+    case Zipper.fromList m.activity of
         Just activity ->
             { activity = activity
-            , wayPoints = []
+            , wayPoints = m.position |> Maybe.map L.singleton |> Maybe.withDefault []
             , begin = begin
             , elapsed = 0
             }

@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Basics.Extra exposing (flip)
 import Browser
 import Common.CoreHelpers exposing (formatPluralRegular, ifThenElse)
 import DateFormat as DF
@@ -26,7 +27,7 @@ init flags =
 
 
 type Msg
-    = SelectSchema (List Float)
+    = SelectSchema (List SchemaElement)
       -- Ready
     | Start
     | OnStartTime Posix
@@ -41,9 +42,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        SelectSchema lst ->
-            --( { model | state = Ready <| mkReadyModel (5 :: lst ++ [ 5 ]) }, Cmd.none )
-            ( { model | state = Ready <| mkReadyModel lst }
+        SelectSchema schema ->
+            ( { model | state = Ready <| mkReadyModel schema }
             , Ports.sendToPort Ports.LoadSoundPlayer
             )
 
@@ -52,10 +52,10 @@ update message model =
 
         OnStartTime now ->
             case model.state of
-                Ready { activity } ->
+                Ready readyModel ->
                     let
                         m =
-                            mkActiveModel activity now
+                            mkActiveModel readyModel now
                     in
                     ( { model | state = Active m }
                     , announce m.activity
@@ -170,23 +170,24 @@ view model =
             Active m ->
                 viewActive model.zone m
 
-            Finished finishedModel ->
-                [ text "TBC" ]
+            Finished m ->
+                viewFinished model.zone m
 
 
 viewChoosing : ChoosingModel -> List (Html Msg)
 viewChoosing { selectedIndex } =
     let
+        mkItem : Int -> List SchemaElement -> Html Msg
         mkItem idx schema =
             li
                 [ class <| ifThenElse (Just idx == selectedIndex) "pure-menu-item selected" "pure-menu-item"
                 , onClick <| SelectSchema schema
                 ]
-                [ text <| Debug.toString schema ]
+                (schema |> L.map viewActivity2)
 
         days =
             startToRun
-                |> L.indexedMap mkItem
+                |> L.indexedMap (\idx flts -> mkItem idx <| mkSchema flts)
                 |> ul [ class "pure-menu-list" ]
     in
     [ h1 [] [ text "Choose schema" ]
@@ -216,13 +217,25 @@ viewActive zone m =
 
         after =
             Zipper.after m.activity |> L.map (viewActivity "after")
+
+        toGo : Float
+        toGo =
+            m.activity |> Zipper.current |> .cumulative |> (\cum -> cum - m.elapsed)
     in
     [ h1 [] [ text "Active" ]
+    , div []
+        [ text "Started at:"
+        , text <| DF.format [ DF.hourFixed, DF.text ":", DF.minuteFixed, DF.text ":", DF.secondFixed ] zone m.begin
+        ]
+    , div [ class "xl" ] [ text <| String.fromInt (round <| toGo / 1000) ]
     , before ++ current :: after |> ul []
-    , div [] [ text <| DF.format [ DF.minuteFixed, DF.text ":", DF.secondFixed ] zone m.begin ]
-    , div [] [ text <| String.fromFloat m.elapsed ]
     , div [] [ mkButton Stop "Stop" ]
+    , div [] [ text <| Debug.toString m.wayPoints ]
     ]
+
+
+viewFinished zone m =
+    [ text "TBC" ]
 
 
 
@@ -232,6 +245,20 @@ viewActive zone m =
 viewActivity : String -> SchemaElement -> Html msg
 viewActivity cls item =
     li [ class cls ] [ text <| String.fromFloat item.time ++ " mins " ++ Debug.toString item.activity ]
+
+
+viewActivity2 : SchemaElement -> Html msg
+viewActivity2 item =
+    let
+        cls =
+            case item.activity of
+                Walking ->
+                    "bg-white"
+
+                Running ->
+                    "bg-red"
+    in
+    div [ class cls ] [ text <| String.fromFloat item.time ++ " mins" ]
 
 
 mkButton : msg -> String -> Html msg
