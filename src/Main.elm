@@ -1,14 +1,14 @@
 port module Main exposing (..)
 
 import Browser
-import Common.CoreHelpers exposing (ifThenElse)
+import Common.CoreHelpers exposing (formatPluralRegular, ifThenElse)
 import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Json.Encode as Encode exposing (Value)
 import List as L
-import List.Zipper as Zipper
+import List.Zipper as Zipper exposing (Zipper)
 import Model exposing (..)
 import Task
 import Time exposing (Posix, Zone)
@@ -48,7 +48,8 @@ update message model =
     in
     case message of
         SelectSchema lst ->
-            ( { model | state = Ready <| mkReadyModel (5 :: lst ++ [ 5 ]) }, Cmd.none )
+            --( { model | state = Ready <| mkReadyModel (5 :: lst ++ [ 5 ]) }, Cmd.none )
+            ( { model | state = Ready <| mkReadyModel lst }, Cmd.none )
 
         Start ->
             ( model, Time.now |> Task.perform OnStartTime )
@@ -56,7 +57,13 @@ update message model =
         OnStartTime now ->
             case model.state of
                 Ready { activity } ->
-                    ( { model | state = Active <| mkActiveModel activity now }, Cmd.none )
+                    let
+                        m =
+                            mkActiveModel activity now
+                    in
+                    ( { model | state = Active m }
+                    , announce m.activity
+                    )
 
                 _ ->
                     ( model, Cmd.none )
@@ -75,7 +82,7 @@ update message model =
                         case Zipper.next state.activity of
                             Just activity ->
                                 ( { model | state = Active { state_ | activity = activity } }
-                                , toJs Encode.null
+                                , announce activity
                                 )
 
                             Nothing ->
@@ -96,11 +103,31 @@ update message model =
                 _ ->
                     ( model, Cmd.none )
 
+        Stop ->
+            ( { model | state = initState }, Cmd.none )
+
         OnTimeZone zone ->
             ( { model | zone = zone }, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
+
+
+announce : Zipper SchemaElement -> Cmd msg
+announce activity =
+    let
+        convert elem =
+            case elem.activity of
+                Running ->
+                    "run"
+
+                Walking ->
+                    "walk"
+
+        mkFullText elem =
+            "Now " ++ convert elem ++ " for " ++ formatPluralRegular (round elem.time) "minute"
+    in
+    toJs <| Encode.string <| mkFullText <| Zipper.current activity
 
 
 
@@ -164,7 +191,7 @@ viewChoosing { selectedIndex } =
 
 viewActivity : String -> SchemaElement -> Html msg
 viewActivity cls item =
-    li [ class cls ] [ text <| Debug.toString item ]
+    li [ class cls ] [ text <| String.fromFloat item.time ++ " mins " ++ Debug.toString item.activity ]
 
 
 

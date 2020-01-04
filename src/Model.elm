@@ -1,9 +1,12 @@
 module Model exposing (..)
 
-import Basics.Extra exposing (flip)
 import List as L
 import List.Zipper as Zipper exposing (Zipper)
 import Time exposing (Posix)
+
+
+min =
+    10 * 1000
 
 
 type alias Model =
@@ -14,7 +17,7 @@ type alias Model =
 
 blankModel : Model
 blankModel =
-    { state = ChooseSchema { selectedIndex = Nothing }
+    { state = initState
     , zone = Time.utc
     }
 
@@ -26,12 +29,23 @@ type State
     | Finished FinishedModel
 
 
+initState : State
+initState =
+    ChooseSchema { selectedIndex = Nothing }
 
---
+
+type Activity
+    = Running
+    | Walking
+
+
+
+-- ChoosingModel
 
 
 type alias ChoosingModel =
-    { selectedIndex : Maybe Int }
+    { selectedIndex : Maybe Int -- unused
+    }
 
 
 
@@ -47,9 +61,32 @@ mkReadyModel floats =
     { activity = mkSchema floats }
 
 
+mkSchema : List Float -> List SchemaElement
+mkSchema lst =
+    let
+        go : Float -> ( Activity, Float, List SchemaElement ) -> ( Activity, Float, List SchemaElement )
+        go ct ( nxt, cum, acc ) =
+            let
+                ct_ =
+                    ct * min
+            in
+            ( if nxt == Running then
+                Walking
 
---
-{-
+              else
+                Running
+            , cum + ct_
+            , SchemaElement ct (cum + ct_) nxt :: acc
+            )
+    in
+    lst
+        |> L.foldl go ( Walking, 0, [] )
+        |> (\( _, _, tmp ) -> L.reverse tmp)
+
+
+
+{- ActiveModel
+
    Needs ability to:
 
        - pause
@@ -107,9 +144,8 @@ type alias WayPoint =
     }
 
 
-type Activity
-    = Running
-    | Walking
+
+-- data
 
 
 startToRun =
@@ -117,30 +153,3 @@ startToRun =
     , [ 1, 1, 1, 1, 2, 2, 3, 3, 3, 3 ]
     , [ 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 ]
     ]
-
-
-mkSchema : List Float -> List SchemaElement
-mkSchema lst =
-    let
-        go : Float -> ( Activity, Float, List SchemaElement ) -> ( Activity, Float, List SchemaElement )
-        go ct ( nxt, cum, acc ) =
-            let
-                ct_ =
-                    ct * min
-            in
-            ( if nxt == Running then
-                Walking
-
-              else
-                Running
-            , cum + ct_
-            , SchemaElement ct (cum + ct_) nxt :: acc
-            )
-    in
-    lst
-        |> L.foldl go ( Walking, 0, [] )
-        |> (\( _, _, tmp ) -> L.reverse tmp)
-
-
-min =
-    60 * 1000
