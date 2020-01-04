@@ -1,12 +1,13 @@
 module Model exposing (..)
 
+import Json.Decode as Decode exposing (Decoder)
 import List as L
 import List.Zipper as Zipper exposing (Zipper)
 import Time exposing (Posix)
 
 
 min =
-    10 * 1000
+    60 * 1000
 
 
 type alias Model =
@@ -53,12 +54,16 @@ type alias ChoosingModel =
 
 
 type alias ReadyModel =
-    { activity : List SchemaElement }
+    { activity : List SchemaElement
+    , position : Maybe WayPoint
+    }
 
 
 mkReadyModel : List Float -> ReadyModel
 mkReadyModel floats =
-    { activity = mkSchema floats }
+    { activity = mkSchema floats
+    , position = Nothing
+    }
 
 
 mkSchema : List Float -> List SchemaElement
@@ -142,6 +147,14 @@ type alias WayPoint =
     , lng : Float
     , time : Posix
     }
+
+
+decodeWayPoint : Decoder WayPoint
+decodeWayPoint =
+    Decode.map3 WayPoint
+        (Decode.at [ "coords", "latitude" ] Decode.float)
+        (Decode.at [ "coords", "longitude" ] Decode.float)
+        (Decode.field "timestamp" <| Decode.map Time.millisToPosix Decode.int)
 
 
 

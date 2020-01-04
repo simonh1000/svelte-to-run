@@ -1,5 +1,17 @@
 @import '~purecss/build/pure.css';
 
+.content {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 900px;
+}
+
+.pure-menu-list {
+    li {
+        padding: 10px 0;
+    }
+}
 .feint {
     color: #333;
 }
