@@ -14,13 +14,14 @@ type alias Model =
 
 blankModel : Model
 blankModel =
-    { state = Ready { activity = day1 }
+    { state = ChooseSchema { selectedIndex = Nothing }
     , zone = Time.utc
     }
 
 
 type State
-    = Ready ReadyModel
+    = ChooseSchema ChoosingModel
+    | Ready ReadyModel
     | Active ActiveModel
     | Finished FinishedModel
 
@@ -29,8 +30,21 @@ type State
 --
 
 
+type alias ChoosingModel =
+    { selectedIndex : Maybe Int }
+
+
+
+--
+
+
 type alias ReadyModel =
-    { activity : List ( Float, Activity ) }
+    { activity : List SchemaElement }
+
+
+mkReadyModel : List Float -> ReadyModel
+mkReadyModel floats =
+    { activity = mkSchema floats }
 
 
 
@@ -43,28 +57,23 @@ type alias ReadyModel =
 
 
 type alias ActiveModel =
-    { activity : Zipper ( Float, Activity ) -- time that each part will be finished by
+    { activity : Zipper SchemaElement -- time that each part will be finished by
     , wayPoints : List WayPoint
     , begin : Posix
     , elapsed : Float
     }
 
 
-mkActiveModel : List ( Float, Activity ) -> Posix -> ActiveModel
-mkActiveModel list begin =
-    let
-        go : ( Float, Activity ) -> ( Float, List ( Float, Activity ) ) -> ( Float, List ( Float, Activity ) )
-        go ( len, activity ) ( total, acc ) =
-            ( len + total, ( len + total, activity ) :: acc )
+type alias SchemaElement =
+    { time : Float
+    , cumulative : Float
+    , activity : Activity
+    }
 
-        mbActivity =
-            list
-                |> L.foldl go ( 0, [] )
-                |> Tuple.second
-                |> L.reverse
-                |> Zipper.fromList
-    in
-    case mbActivity of
+
+mkActiveModel : List SchemaElement -> Posix -> ActiveModel
+mkActiveModel list begin =
+    case Zipper.fromList list of
         Just activity ->
             { activity = activity
             , wayPoints = []
@@ -73,7 +82,7 @@ mkActiveModel list begin =
             }
 
         Nothing ->
-            Debug.todo "mkActiveModel"
+            Debug.todo "no schema"
 
 
 
@@ -103,12 +112,35 @@ type Activity
     | Walking
 
 
-day1 =
-    L.repeat 5 ( min, Running )
-        |> L.intersperse ( min, Walking )
-        |> (::) ( min, Walking )
-        |> flip (++) [ ( min, Walking ) ]
+startToRun =
+    [ [ 1, 1, 1, 1, 2, 2, 2, 2, 3 ]
+    , [ 1, 1, 1, 1, 2, 2, 3, 3, 3, 3 ]
+    , [ 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 ]
+    ]
+
+
+mkSchema : List Float -> List SchemaElement
+mkSchema lst =
+    let
+        go : Float -> ( Activity, Float, List SchemaElement ) -> ( Activity, Float, List SchemaElement )
+        go ct ( nxt, cum, acc ) =
+            let
+                ct_ =
+                    ct * min
+            in
+            ( if nxt == Running then
+                Walking
+
+              else
+                Running
+            , cum + ct_
+            , SchemaElement ct (cum + ct_) nxt :: acc
+            )
+    in
+    lst
+        |> L.foldl go ( Walking, 0, [] )
+        |> (\( _, _, tmp ) -> L.reverse tmp)
 
 
 min =
-    10 * 1000
+    60 * 1000

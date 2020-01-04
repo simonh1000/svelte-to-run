@@ -1,6 +1,7 @@
 port module Main exposing (..)
 
 import Browser
+import Common.CoreHelpers exposing (ifThenElse)
 import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -28,8 +29,11 @@ port toJs : Value -> Cmd msg
 
 
 type Msg
-    = Start
+    = SelectSchema (List Float)
+      -- Ready
+    | Start
     | OnStartTime Posix
+      -- Running
     | Pause
     | OnEachSecond Posix
     | Stop
@@ -43,6 +47,9 @@ update message model =
             toJs Encode.null
     in
     case message of
+        SelectSchema lst ->
+            ( { model | state = Ready <| mkReadyModel (5 :: lst ++ [ 5 ]) }, Cmd.none )
+
         Start ->
             ( model, Time.now |> Task.perform OnStartTime )
 
@@ -64,7 +71,7 @@ update message model =
                         state_ =
                             { state | elapsed = elapsed }
                     in
-                    if elapsed > Tuple.first (Zipper.current state.activity) then
+                    if elapsed > .cumulative (Zipper.current state.activity) then
                         case Zipper.next state.activity of
                             Just activity ->
                                 ( { model | state = Active { state_ | activity = activity } }
@@ -105,6 +112,9 @@ update message model =
 view : Model -> Html Msg
 view model =
     case model.state of
+        ChooseSchema m ->
+            viewChoosing m
+
         Ready { activity } ->
             div [ class "container" ]
                 [ h1 [] [ text "Ready" ]
@@ -137,7 +147,22 @@ view model =
             text "TBC"
 
 
-viewActivity : String -> ( Float, Activity ) -> Html msg
+viewChoosing : ChoosingModel -> Html Msg
+viewChoosing { selectedIndex } =
+    let
+        mkItem idx schema =
+            li
+                [ class <| ifThenElse (Just idx == selectedIndex) "selected" ""
+                , onClick <| SelectSchema schema
+                ]
+                [ text <| Debug.toString schema ]
+    in
+    startToRun
+        |> L.indexedMap mkItem
+        |> ul []
+
+
+viewActivity : String -> SchemaElement -> Html msg
 viewActivity cls item =
     li [ class cls ] [ text <| Debug.toString item ]
 
@@ -150,16 +175,15 @@ viewActivity cls item =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    let
-        eachSecond =
-            Time.every 1000 OnEachSecond
-    in
     case model.state of
+        ChooseSchema choosingModel ->
+            Sub.none
+
         Ready _ ->
             Sub.none
 
         Active activeModel ->
-            eachSecond
+            Time.every 1000 OnEachSecond
 
         Finished finishedModel ->
             Sub.none
