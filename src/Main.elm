@@ -1,6 +1,5 @@
 module Main exposing (..)
 
-import Basics.Extra exposing (flip)
 import Browser
 import Common.CoreHelpers exposing (formatPluralRegular, ifThenElse)
 import DateFormat as DF
@@ -44,7 +43,7 @@ update message model =
     case message of
         SelectSchema schema ->
             ( { model | state = Ready <| mkReadyModel schema }
-            , Ports.sendToPort Ports.LoadSoundPlayer
+            , Ports.sendToPort Ports.ToReady
             )
 
         Start ->
@@ -225,7 +224,7 @@ viewActive zone m =
     [ h1 [] [ text "Active" ]
     , div []
         [ text "Started at:"
-        , text <| DF.format [ DF.hourFixed, DF.text ":", DF.minuteFixed, DF.text ":", DF.secondFixed ] zone m.begin
+        , text <| DF.format [ DF.hourMilitaryFixed, DF.text ":", DF.minuteFixed, DF.text ":", DF.secondFixed ] zone m.begin
         ]
     , div [ class "xl" ] [ text <| String.fromInt (round <| toGo / 1000) ]
     , before ++ current :: after |> ul []

@@ -19,7 +19,7 @@ type alias PortMsg =
 
 type PortOutgoing
     = Announce String
-    | LoadSoundPlayer
+    | ToReady
 
 
 sendToPort : PortOutgoing -> Cmd msg
@@ -33,8 +33,8 @@ mkPortMsg tp =
         Announce msg ->
             PortMsg "announce" <| Encode.string msg
 
-        LoadSoundPlayer ->
-            PortMsg "loadSoundPlayer" Encode.null
+        ToReady ->
+            PortMsg "ready" Encode.null
 
 
 type PortIncoming
