@@ -57,6 +57,11 @@ decodePortIncoming { tag, payload } =
         "waypoint" ->
             apply decNextWayPoint
 
+        "error" ->
+            Decode.value
+                |> Decode.map (Encode.encode 0 >> Error)
+                |> apply
+
         _ ->
             Error ("No decoder for " ++ tag)
 

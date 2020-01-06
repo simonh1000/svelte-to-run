@@ -5,7 +5,7 @@ import Common.CoreHelpers exposing (formatPluralRegular, ifThenElse)
 import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onCheck, onClick)
 import List as L
 import List.Zipper as Zipper exposing (Zipper)
 import Model exposing (..)
@@ -27,12 +27,13 @@ init flags =
 
 type Msg
     = SelectSchema (List SchemaElement)
+    | ToggleWarmUp Bool
       -- Ready
     | Start
     | OnStartTime Posix
       -- Active
     | Pause
-    | Stop
+    | Cancel
     | OnEachSecond Posix
     | OnPortIncoming PortIncoming
     | OnTimeZone Zone
@@ -41,10 +42,18 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
+        ToggleWarmUp add5MinWarmUp ->
+            ( { model | state = mapChoosing (\m -> { m | add5MinWarmUp = add5MinWarmUp }) model.state }, Cmd.none )
+
         SelectSchema schema ->
-            ( { model | state = Ready <| mkReadyModel schema }
-            , Ports.sendToPort Ports.ToReady
-            )
+            case model.state of
+                ChooseSchema state ->
+                    ( { model | state = Ready <| mkReadyModel state schema }
+                    , Ports.sendToPort Ports.ToReady
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
         Start ->
             ( model, Time.now |> Task.perform OnStartTime )
@@ -81,15 +90,8 @@ update message model =
                                 )
 
                             Nothing ->
-                                let
-                                    state2 =
-                                        { wayPoints = []
-                                        , begin = state.begin
-                                        , end = now
-                                        }
-                                in
-                                ( { model | state = Finished state2 }
-                                , Cmd.none
+                                ( { model | state = Finished <| mkFinishedModel state }
+                                , Ports.sendToPort <| Announce "Finished - well done"
                                 )
 
                     else
@@ -98,7 +100,7 @@ update message model =
                 _ ->
                     ( model, Cmd.none )
 
-        Stop ->
+        Cancel ->
             ( { model | state = initState }, Cmd.none )
 
         OnTimeZone zone ->
@@ -174,12 +176,12 @@ view model =
 
 
 viewChoosing : ChoosingModel -> List (Html Msg)
-viewChoosing { selectedIndex } =
+viewChoosing m =
     let
         mkItem : Int -> List SchemaElement -> Html Msg
         mkItem idx schema =
             li
-                [ class <| ifThenElse (Just idx == selectedIndex) "pure-menu-item selected" "pure-menu-item"
+                [ class <| ifThenElse (Just idx == m.selectedIndex) "pure-menu-item selected" "pure-menu-item"
                 , onClick <| SelectSchema schema
                 ]
                 (schema |> L.map viewActivity2)
@@ -191,6 +193,10 @@ viewChoosing { selectedIndex } =
     in
     [ h1 [] [ text "Choose schema" ]
     , div [ class "pure-menu custom-restricted-width" ] [ days ]
+    , div []
+        [ text "5 min warm up"
+        , input [ type_ "checkbox", onCheck ToggleWarmUp, checked m.add5MinWarmUp ] []
+        ]
     ]
 
 
@@ -224,21 +230,33 @@ viewActive zone m =
     [ h1 [] [ text "Active" ]
     , div []
         [ text "Started at:"
-        , text <| DF.format [ DF.hourMilitaryFixed, DF.text ":", DF.minuteFixed, DF.text ":", DF.secondFixed ] zone m.begin
+        , viewTime zone m.begin
         ]
     , div [ class "xl" ] [ text <| String.fromInt (round <| toGo / 1000) ]
     , before ++ current :: after |> ul []
-    , div [] [ mkButton Stop "Stop" ]
+    , div []
+        [ mkButton Cancel "Cancel"
+        , mkButton Pause "Pause"
+        ]
     , div [] [ text <| Debug.toString m.wayPoints ]
     ]
 
 
+viewFinished : Zone -> FinishedModel -> List (Html msg)
 viewFinished zone m =
-    [ text "TBC" ]
+    [ h1 [] [ text "Finished" ]
+    , viewTime zone m.begin
+    , text <| Debug.toString m.wayPoints
+    ]
 
 
 
 -- View Helpers
+
+
+viewTime : Zone -> Posix -> Html msg
+viewTime zone posix =
+    text <| DF.format [ DF.hourMilitaryFixed, DF.text ":", DF.minuteFixed, DF.text ":", DF.secondFixed ] zone posix
 
 
 viewActivity : String -> SchemaElement -> Html msg
@@ -249,15 +267,22 @@ viewActivity cls item =
 viewActivity2 : SchemaElement -> Html msg
 viewActivity2 item =
     let
+        t =
+            String.fromFloat item.time
+
         cls =
             case item.activity of
                 Walking ->
-                    "bg-white"
+                    "font-large bg-white"
 
                 Running ->
-                    "bg-red"
+                    "font-large bg-red"
     in
-    div [ class cls ] [ text <| String.fromFloat item.time ++ " mins" ]
+    div
+        [ class cls
+        , style "flex-grow" t
+        ]
+        [ text t ]
 
 
 mkButton : msg -> String -> Html msg

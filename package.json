@@ -45,6 +45,7 @@
         "webpack-merge": "^4.2.2"
     },
     "dependencies": {
+        "file-saver": "^2.0.2",
         "purecss": "^1.0.1"
     },
     "prettier": {

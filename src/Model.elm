@@ -6,7 +6,7 @@ import List.Zipper as Zipper exposing (Zipper)
 import Time exposing (Posix)
 
 
-min =
+minute =
     60 * 1000
 
 
@@ -32,7 +32,17 @@ type State
 
 initState : State
 initState =
-    ChooseSchema { selectedIndex = Nothing }
+    ChooseSchema blankChoosing
+
+
+mapChoosing : (ChoosingModel -> ChoosingModel) -> State -> State
+mapChoosing fn state =
+    case state of
+        ChooseSchema m ->
+            ChooseSchema <| fn m
+
+        _ ->
+            state
 
 
 type Activity
@@ -46,6 +56,13 @@ type Activity
 
 type alias ChoosingModel =
     { selectedIndex : Maybe Int -- unused
+    , add5MinWarmUp : Bool
+    }
+
+
+blankChoosing =
+    { selectedIndex = Nothing
+    , add5MinWarmUp = True
     }
 
 
@@ -59,34 +76,49 @@ type alias ReadyModel =
     }
 
 
-mkReadyModel : List SchemaElement -> ReadyModel
-mkReadyModel schema =
-    { activity = schema
+mkReadyModel : ChoosingModel -> List SchemaElement -> ReadyModel
+mkReadyModel m schema =
+    let
+        schema_ =
+            if m.add5MinWarmUp then
+                SchemaElement 5 0 Walking :: schema
+
+            else
+                schema
+    in
+    { activity = calcCumulatives schema_
     , position = Nothing
     }
 
 
-mkSchema : List Float -> List SchemaElement
+mkSchema : List ( Float, Activity ) -> List SchemaElement
 mkSchema lst =
     let
-        go : Float -> ( Activity, Float, List SchemaElement ) -> ( Activity, Float, List SchemaElement )
-        go ct ( nxt, cum, acc ) =
-            let
-                ct_ =
-                    ct * min
-            in
-            ( if nxt == Running then
-                Walking
+        go : ( Float, Activity ) -> List SchemaElement -> List SchemaElement
+        go ( ct, act ) acc =
+            SchemaElement ct 0 act :: acc
+    in
+    lst
+        |> L.foldl go []
+        |> L.reverse
 
-              else
-                Running
-            , cum + ct_
-            , SchemaElement ct (cum + ct_) nxt :: acc
+
+calcCumulatives : List SchemaElement -> List SchemaElement
+calcCumulatives lst =
+    let
+        go : SchemaElement -> ( Float, List SchemaElement ) -> ( Float, List SchemaElement )
+        go elem ( cum, acc ) =
+            let
+                cum_ =
+                    cum + elem.time * minute
+            in
+            ( cum_
+            , { elem | cumulative = cum_ } :: acc
             )
     in
     lst
-        |> L.foldl go ( Walking, 0, [] )
-        |> (\( _, _, tmp ) -> L.reverse tmp)
+        |> L.foldl go ( 0, [] )
+        |> (\( _, tmp ) -> L.reverse tmp)
 
 
 
@@ -138,6 +170,14 @@ type alias FinishedModel =
     }
 
 
+mkFinishedModel : ActiveModel -> FinishedModel
+mkFinishedModel m =
+    { wayPoints = m.wayPoints
+    , begin = m.begin
+    , end = m.begin
+    }
+
+
 
 --
 
@@ -161,9 +201,18 @@ decodeWayPoint =
 -- data
 
 
+startToRun : List (List ( number, Activity ))
 startToRun =
-    [ [ 5, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1 ]
-    , [ 1, 1, 1, 1, 2, 2, 2, 2, 3 ]
-    , [ 1, 1, 1, 1, 2, 2, 3, 3, 3, 3 ]
-    , [ 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 ]
+    [ [ r 1, w 1, r 1, w 1, r 2, w 2, r 1, w 1, r 1, w 1, r 1 ]
+    , [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
+    , [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3, w 3 ]
+    , [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3, w 3 ]
     ]
+
+
+w int =
+    ( int, Walking )
+
+
+r int =
+    ( int, Running )
