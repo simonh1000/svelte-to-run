@@ -45,9 +45,23 @@ mapChoosing fn state =
             state
 
 
+
+--
+
+
 type Activity
     = Running
     | Walking
+
+
+ppActivity : Activity -> String
+ppActivity activity =
+    case activity of
+        Running ->
+            "Run"
+
+        Walking ->
+            "Walk"
 
 
 

@@ -9,6 +9,14 @@
     max-width: 900px;
 }
 
+h1 {
+    @apply text-3xl;
+    @apply font-bold;
+}
+
+.remaining {
+    font-size: 100px;
+}
 .schemas {
     list-style-type: none;
     li {
@@ -17,5 +25,7 @@
 }
 
 .current {
-    font-weight: bold;
+    @apply font-bold;
+    @apply border-2;
+    @apply border-teal-400;
 }
