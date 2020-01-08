@@ -2,10 +2,10 @@ const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 
-const ClosurePlugin = require('closure-webpack-plugin');
+const ClosurePlugin = require("closure-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 // to extract the css as a separate file
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -14,7 +14,10 @@ var MODE =
 var withDebug = !process.env["npm_config_nodebug"] && MODE == "development";
 // this may help for Yarn users
 // var withDebug = !npmParams.includes("--nodebug");
-console.log('\x1b[36m%s\x1b[0m', `** elm-webpack-starter: mode "${MODE}", withDebug: ${withDebug}\n`);
+console.log(
+    "\x1b[36m%s\x1b[0m",
+    `** elm-webpack-starter: mode "${MODE}", withDebug: ${withDebug}\n`
+);
 
 var common = {
     mode: MODE,
@@ -40,22 +43,22 @@ var common = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader"
-                }
-            },
-            {
-                test: /\.scss$/,
-                exclude: [/elm-stuff/, /node_modules/],
-                // see https://github.com/webpack-contrib/css-loader#url
-                loaders: ["style-loader", "css-loader?url=false", "sass-loader"]
-            },
-            {
-                test: /\.css$/,
-                exclude: [/elm-stuff/, /node_modules/],
-                loaders: ["style-loader", "css-loader?url=false"]
+                // Apply rule for .css files
+                test: /\.css$/, // Set loaders to transform files.
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader" },
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            ident: "postcss",
+                            plugins: [
+                                require("tailwindcss"),
+                                require("autoprefixer")
+                            ]
+                        }
+                    }
+                ]
             },
             {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -127,17 +130,21 @@ if (MODE === "production") {
     module.exports = merge(common, {
         optimization: {
             minimizer: [
-              new ClosurePlugin({mode: 'STANDARD'}, {
-                // compiler flags here
-                //
-                // for debugging help, try these:
-                //
-                // formatting: 'PRETTY_PRINT',
-                // debug: true
-                // renaming: false
-              })
+                new ClosurePlugin(
+                    { mode: "STANDARD" },
+                    {
+                        // compiler flags here
+                        //
+                        // for debugging help, try these:
+                        //
+                        // formatting: 'PRETTY_PRINT',
+                        // debug: true
+                        // renaming: false
+                    }
+                )
             ]
-          }, plugins: [
+        },
+        plugins: [
             // Delete everything from output-path (/dist) and report to user
             new CleanWebpackPlugin({
                 root: __dirname,
