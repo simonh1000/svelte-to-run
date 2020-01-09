@@ -43,24 +43,6 @@ var common = {
     module: {
         rules: [
             {
-                // Apply rule for .css files
-                test: /\.css$/, // Set loaders to transform files.
-                use: [
-                    { loader: "style-loader" },
-                    { loader: "css-loader" },
-                    {
-                        loader: "postcss-loader",
-                        options: {
-                            ident: "postcss",
-                            plugins: [
-                                require("tailwindcss"),
-                                require("autoprefixer")
-                            ]
-                        }
-                    }
-                ]
-            },
-            {
                 test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 exclude: [/elm-stuff/, /node_modules/],
                 loader: "url-loader",
@@ -93,6 +75,24 @@ if (MODE === "development") {
         ],
         module: {
             rules: [
+                {
+                    // Apply rule for .css files
+                    test: /\.css$/, // Set loaders to transform files.
+                    use: [
+                        { loader: "style-loader" },
+                        { loader: "css-loader" },
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                ident: "postcss",
+                                plugins: [
+                                    require("tailwindcss"),
+                                    require("autoprefixer")
+                                ]
+                            }
+                        }
+                    ]
+                },
                 {
                     test: /\.elm$/,
                     exclude: [/elm-stuff/, /node_modules/],
@@ -177,20 +177,20 @@ if (MODE === "production") {
                     }
                 },
                 {
-                    test: /\.css$/,
-                    exclude: [/elm-stuff/, /node_modules/],
-                    loaders: [
-                        MiniCssExtractPlugin.loader,
-                        "css-loader?url=false"
-                    ]
-                },
-                {
-                    test: /\.scss$/,
-                    exclude: [/elm-stuff/, /node_modules/],
-                    loaders: [
-                        MiniCssExtractPlugin.loader,
-                        "css-loader?url=false",
-                        "sass-loader"
+                    test: /\.css$/, // extract to separate file
+                    use: [
+                        { loader: MiniCssExtractPlugin.loader },
+                        { loader: "css-loader" },
+                        {
+                            loader: "postcss-loader",
+                            options: {
+                                ident: "postcss",
+                                plugins: [
+                                    require("tailwindcss"),
+                                    require("autoprefixer")
+                                ]
+                            }
+                        }
                     ]
                 }
             ]
