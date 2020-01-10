@@ -91,7 +91,7 @@ update message model =
 
                             Nothing ->
                                 ( { model | state = Finished <| mkFinishedModel state }
-                                , Ports.sendToPort <| Announce "Finished - well done"
+                                , Ports.sendToPort <| Speak "Finished - well done"
                                 )
 
                     else
@@ -144,7 +144,10 @@ announce activity =
                     "walk"
 
         mkFullText elem =
-            "Now " ++ convert elem ++ " for " ++ formatPluralRegular (round elem.time) "minute"
+            { txt = "Now " ++ convert elem ++ " for " ++ formatPluralRegular (round elem.time) "minute"
+            , mins = round <| elem.time / 1000
+            , activity = elem.activity
+            }
     in
     Zipper.current activity
         |> mkFullText
@@ -160,7 +163,7 @@ announce activity =
 
 view : Model -> Html Msg
 view model =
-    div [ class "bg-gray-100 p-6" ] <|
+    div [ class "p-6" ] <|
         case model.state of
             ChooseSchema m ->
                 viewChoosing m
@@ -192,7 +195,7 @@ viewChoosing m =
 
         days =
             startToRun
-                |> L.indexedMap (\idx flts -> mkItem idx <| mkSchema flts)
+                |> L.indexedMap (\idx { schema } -> mkItem idx <| mkSchema schema)
                 |> ul [ class "schemas" ]
     in
     [ h1 [] [ text "Choose schema" ]
@@ -279,30 +282,30 @@ viewSchemeZipper : Zipper SchemaElement -> Html msg
 viewSchemeZipper items =
     let
         before =
-            Zipper.before items |> L.map (viewActivity2 "before")
+            Zipper.before items |> L.map (viewActivityFlex "before")
 
         current =
-            Zipper.current items |> viewActivity2 "current"
+            Zipper.current items |> viewActivityFlex "current"
 
         after =
-            Zipper.after items |> L.map (viewActivity2 "after")
+            Zipper.after items |> L.map (viewActivityFlex "after")
     in
     before ++ current :: after |> div [ class "flex flex-row" ]
 
 
 viewSchemeList : String -> List SchemaElement -> Html msg
 viewSchemeList cls items =
-    items |> L.map (viewActivity2 cls) |> div [ class "flex flex-row" ]
+    items |> L.map (viewActivityAbs cls) |> div [ class "flex flex-row" ]
 
 
-viewActivity2 : String -> SchemaElement -> Html msg
-viewActivity2 cls item =
+viewActivityFlex : String -> SchemaElement -> Html msg
+viewActivityFlex cls item =
     let
         t =
             String.fromFloat item.time
 
         baseCls =
-            "flex-grow flex flex-row items-center justify-center font-large "
+            "flex flex-row flex-grow items-center justify-center font-large "
 
         cls_ =
             case item.activity of
@@ -317,6 +320,30 @@ viewActivity2 cls item =
         , style "flex-grow" t
         ]
         [ text t ]
+
+
+viewActivityAbs : String -> SchemaElement -> Html msg
+viewActivityAbs cls item =
+    let
+        width =
+            String.fromFloat (item.time * 15) ++ "px"
+
+        baseCls =
+            "flex flex-row items-center justify-center font-large "
+
+        cls_ =
+            case item.activity of
+                Walking ->
+                    baseCls ++ cls ++ " bg-white"
+
+                Running ->
+                    baseCls ++ cls ++ " bg-red-600"
+    in
+    div
+        [ class cls_
+        , style "width" width
+        ]
+        [ text <| String.fromFloat item.time ]
 
 
 mkButton : msg -> String -> Html msg

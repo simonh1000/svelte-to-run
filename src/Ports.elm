@@ -2,7 +2,7 @@ port module Ports exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import Model exposing (WayPoint, decodeWayPoint)
+import Model exposing (..)
 
 
 port toJs : PortMsg -> Cmd msg
@@ -18,7 +18,8 @@ type alias PortMsg =
 
 
 type PortOutgoing
-    = Announce String
+    = Announce { txt : String, mins : Int, activity : Activity }
+    | Speak String
     | ToReady
 
 
@@ -31,10 +32,18 @@ mkPortMsg : PortOutgoing -> PortMsg
 mkPortMsg tp =
     case tp of
         Announce msg ->
-            PortMsg "announce" <| Encode.string msg
+            [ ( "txt", Encode.string msg.txt )
+            , ( "mins", Encode.int msg.mins )
+            , ( "activity", Encode.string <| ppActivity msg.activity )
+            ]
+                |> Encode.object
+                |> PortMsg "announce"
 
         ToReady ->
             PortMsg "ready" Encode.null
+
+        Speak string ->
+            PortMsg "speak" <| Encode.string string
 
 
 type PortIncoming

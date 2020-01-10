@@ -215,12 +215,18 @@ decodeWayPoint =
 -- data
 
 
-startToRun : List (List ( number, Activity ))
+type alias DayRun =
+    { title : String
+    , schema : List ( Float, Activity )
+    }
+
+
+startToRun : List DayRun
 startToRun =
-    [ [ r 1, w 1, r 1, w 1, r 2, w 2, r 1, w 1, r 1, w 1, r 1 ]
-    , [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
-    , [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3, w 3 ]
-    , [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3, w 3 ]
+    [ DayRun "short" [ r 1, w 1, r 1, w 1, r 2, w 2, r 1, w 1, r 1, w 1, r 1 ]
+    , DayRun "day 1" [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
+    , DayRun "day 2" [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3 ]
+    , DayRun "day 3" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]
     ]
 
 
