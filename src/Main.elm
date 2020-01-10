@@ -182,20 +182,14 @@ view model =
 -- CHOOSING
 
 
+{-| schemas are showed with absolute sizes
+-}
 viewChoosing : ChoosingModel -> List (Html Msg)
 viewChoosing m =
     let
-        mkItem : Int -> List SchemaElement -> Html Msg
-        mkItem idx schema =
-            li
-                [ class <| ifThenElse (Just idx == m.selectedIndex) "mb-2 selected" "mb-2"
-                , onClick <| SelectSchema schema
-                ]
-                [ viewSchemeList "" schema ]
-
         days =
             startToRun
-                |> L.indexedMap (\idx { schema } -> mkItem idx <| mkSchema schema)
+                |> L.indexedMap (viewDayRun m)
                 |> ul [ class "schemas" ]
     in
     [ h1 [] [ text "Choose schema" ]
@@ -213,6 +207,25 @@ viewChoosing m =
     ]
 
 
+viewDayRun : ChoosingModel -> Int -> DayRun -> Html Msg
+viewDayRun m idx dayRun =
+    let
+        schema_ =
+            dayRunToSchema dayRun.schema
+
+        tot =
+            dayRun.schema |> L.map Tuple.first |> L.sum |> round |> String.fromInt
+    in
+    li
+        [ class <| ifThenElse (Just idx == m.selectedIndex) "mb-2 selected" "mb-2" ]
+        [ h3 []
+            [ text dayRun.title
+            , span [ class "ml-1" ] [ text <| "(" ++ tot ++ " mins)" ]
+            ]
+        , div [ onClick <| SelectSchema schema_ ] [ viewSchemaAbs "" schema_ ]
+        ]
+
+
 
 -- READY
 
@@ -221,7 +234,7 @@ viewReady : ReadyModel -> List (Html Msg)
 viewReady m =
     [ h1 [] [ text "Ready" ]
     , m.activity
-        |> viewSchemeList ""
+        |> viewSchemaFlex ""
     , div [] [ mkButton Start "Start" ]
     , div [] [ text <| Debug.toString m.position ]
     ]
@@ -293,9 +306,9 @@ viewSchemeZipper items =
     before ++ current :: after |> div [ class "flex flex-row" ]
 
 
-viewSchemeList : String -> List SchemaElement -> Html msg
-viewSchemeList cls items =
-    items |> L.map (viewActivityAbs cls) |> div [ class "flex flex-row" ]
+viewSchemaFlex : String -> List SchemaElement -> Html msg
+viewSchemaFlex cls items =
+    items |> L.map (viewActivityFlex cls) |> div [ class "flex flex-row self-start h-10" ]
 
 
 viewActivityFlex : String -> SchemaElement -> Html msg
@@ -306,44 +319,47 @@ viewActivityFlex cls item =
 
         baseCls =
             "flex flex-row flex-grow items-center justify-center font-large "
-
-        cls_ =
-            case item.activity of
-                Walking ->
-                    baseCls ++ cls ++ " bg-white"
-
-                Running ->
-                    baseCls ++ cls ++ " bg-red-600"
     in
     div
-        [ class cls_
+        [ mkClass baseCls cls item.activity
         , style "flex-grow" t
         ]
         [ text t ]
 
 
+viewSchemaAbs : String -> List SchemaElement -> Html msg
+viewSchemaAbs cls items =
+    items |> L.map (viewActivityAbs cls) |> div [ class "flex flex-row self-start" ]
+
+
 viewActivityAbs : String -> SchemaElement -> Html msg
 viewActivityAbs cls item =
     let
+        t =
+            String.fromFloat item.time
+
         width =
             String.fromFloat (item.time * 15) ++ "px"
 
         baseCls =
             "flex flex-row items-center justify-center font-large "
-
-        cls_ =
-            case item.activity of
-                Walking ->
-                    baseCls ++ cls ++ " bg-white"
-
-                Running ->
-                    baseCls ++ cls ++ " bg-red-600"
     in
     div
-        [ class cls_
+        [ mkClass baseCls cls item.activity
         , style "width" width
         ]
-        [ text <| String.fromFloat item.time ]
+        [ text t ]
+
+
+mkClass : String -> String -> Activity -> Attribute msg
+mkClass baseCls cls activity =
+    class <|
+        case activity of
+            Walking ->
+                baseCls ++ cls ++ " bg-white"
+
+            Running ->
+                baseCls ++ cls ++ " bg-red-600"
 
 
 mkButton : msg -> String -> Html msg

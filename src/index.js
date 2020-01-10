@@ -8,6 +8,7 @@ const { Elm } = require("./Main");
 var app = Elm.Main.init({ flags: 6 });
 
 app.ports.toJs.subscribe(data => {
+    // console.log(data);
     switch (data.tag) {
         case "announce":
             say(data.payload);
@@ -16,27 +17,32 @@ app.ports.toJs.subscribe(data => {
             startWayPointCollection(app.ports.fromJs.send);
             loadSoundPlayer();
             break;
+        case "speak":
+            synthesise(data.payload);
+            break;
         default:
             console.error(data.tag);
     }
 });
 
 function say(payload) {
-    beep()
+    beep(2)
         .then(() => {
             // speech synthesis only seems to work when phone is on and browser is in foreground
             // NOTE: the app does not need to be the chosen tab though
             // if (window.document.hasFocus()) {
             if (document.visibilityState == "visible") {
-                window.speechSynthesis.speak(
-                    new SpeechSynthesisUtterance(payload)
-                );
+                synthesise(payload.txt);
             } else {
-                let tmp = new Audio("run1.wav");
+                let tmp = new Audio(payload.activity.toLowerCase() + ".wav");
                 tmp.play();
             }
         })
         .catch(err => console.error(err));
+}
+
+function synthesise(txt) {
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(txt));
 }
 
 function beep() {

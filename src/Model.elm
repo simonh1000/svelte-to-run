@@ -7,7 +7,7 @@ import Time exposing (Posix)
 
 
 minute =
-    60 * 1000
+    10 * 1000
 
 
 type alias Model =
@@ -105,8 +105,8 @@ mkReadyModel m schema =
     }
 
 
-mkSchema : List ( Float, Activity ) -> List SchemaElement
-mkSchema lst =
+dayRunToSchema : List ( Float, Activity ) -> List SchemaElement
+dayRunToSchema lst =
     let
         go : ( Float, Activity ) -> List SchemaElement -> List SchemaElement
         go ( ct, act ) acc =
@@ -227,6 +227,9 @@ startToRun =
     , DayRun "day 1" [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
     , DayRun "day 2" [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3 ]
     , DayRun "day 3" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]
+    , DayRun "day 4" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]
+    , DayRun "day 5" [ r 2, w 2, r 3, w 3, r 3, w 3, r 3 ]
+    , DayRun "day 6" [ r 1, w 1, r 2, w 2, r 3, w 3, r 3, w 3, r 3 ]
     ]
 
 
