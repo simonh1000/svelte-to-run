@@ -127,6 +127,15 @@ escapeString =
     Encode.string >> Encode.encode 0
 
 
+addSuffixIf : Bool -> String -> String -> String
+addSuffixIf b suffix base =
+    if b then
+        base ++ suffix
+
+    else
+        base
+
+
 {-| Format plural for nouns which have an irregular plural
 
   - 0, child, children -> 0 children

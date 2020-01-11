@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Common.CoreHelpers exposing (formatPluralRegular, ifThenElse)
+import Common.CoreHelpers exposing (addSuffixIf, formatPluralRegular, ifThenElse)
 import DateFormat as DF
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -217,12 +217,16 @@ viewDayRun m idx dayRun =
             dayRun.schema |> L.map Tuple.first |> L.sum |> round |> String.fromInt
     in
     li
-        [ class <| ifThenElse (Just idx == m.selectedIndex) "mb-2 selected" "mb-2" ]
+        [ class <| addSuffixIf (Just idx == m.selectedIndex) " selected" "flex flex-col mb-2" ]
         [ h3 []
             [ text dayRun.title
             , span [ class "ml-1" ] [ text <| "(" ++ tot ++ " mins)" ]
             ]
-        , div [ onClick <| SelectSchema schema_ ] [ viewSchemaAbs "" schema_ ]
+        , div
+            [ class "flex flex-row self-start"
+            , onClick <| SelectSchema schema_
+            ]
+            (L.map (viewActivityAbs "") schema_)
         ]
 
 
@@ -325,11 +329,6 @@ viewActivityFlex cls item =
         , style "flex-grow" t
         ]
         [ text t ]
-
-
-viewSchemaAbs : String -> List SchemaElement -> Html msg
-viewSchemaAbs cls items =
-    items |> L.map (viewActivityAbs cls) |> div [ class "flex flex-row self-start" ]
 
 
 viewActivityAbs : String -> SchemaElement -> Html msg
