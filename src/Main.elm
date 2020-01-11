@@ -28,6 +28,7 @@ init flags =
 type Msg
     = SelectSchema (List SchemaElement)
     | ToggleWarmUp Bool
+    | ToggleDevMode Bool
       -- Ready
     | Start
     | OnStartTime Posix
@@ -44,6 +45,9 @@ update message model =
     case message of
         ToggleWarmUp add5MinWarmUp ->
             ( { model | state = mapChoosing (\m -> { m | add5MinWarmUp = add5MinWarmUp }) model.state }, Cmd.none )
+
+        ToggleDevMode devMode ->
+            ( { model | state = mapChoosing (\m -> { m | devMode = devMode }) model.state }, Cmd.none )
 
         SelectSchema schema ->
             case model.state of
@@ -191,18 +195,36 @@ viewChoosing m =
             startToRun
                 |> L.indexedMap (viewDayRun m)
                 |> ul [ class "schemas" ]
+
+        cls isSelected =
+            if isSelected then
+                "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+
+            else
+                "bg-blue-100 hover:bg-blue-300 text-black font-bold py-2 px-4 rounded mr-2"
+
+        mkToggle msg isSelected txt =
+            span []
+                [ label
+                    [ for txt
+                    , class <| cls isSelected
+                    ]
+                    [ text txt, ifThenElse isSelected (text "!") (text "") ]
+                , input
+                    [ id txt
+                    , type_ "checkbox"
+                    , onCheck msg
+                    , checked isSelected
+                    , class "hidden"
+                    ]
+                    []
+                ]
     in
     [ h1 [] [ text "Choose schema" ]
     , div [] [ days ]
     , div []
-        [ label [ for "warmup" ] [ text "5 min warm up" ]
-        , input
-            [ id "warmup"
-            , type_ "checkbox"
-            , onCheck ToggleWarmUp
-            , checked m.add5MinWarmUp
-            ]
-            []
+        [ mkToggle ToggleWarmUp m.add5MinWarmUp "5 min warm up"
+        , mkToggle ToggleDevMode m.devMode "dev mode"
         ]
     ]
 

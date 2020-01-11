@@ -1,13 +1,10 @@
 module Model exposing (..)
 
+import Common.CoreHelpers exposing (ifThenElse)
 import Json.Decode as Decode exposing (Decoder)
 import List as L
 import List.Zipper as Zipper exposing (Zipper)
 import Time exposing (Posix)
-
-
-minute =
-    60 * 1000
 
 
 type alias Model =
@@ -71,12 +68,14 @@ ppActivity activity =
 type alias ChoosingModel =
     { selectedIndex : Maybe Int -- unused
     , add5MinWarmUp : Bool
+    , devMode : Bool
     }
 
 
 blankChoosing =
     { selectedIndex = Nothing
     , add5MinWarmUp = True
+    , devMode = False
     }
 
 
@@ -93,6 +92,9 @@ type alias ReadyModel =
 mkReadyModel : ChoosingModel -> List SchemaElement -> ReadyModel
 mkReadyModel m schema =
     let
+        minute =
+            ifThenElse m.devMode 10 60
+
         schema_ =
             if m.add5MinWarmUp then
                 SchemaElement 5 0 Walking :: schema
@@ -100,7 +102,7 @@ mkReadyModel m schema =
             else
                 schema
     in
-    { activity = calcCumulatives schema_
+    { activity = calcCumulatives minute schema_
     , position = Nothing
     }
 
@@ -117,14 +119,14 @@ dayRunToSchema lst =
         |> L.reverse
 
 
-calcCumulatives : List SchemaElement -> List SchemaElement
-calcCumulatives lst =
+calcCumulatives : Float -> List SchemaElement -> List SchemaElement
+calcCumulatives minute lst =
     let
         go : SchemaElement -> ( Float, List SchemaElement ) -> ( Float, List SchemaElement )
         go elem ( cum, acc ) =
             let
                 cum_ =
-                    cum + elem.time * minute
+                    cum + elem.time * minute * 1000
             in
             ( cum_
             , { elem | cumulative = cum_ } :: acc
