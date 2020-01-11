@@ -39,9 +39,9 @@ function say(payload) {
             // speech synthesis only seems to work when phone is on and browser is in foreground
             // NOTE: the app does not need to be the chosen tab though
             // if (window.document.hasFocus()) {
-            if (document.visibilityState == "visible") {
+            try {
                 synthesise(payload.txt);
-            } else {
+            } catch(err) {
                 let tmp = new Audio(payload.activity.toLowerCase() + ".wav");
                 tmp.play();
             }
