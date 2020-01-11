@@ -7,7 +7,7 @@ import Time exposing (Posix)
 
 
 minute =
-    10 * 1000
+    60 * 1000
 
 
 type alias Model =
