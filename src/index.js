@@ -34,14 +34,14 @@ app.ports.toJs.subscribe(data => {
 });
 
 function say(payload) {
-    beep(2)
+    beep()
         .then(() => {
             // speech synthesis only seems to work when phone is on and browser is in foreground
             // NOTE: the app does not need to be the chosen tab though
-            // if (window.document.hasFocus()) {
-            try {
+            if (window.document.hasFocus()) {
+//            if (document.visibilityState == "visible") {
                 synthesise(payload.txt);
-            } catch(err) {
+            } else {
                 let tmp = new Audio(payload.activity.toLowerCase() + ".wav");
                 tmp.play();
             }
