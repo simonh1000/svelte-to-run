@@ -20,7 +20,8 @@ type alias PortMsg =
 type PortOutgoing
     = Announce { txt : String, mins : Int, activity : Activity }
     | Speak String
-    | ToReady
+    | ToReady -- initialises sound player and noSleep
+    | Finish -- tells js to turn off noSleep
 
 
 sendToPort : PortOutgoing -> Cmd msg
@@ -39,11 +40,14 @@ mkPortMsg tp =
                 |> Encode.object
                 |> PortMsg "announce"
 
+        Speak string ->
+            PortMsg "speak" <| Encode.string string
+
         ToReady ->
             PortMsg "ready" Encode.null
 
-        Speak string ->
-            PortMsg "speak" <| Encode.string string
+        Finish ->
+            PortMsg "finish" Encode.null
 
 
 type PortIncoming

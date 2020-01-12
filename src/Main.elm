@@ -95,7 +95,7 @@ update message model =
 
                             Nothing ->
                                 ( { model | state = Finished <| mkFinishedModel state }
-                                , Ports.sendToPort <| Speak "Finished - well done"
+                                , finishCmd
                                 )
 
                     else
@@ -130,6 +130,13 @@ update message model =
 
         _ ->
             ( model, Cmd.none )
+
+
+finishCmd =
+    Cmd.batch
+        [ Ports.sendToPort <| Speak "Finished - well done"
+        , Ports.sendToPort Finish
+        ]
 
 
 
