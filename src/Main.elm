@@ -14,9 +14,11 @@ import Task
 import Time exposing (Posix, Zone)
 
 
-init : Int -> ( Model, Cmd Msg )
+init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( blankModel, Time.here |> Task.perform OnTimeZone )
+    ( { blankModel | state = ChooseSchema <| mkChoosingModel flags }
+    , Time.here |> Task.perform OnTimeZone
+    )
 
 
 
@@ -199,7 +201,7 @@ viewChoosing : ChoosingModel -> List (Html Msg)
 viewChoosing m =
     let
         days =
-            startToRun
+            m.runs
                 |> L.indexedMap (viewDayRun m)
                 |> ul [ class "schemas" ]
 
@@ -429,7 +431,7 @@ stateSubs model =
 -- ---------------------------
 
 
-main : Program Int Model Msg
+main : Program Flags Model Msg
 main =
     Browser.document
         { init = init

@@ -29,7 +29,7 @@ type State
 
 initState : State
 initState =
-    ChooseSchema blankChoosing
+    ChooseSchema <| mkChoosingModel []
 
 
 mapChoosing : (ChoosingModel -> ChoosingModel) -> State -> State
@@ -69,13 +69,22 @@ type alias ChoosingModel =
     { selectedIndex : Maybe Int -- unused
     , add5MinWarmUp : Bool
     , devMode : Bool
+    , runs : List DayRun
     }
 
 
-blankChoosing =
+type alias DayRun =
+    { title : String
+    , schema : List ( Float, Activity )
+    }
+
+
+mkChoosingModel : Flags -> ChoosingModel
+mkChoosingModel flags =
     { selectedIndex = Nothing
     , add5MinWarmUp = True
     , devMode = False
+    , runs = convertFlags flags
     }
 
 
@@ -217,27 +226,28 @@ decodeWayPoint =
 -- data
 
 
-type alias DayRun =
-    { title : String
-    , schema : List ( Float, Activity )
-    }
+type alias Flags =
+    List ( String, List String )
 
 
-startToRun : List DayRun
-startToRun =
-    [ DayRun "dev" [ r 1, w 1, r 1 ]
-    , DayRun "day 1" [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
-    , DayRun "day 2" [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3 ]
-    , DayRun "day 3" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]
-    , DayRun "day 4" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]
-    , DayRun "day 5" [ r 2, w 2, r 3, w 3, r 3, w 3, r 3 ]
-    , DayRun "day 6" [ r 1, w 1, r 2, w 2, r 3, w 3, r 3, w 3, r 3 ]
-    ]
+convertFlags : Flags -> List DayRun
+convertFlags =
+    L.map (\( title, lst ) -> DayRun title <| L.map convert lst)
 
 
-w int =
-    ( int, Walking )
+convert : String -> ( Float, Activity )
+convert s =
+    let
+        activity =
+            if String.left 1 s == "r" then
+                Running
 
+            else
+                Walking
 
-r int =
-    ( int, Running )
+        time =
+            String.dropLeft 1 s
+                |> String.toFloat
+                |> Maybe.withDefault 0
+    in
+    ( time, activity )

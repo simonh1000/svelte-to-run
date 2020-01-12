@@ -12,8 +12,19 @@ if ("serviceWorker" in navigator) {
     });
 }
 
+const runs =
+    [ [ "dev", [ "r1", "w1", "r1" ] ]
+    , [ "day 1", [ "r1", "w1", "r1", "w1", "r2", "w2", "r2", "w2", "r3" ] ]
+    , [ "day 2", [ "r1", "w1", "r1", "w1", "r2", "w2", "r3", "w3", "r3" ] ]
+    , [ "day 3", [ "r1", "w1", "r2", "w2", "r2", "w2", "r3", "w3", "r3" ] ]
+    , [ "day 4", [ "r1", "w1", "r2", "w2", "r2", "w2", "r3", "w3", "r3" ] ]
+    , [ "day 5", [ "r2", "w2", "r3", "w3", "r3", "w3", "r3" ] ]
+    , [ "day 6", [ "r1", "w1", "r2", "w2", "r3", "w3", "r3", "w3", "r3" ] ]
+    ]
+
+
 const { Elm } = require("./Main");
-var app = Elm.Main.init({ flags: 6 });
+var app = Elm.Main.init({ flags: runs });
 
 app.ports.toJs.subscribe(data => {
     console.log(data);
