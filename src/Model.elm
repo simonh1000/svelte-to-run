@@ -225,7 +225,7 @@ type alias DayRun =
 
 startToRun : List DayRun
 startToRun =
-    [ DayRun "short" [ r 1, w 1, r 1, w 1, r 2, w 2, r 1, w 1, r 1, w 1, r 1 ]
+    [ DayRun "dev" [ r 1, w 1, r 1 ]
     , DayRun "day 1" [ r 1, w 1, r 1, w 1, r 2, w 2, r 2, w 2, r 3 ]
     , DayRun "day 2" [ r 1, w 1, r 1, w 1, r 2, w 2, r 3, w 3, r 3 ]
     , DayRun "day 3" [ r 1, w 1, r 2, w 2, r 2, w 2, r 3, w 3, r 3 ]

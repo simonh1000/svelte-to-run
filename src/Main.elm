@@ -268,7 +268,7 @@ viewReady m =
     [ h1 [] [ text "Ready" ]
     , m.activity
         |> viewSchemaFlex ""
-    , div [] [ mkButton Start "Start" ]
+    , div [] [ mkButton Start "start-button" "Start" ]
     , div [] [ text <| Debug.toString m.position ]
     ]
 
@@ -300,8 +300,8 @@ viewActive zone m =
         ]
     , viewSchemeZipper m.activity
     , div [ class "mt-6" ]
-        [ mkButton Cancel "Cancel"
-        , mkButton Pause "Pause"
+        [ mkButton Cancel "unused" "Cancel"
+        , mkButton Pause "unused" "Pause"
         ]
     , div [ class "mt-6 text-xs" ] [ text <| Debug.toString m.wayPoints ]
     ]
@@ -311,7 +311,7 @@ viewFinished : Zone -> FinishedModel -> List (Html msg)
 viewFinished zone m =
     [ h1 [] [ text "Finished" ]
     , viewTime zone m.begin
-    , text <| Debug.toString m.wayPoints
+    , div [ class "mt-6 text-xs" ] [ text <| Debug.toString m.wayPoints ]
     ]
 
 
@@ -390,10 +390,10 @@ mkClass baseCls cls activity =
                 baseCls ++ cls ++ " bg-red-600"
 
 
-mkButton : msg -> String -> Html msg
-mkButton msg txt =
+mkButton : msg -> String -> String -> Html msg
+mkButton msg id_ txt =
     button
-        [ id "start-button"
+        [ id id_
         , class "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
         , onClick msg
         ]

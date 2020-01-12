@@ -32,7 +32,7 @@ app.ports.toJs.subscribe(data => {
             synthesise(data.payload);
             break;
         case "finish":
-            noSleep.disable();
+            enableSleep();
             break;
         default:
             console.error(data.tag);
@@ -80,8 +80,10 @@ function beepX(x) {
 // a hack to enable sounds on iOS
 function createClickEvent() {
     setTimeout(() => {
+        console.log("Attaching special listener");
         const start = document.querySelector("#start-button");
         start.addEventListener("click", () => {
+            console.log("Using special listener");
             var tmp = new Audio();
             tmp.src = beeep;
             tmp.play().catch(err => console.error("init", err));
@@ -109,4 +111,9 @@ function startWayPointCollection(cb) {
             });
         }
     );
+}
+
+const enableSleep = function() {
+    console.log("enabling sleep");
+    noSleep.disable();
 }
