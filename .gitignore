@@ -30,5 +30,7 @@ ignore
 dist
 tests/VerifyExamples
 package-lock.json
-sound-creator
 ignore
+
+sound-creator
+tilt
