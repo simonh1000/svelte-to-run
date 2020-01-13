@@ -50,7 +50,7 @@ export const beep = function() {
 };
 
 // a hack to enable sounds on iOS
-export const createClickEvent = function() {
+export const enableSound = function() {
     setTimeout(() => {
         console.log("Attaching special listener");
         const start = document.querySelector("#start-button");
@@ -63,13 +63,19 @@ export const createClickEvent = function() {
     }, 100);
 };
 
-export const startWayPointCollection = function(cb) {
+export const startGeolocation = function(cb) {
     navigator.geolocation.watchPosition(
         pos => {
-            // console.log(pos);
+            console.log(pos);
             cb({
                 tag: "waypoint",
-                payload: pos
+                payload: {
+                    timestamp: pos.timestamp,
+                    coords: {
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude
+                    }
+                }
             });
         },
         err => {
