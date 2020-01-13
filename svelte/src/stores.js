@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
 
 import { startGeolocation } from "../../elm/src/lib.js";
+import { dayRun2Run } from "./helpers.js";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
@@ -16,7 +17,7 @@ export const choosing2Ready = function(evt) {
     console.log("choosing2Ready", evt);
     state.set({
         state: READY,
-        run: evt.detail.dayRun,
+        run: dayRun2Run(evt.detail.dayRun),
         location: {}
     });
     startGeolocation(geoCb);
