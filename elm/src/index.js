@@ -5,8 +5,8 @@ require("./styles.css");
 import {
     runs,
     say,
-    startWayPointCollection,
-    createClickEvent,
+    startGeolocation,
+    enableSound,
     requestWakeLock,
     releaseWakeLock,
     synthesise
@@ -30,8 +30,8 @@ app.ports.toJs.subscribe(data => {
             say(data.payload);
             break;
         case "ready":
-            startWayPointCollection(app.ports.fromJs.send);
-            createClickEvent();
+            startGeolocation(app.ports.fromJs.send);
+            enableSound();
             requestWakeLock(app.ports.fromJs.send);
             break;
         case "speak":
