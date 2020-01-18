@@ -6,7 +6,6 @@
         let col = type == "run" ? "red" : "white";
         return idx == selected ? col + " selected" : col;
     };
-    // console.log(document.querySelector(".activity"));
 </script>
 
 <style>

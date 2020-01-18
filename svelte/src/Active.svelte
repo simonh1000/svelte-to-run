@@ -1,5 +1,6 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
+    import { requestWakeLock, say } from "../../elm/src/lib.js";
     import Activity from "./Components/Activity.svelte";
 
     export let state;
@@ -17,9 +18,23 @@
                 dispatch("finished");
             } else {
                 section++;
+                mkAnnouncement();
             }
         }
     }, 1000);
+
+    const mkAnnouncement = () => {
+        let item = state.list[section];
+        let txt = `${item.type} for ${item.time} ${
+            item.time == 1 ? "minute" : "minutes"
+        }`;
+        say({ txt });
+    };
+
+    onMount(() => {
+        mkAnnouncement();
+        requestWakeLock();
+    });
 </script>
 
 <style>
@@ -35,8 +50,10 @@
 </div>
 
 <Activity {section} list={state.list} />
-{section}
-<button disabled>Pause</button>
-<button disabled>Stop</button>
 
-<div>{JSON.stringify(state.waypoints)}</div>
+<div>
+    <button disabled>Pause</button>
+    <button disabled>Stop</button>
+</div>
+
+<div>{state.waypoints.length + ' waypoints collected'}</div>
