@@ -19,21 +19,22 @@ export var state = writable({
 //   location
 // }
 export const choosing2Ready = function(evt) {
-    let base = dayRun2Run(evt.detail.dayRun);
-    let readyModel = Object.assign(base, {
+    let readyModel = Object.assign(evt.detail.dayRun, {
         state: READY,
         location: {}
     });
-    console.log("ready model", readyModel);
+    console.log("choosing2Ready", readyModel);
     state.set(readyModel);
     startGeolocation(geoCb);
 };
 
 // Ready --> Active
-export const ready2Active = function() {
+export const ready2Active = function(evt) {
+    console.log(evt.detail);
     state.update(s => {
         let tmp = {
             ...s,
+            list: dayRun2Run(s.list, evt.detail.minute),
             state: ACTIVE,
             start: new Date(),
             waypoints: [s.location]

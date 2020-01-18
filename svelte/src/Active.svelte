@@ -35,7 +35,7 @@
 </div>
 
 <Activity {section} list={state.list} />
-
+{section}
 <button disabled>Pause</button>
 <button disabled>Stop</button>
 
