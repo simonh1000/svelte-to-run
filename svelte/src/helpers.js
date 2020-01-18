@@ -40,12 +40,3 @@ export function dayRun2Run(list, min) {
     );
     return convertedData.accItems;
 }
-
-// dayRun2Run({
-//     title: "simon",
-//     list: [
-//         { type: "run", time: 1 },
-//         { type: "walk", time: 1 },
-//         { type: "run", time: 1 }
-//     ]
-// });
