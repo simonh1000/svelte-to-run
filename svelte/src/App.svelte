@@ -10,12 +10,9 @@
         FINISHED
     } from "./stores";
 
-    import Choosing from "./Choosing/Choosing.svelte";
-    import Ready from "./Ready/Ready.svelte";
+    import Ready from "./Ready.svelte";
     import Active from "./Active.svelte";
     import Finished from "./Finished.svelte";
-
-    export let dayRuns;
 </script>
 
 <style>
@@ -43,9 +40,7 @@
 <main>
     <h1>My Running app</h1>
 
-    {#if $state.state == CHOOSING}
-        <Choosing {dayRuns} on:selectRun={choosing2Ready} />
-    {/if}
+    {#if $state.state == CHOOSING}No longer used{/if}
 
     {#if $state.state == READY}
         <Ready state={$state} on:start={ready2Active} />

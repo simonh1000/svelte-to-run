@@ -1,19 +1,19 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
 
-    import { enableSound } from "../lib.js";
-    import Activity from "../Components/Activity.svelte";
+    import { enableSound } from "./lib.js";
+    import Activity from "./Components/Activity.svelte";
 
     export let state;
     let warmUp = false;
 
     const dispatch = createEventDispatcher();
-    const debug = () => mkDispatch(10);
-    const start = () => mkDispatch(60);
     const mkDispatch = minute => {
         dispatch("start", { minute, warmUp });
     };
 
+    // the sound will not work on some systems unless it is triggered by a user action
+    // attach a listener (this could be done in svelte?)
     onMount(() => {
         enableSound();
     });
@@ -44,9 +44,11 @@
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />
         <label for="warm-up">Add 5 mins warm up</label>
     </div>
-    <button id="start-button" class="button" on:click={start}>Start</button>
+    <button id="start-button" class="button" on:click={() => mkDispatch(60)}>
+        Start
+    </button>
 </div>
 
-<button id="debug-button" on:click={debug}>Debug mode</button>
+<button id="debug-button" on:click={() => mkDispatch(10)}>Debug mode</button>
 
 <div>{JSON.stringify(state.location)}</div>
