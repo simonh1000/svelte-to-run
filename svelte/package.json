@@ -5,15 +5,22 @@
         "@rollup/plugin-commonjs": "^11.0.0",
         "@rollup/plugin-node-resolve": "^6.0.0",
         "cross-env": "^6.0.3",
+        "node-sass": "^4.13.1",
         "nollup": "^0.10.0",
         "rollup": "^1.26.3",
         "rollup-plugin-hot": "^0.0.8",
         "rollup-plugin-livereload": "^1.0.0",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-sass": "^1.2.2",
+        "rollup-plugin-svelte": "^5.1.1",
         "rollup-plugin-svelte-hot": "^0.1.1",
         "rollup-plugin-terser": "^5.1.2",
-        "svelte": "~3.16.7"
+        "svelte": "~3.16.7",
+        "svelte-material-ui": "^1.0.0-beta.19",
+        "svelte-preprocess": "^3.3.0"
     },
     "dependencies": {
+        "postcss-node-sass": "^2.1.8",
         "sirv-cli": "^0.4.4"
     },
     "scripts": {

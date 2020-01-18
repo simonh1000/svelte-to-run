@@ -9,6 +9,12 @@
         ACTIVE,
         FINISHED
     } from "./stores";
+    import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
+    import IconButton from "@smui/icon-button";
+    import Button, { Label, Icon } from "@smui/button";
+    import Fab from "@smui/fab";
+
+    let secondaryColor = false;
 
     import Ready from "./Ready.svelte";
     import Active from "./Active.svelte";
@@ -36,6 +42,24 @@
         }
     }
 </style>
+
+<div class="top-app-bar-container">
+    <TopAppBar
+        variant="static"
+        color={secondaryColor ? 'secondary' : 'primary'}>
+        <Row>
+            <Section>
+                <IconButton class="material-icons">menu</IconButton>
+                <Title>Static</Title>
+            </Section>
+        </Row>
+    </TopAppBar>
+</div>
+
+<Fab on:click={() => alert('Clicked!')} extended>
+    <Icon class="material-icons" style="margin-right: 12px;">favorite</Icon>
+    <Label>Extended FAB</Label>
+</Fab>
 
 <main>
     <h1>My Running app</h1>
