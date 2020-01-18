@@ -1,7 +1,7 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
 
-    import { enableSound } from "../../../elm/src/lib.js";
+    import { enableSound } from "../lib.js";
     import Activity from "../Components/Activity.svelte";
 
     export let state;

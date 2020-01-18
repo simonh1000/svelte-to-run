@@ -1,8 +1,13 @@
 import { writable } from "svelte/store";
 
-import { startGeolocation, runs } from "../../elm/src/lib.js";
+import {
+    startGeolocation,
+    runs,
+    releaseWakeLock,
+    getRunsData,
+    addLatestRun
+} from "./lib.js";
 import { expand, dayRun2Run, getNextRun } from "./helpers.js";
-import { getRunsData, addLatestRun } from "./effects";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
@@ -55,6 +60,7 @@ export const ready2Active = function(evt) {
 
 // Active --> Finished
 export const active2Finished = function() {
+    releaseWakeLock();
     state.update(s => {
         let runs = addLatestRun({ title: s.title, waypoints: s.waypoints });
         let tmp = {
