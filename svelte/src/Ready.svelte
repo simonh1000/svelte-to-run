@@ -1,11 +1,13 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
+    import Button from "@smui/button";
 
     import { enableSound } from "./lib.js";
     import Activity from "./Components/Activity.svelte";
 
     export let state;
     let warmUp = false;
+    let active = true;
 
     const dispatch = createEventDispatcher();
     const mkDispatch = minute => {
@@ -44,11 +46,11 @@
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />
         <label for="warm-up">Add 5 mins warm up</label>
     </div>
-    <button id="start-button" class="button" on:click={() => mkDispatch(60)}>
+    <Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
         Start
-    </button>
+    </Button>
 </div>
 
-<button id="debug-button" on:click={() => mkDispatch(10)}>Debug mode</button>
+<Button id="debug-button" on:click={() => mkDispatch(10)}>Debug mode</Button>
 
 <div>{JSON.stringify(state.location)}</div>

@@ -9,12 +9,12 @@
         ACTIVE,
         FINISHED
     } from "./stores";
-    import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
-    import IconButton from "@smui/icon-button";
-    import Button, { Label, Icon } from "@smui/button";
-    import Fab from "@smui/fab";
+    import Tab, { Icon, Label } from "@smui/tab";
+    import TabBar from "@smui/tab-bar";
+    import Button from "@smui/button";
 
     let secondaryColor = false;
+    let active = "Home";
 
     import Ready from "./Ready.svelte";
     import Active from "./Active.svelte";
@@ -41,25 +41,32 @@
             max-width: none;
         }
     }
+    section > div {
+        margin-bottom: 40px;
+    }
 </style>
 
 <div class="top-app-bar-container">
-    <TopAppBar
-        variant="static"
-        color={secondaryColor ? 'secondary' : 'primary'}>
-        <Row>
-            <Section>
-                <IconButton class="material-icons">menu</IconButton>
-                <Title>Static</Title>
-            </Section>
-        </Row>
-    </TopAppBar>
-</div>
+    <div>
+        <TabBar tabs={['Home', 'Merchandise', 'About Us']} let:tab bind:active>
+            <!-- Notice that the `tab` property is required! -->
+            <Tab {tab}>
+                <Label>{tab}</Label>
+            </Tab>
+        </TabBar>
 
-<Fab on:click={() => alert('Clicked!')} extended>
-    <Icon class="material-icons" style="margin-right: 12px;">favorite</Icon>
-    <Label>Extended FAB</Label>
-</Fab>
+        <div style="margin-top: 15px;">
+            Programmatically select:
+            {#each ['Home', 'Merchandise', 'About Us'] as tab}
+                <Button on:click={() => (active = tab)}>
+                    <Label>{tab}</Label>
+                </Button>
+            {/each}
+        </div>
+
+        <pre class="status">Selected: {active}</pre>
+    </div>
+</div>
 
 <main>
     <h1>My Running app</h1>
