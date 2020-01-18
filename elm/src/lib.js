@@ -86,7 +86,7 @@ export const enableSound = function() {
 };
 
 export const startGeolocation = function(cb) {
-    navigator.geolocation.watchPosition(
+    let watchId = navigator.geolocation.watchPosition(
         pos => {
             console.log(pos);
             cb({
@@ -96,7 +96,8 @@ export const startGeolocation = function(cb) {
                     coords: {
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude
-                    }
+                    },
+                    watchId
                 }
             });
         },

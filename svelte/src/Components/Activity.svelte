@@ -1,5 +1,11 @@
 <script>
     export let list;
+    export let section;
+
+    let mkClass = function(type, idx) {
+        let col = type == "run" ? "red" : "white";
+        return idx == section ? col + " selected" : col;
+    };
     // console.log(document.querySelector(".activity"));
 </script>
 
@@ -26,10 +32,8 @@
 </style>
 
 <div class="schema-items">
-    {#each list as item}
-        <div
-            class={item.type == 'run' ? 'red' : 'white'}
-            style="flex-grow: {item.time}">
+    {#each list as item, idx}
+        <div class={mkClass(item.type, idx)} style="flex-grow: {item.time}">
             {item.time}
         </div>
     {/each}

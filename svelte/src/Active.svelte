@@ -11,12 +11,12 @@
     let interval = setInterval(() => {
         time++;
         if (time > state.list[section].accTime) {
-            section++;
-
-            if (section >= state.list.length) {
+            if (section + 1 == state.list.length) {
                 console.log("FINISHED");
                 clearInterval(interval);
                 dispatch("finished");
+            } else {
+                section++;
             }
         }
     }, 1000);
@@ -29,10 +29,12 @@
 </style>
 
 <h2>Active</h2>
-{section} {JSON.stringify(state.list[section])}
-<Activity list={state.list} />
 
-<div class="xlarge">{time}</div>
+<div class="xlarge">
+    {state.list[section].accTime - time} {state.list[section].type}
+</div>
+
+<Activity {section} list={state.list} />
 
 <button disabled>Pause</button>
 <button disabled>Stop</button>
