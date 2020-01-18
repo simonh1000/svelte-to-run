@@ -32,17 +32,20 @@ export const choosing2Ready = function(evt) {
 
 // Ready --> Active
 export const ready2Active = function(evt) {
-    console.log(evt.detail);
     state.update(s => {
-        let tmp = {
+        const list = evt.detail.warmUp
+            ? [{ type: "walk", time: 5 }, ...s.list]
+            : s.list;
+
+        let newState = {
             ...s,
-            list: dayRun2Run(s.list, evt.detail.minute),
+            list: dayRun2Run(list, evt.detail.minute),
             state: ACTIVE,
             start: new Date(),
             waypoints: [s.location]
         };
-        console.log("ready2Active", tmp);
-        return tmp;
+        console.log("ready2Active", newState);
+        return newState;
     });
 };
 
