@@ -14,6 +14,8 @@
 
 <Activity list={state.list} />
 
+<button>Add 5 mins walking</button>
+<button>Debug mode</button>
 <button id="start-button" on:click={start}>Start</button>
 
 <div>{JSON.stringify(state.location)}</div>

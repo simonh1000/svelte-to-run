@@ -3,15 +3,17 @@
         state,
         choosing2Ready,
         ready2Active,
+        active2Finished,
         CHOOSING,
         READY,
-        ACTIVE
+        ACTIVE,
+        FINISHED
     } from "./stores";
-    import { startGeolocation } from "../../elm/src/lib.js";
 
     import Choosing from "./Choosing/Choosing.svelte";
     import Ready from "./Ready/Ready.svelte";
     import Active from "./Active.svelte";
+    import Finished from "./Finished.svelte";
 
     export let dayRuns;
 </script>
@@ -50,6 +52,10 @@
     {/if}
 
     {#if $state.state == ACTIVE}
-        <Active state={$state} />
+        <Active state={$state} on:finished={active2Finished} />
+    {/if}
+
+    {#if $state.state == FINISHED}
+        <Finished state={$state} />
     {/if}
 </main>

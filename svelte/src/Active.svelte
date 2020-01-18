@@ -8,10 +8,16 @@
 
     const dispatch = createEventDispatcher();
 
-    setInterval(() => {
+    let interval = setInterval(() => {
         time++;
         if (time > state.list[section].accTime) {
             section++;
+
+            if (section >= state.list.length) {
+                console.log("FINISHED");
+                clearInterval(interval);
+                dispatch("finished");
+            }
         }
     }, 1000);
 </script>
@@ -23,7 +29,7 @@
 </style>
 
 <h2>Active</h2>
-{section}
+{section} {JSON.stringify(state.list[section])}
 <Activity list={state.list} />
 
 <div class="xlarge">{time}</div>

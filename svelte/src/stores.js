@@ -30,15 +30,29 @@ export const choosing2Ready = function(evt) {
 };
 
 // Ready --> Active
-export const ready2Active = function(r) {
+export const ready2Active = function() {
     state.update(s => {
-        console.log("ready2Active", s);
-        return {
+        let tmp = {
             ...s,
             state: ACTIVE,
             start: new Date(),
             waypoints: [s.location]
         };
+        console.log("ready2Active", tmp);
+        return tmp;
+    });
+};
+
+// Active --> Finished
+export const active2Finished = function() {
+    state.update(s => {
+        let tmp = {
+            ...s,
+            state: FINISHED,
+            ended: new Date()
+        };
+        console.log("active2Finished", tmp);
+        return tmp;
     });
 };
 

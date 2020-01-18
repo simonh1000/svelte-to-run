@@ -15,7 +15,7 @@ export function dayRun2Run(dayRun) {
             let tmp = accTime + item.time * min;
             return {
                 accTime: tmp,
-                accItems: [...accItems, { ...item, accTime: accTime }]
+                accItems: [...accItems, { ...item, accTime: tmp }]
             };
         },
         { accTime: 0, accItems: [] }
