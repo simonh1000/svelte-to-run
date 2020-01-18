@@ -28,7 +28,7 @@
         let txt = `${item.type} for ${item.time} ${
             item.time == 1 ? "minute" : "minutes"
         }`;
-        say({ txt });
+        say({ ...item, txt });
     };
 
     onMount(() => {

@@ -35,7 +35,7 @@ const beeep =
 
 export const say = function(payload) {
     // console.log("say", payload);
-    beep()
+    beep(1)
         .then(() => {
             // speech synthesis only seems to work when phone is on and browser is in foreground
             // NOTE: the app does not need to be the chosen tab though
@@ -66,10 +66,13 @@ export const beepX = function(x) {
     }
 };
 
-export const beep = function() {
-    let tmp = new Audio();
-    tmp.src = beeep;
-    return tmp.play();
+export const beep = function(x) {
+    return new Promise(resolve => {
+        let tmp = new Audio();
+        tmp.src = beeep;
+        tmp.play();
+        tmp.addEventListener("ended", () => resolve(x), false);
+    });
 };
 
 // a hack to enable sounds on iOS

@@ -6,6 +6,23 @@ export function expand(run) {
     return { title: run[0], list: run[1].reduce(go, []) };
 }
 
+export function getNextRun(history, dayRuns) {
+    console.log(history, dayRuns);
+    if (history.length) {
+        let lastRun = history[0].title;
+        let nextRun = dayRuns.reduce((acc, r) => {
+            if (acc.prev == lastRun) {
+                return { prev: r.title, run: r };
+            } else {
+                return { ...acc, prev: r.title };
+            }
+        });
+        return nextRun.run || dayRuns[0];
+    } else {
+        return dayRuns[0];
+    }
+}
+
 // [{type,time}] -> [{type, time, accTime}]
 export function dayRun2Run(list, min) {
     let convertedData = list.reduce(

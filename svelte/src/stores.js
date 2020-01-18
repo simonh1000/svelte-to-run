@@ -1,16 +1,15 @@
 import { writable } from "svelte/store";
 
-import { startGeolocation } from "../../elm/src/lib.js";
-import { dayRun2Run } from "./helpers.js";
+import { startGeolocation, runs } from "../../elm/src/lib.js";
+import { expand, dayRun2Run, getNextRun } from "./helpers.js";
+import { getRunsData } from "./effects";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
 export const ACTIVE = "ACTIVE";
 export const FINISHED = "FINISHED";
 
-export var state = writable({
-    state: CHOOSING
-});
+export var state = writable({});
 
 // Choosing -> Ready
 // { title,
@@ -18,11 +17,14 @@ export var state = writable({
 //   state
 //   location
 // }
+const readyModel = {
+    title: "",
+    list: [],
+    state: READY,
+    location: {}
+};
 export const choosing2Ready = function(evt) {
-    let readyModel = Object.assign(evt.detail.dayRun, {
-        state: READY,
-        location: {}
-    });
+    let readyModel = { ...readyModel, ...evt.detail.dayRun };
     console.log("choosing2Ready", readyModel);
     state.set(readyModel);
     startGeolocation(geoCb);
@@ -72,3 +74,19 @@ const geoCb = res => {
         return s;
     });
 };
+
+// Start
+
+let dayRuns = runs.map(expand);
+let history = getRunsData();
+const nextRun = getNextRun(history, dayRuns);
+
+const initialModel = {
+    ...readyModel,
+    title: nextRun.title,
+    list: dayRun2Run(nextRun.list)
+};
+state.set(initialModel);
+// const initialModel = {
+// state: CHOOSING
+// };
