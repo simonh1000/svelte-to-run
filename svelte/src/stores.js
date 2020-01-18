@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 import { startGeolocation, runs } from "../../elm/src/lib.js";
 import { expand, dayRun2Run, getNextRun } from "./helpers.js";
-import { getRunsData } from "./effects";
+import { getRunsData, addLatestRun } from "./effects";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
@@ -23,9 +23,13 @@ const readyModel = {
     state: READY,
     location: {}
 };
+// convertChoosingModel()
 export const choosing2Ready = function(evt) {
     let readyModel = { ...readyModel, ...evt.detail.dayRun };
-    console.log("choosing2Ready", readyModel);
+    switch2Ready(readyModel);
+};
+export const switch2Ready = function(readyModel) {
+    console.log("Ready", readyModel);
     state.set(readyModel);
     startGeolocation(geoCb);
 };
@@ -52,9 +56,10 @@ export const ready2Active = function(evt) {
 // Active --> Finished
 export const active2Finished = function() {
     state.update(s => {
+        let runs = addLatestRun({ title: s.title, waypoints: s.waypoints });
         let tmp = {
-            ...s,
             state: FINISHED,
+            runs,
             ended: new Date()
         };
         console.log("active2Finished", tmp);
@@ -89,7 +94,7 @@ const initialModel = {
     title: nextRun.title,
     list: dayRun2Run(nextRun.list)
 };
-state.set(initialModel);
 // const initialModel = {
 // state: CHOOSING
 // };
+switch2Ready(initialModel);

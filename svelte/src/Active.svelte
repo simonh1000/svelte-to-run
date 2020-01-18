@@ -56,4 +56,5 @@
     <button disabled>Stop</button>
 </div>
 
+<div>{JSON.stringify(state.waypoints)}</div>
 <div>{state.waypoints.length + ' waypoints collected'}</div>

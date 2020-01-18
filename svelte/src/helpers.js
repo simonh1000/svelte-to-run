@@ -10,13 +10,16 @@ export function getNextRun(history, dayRuns) {
     console.log(history, dayRuns);
     if (history.length) {
         let lastRun = history[0].title;
-        let nextRun = dayRuns.reduce((acc, r) => {
-            if (acc.prev == lastRun) {
-                return { prev: r.title, run: r };
-            } else {
-                return { ...acc, prev: r.title };
-            }
-        });
+        let nextRun = dayRuns.reduce(
+            (acc, r) => {
+                if (acc.prev == lastRun) {
+                    return { run: r, prev: r.title };
+                } else {
+                    return { ...acc, prev: r.title };
+                }
+            },
+            { prev: null }
+        );
         return nextRun.run || dayRuns[0];
     } else {
         return dayRuns[0];

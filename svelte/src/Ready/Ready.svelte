@@ -20,11 +20,18 @@
 </script>
 
 <style>
+    .buttons {
+        display: flex;
+        align-items: stretch;
+    }
     .button {
         display: flex;
         border: 1px solid grey;
         background-color: cornflowerblue;
         padding: 5px;
+    }
+    .button + .button {
+        margin-left: 5px;
     }
 </style>
 
@@ -32,12 +39,14 @@
 
 <Activity section="-1" list={state.list} />
 
-<div class="button">
-    <input type="checkbox" id="warm-up" bind:checked={warmUp} />
-    <label for="warm-up">Add 5 mins warm up</label>
+<div class="buttons">
+    <div class="button">
+        <input type="checkbox" id="warm-up" bind:checked={warmUp} />
+        <label for="warm-up">Add 5 mins warm up</label>
+    </div>
+    <button id="start-button" class="button" on:click={start}>Start</button>
 </div>
 
 <button id="debug-button" on:click={debug}>Debug mode</button>
-<button id="start-button" on:click={start}>Start</button>
 
 <div>{JSON.stringify(state.location)}</div>

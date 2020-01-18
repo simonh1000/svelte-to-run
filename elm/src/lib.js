@@ -94,9 +94,9 @@ export const enableSound = function() {
 };
 
 export const startGeolocation = function(cb) {
+    console.log("Starting geolocation");
     let watchId = navigator.geolocation.watchPosition(
         pos => {
-            console.log(pos);
             cb({
                 tag: "waypoint",
                 payload: {
