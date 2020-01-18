@@ -10,9 +10,9 @@
     }
 </script>
 
-<h2>Ready to start</h2>
+<h2>Ready to start: {state.title}</h2>
 
-<Activity run={state.run} />
+<Activity list={state.list} />
 
 <button id="start-button" on:click={start}>Start</button>
 

@@ -1,5 +1,5 @@
 <script>
-    export let run;
+    export let list;
     // console.log(document.querySelector(".activity"));
 </script>
 
@@ -25,17 +25,12 @@
     }
 </style>
 
-<div class="activity">
-    <h3>{run.title}</h3>
-
-    <div class="schema-items">
-        {#each run.list as item}
-            <div
-                class={item.type == 'run' ? 'red' : 'white'}
-                style="flex-grow: {item.time}">
-                {item.time}
-            </div>
-        {/each}
-    </div>
-
+<div class="schema-items">
+    {#each list as item}
+        <div
+            class={item.type == 'run' ? 'red' : 'white'}
+            style="flex-grow: {item.time}">
+            {item.time}
+        </div>
+    {/each}
 </div>

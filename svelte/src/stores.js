@@ -13,13 +13,19 @@ export var state = writable({
 });
 
 // Choosing -> Ready
+// { title,
+//   list:[{type, time, accTime}]
+//   state
+//   location
+// }
 export const choosing2Ready = function(evt) {
-    console.log("choosing2Ready", evt);
-    state.set({
+    let base = dayRun2Run(evt.detail.dayRun);
+    let readyModel = Object.assign(base, {
         state: READY,
-        run: dayRun2Run(evt.detail.dayRun),
         location: {}
     });
+    console.log("ready model", readyModel);
+    state.set(readyModel);
     startGeolocation(geoCb);
 };
 

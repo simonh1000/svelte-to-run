@@ -6,19 +6,21 @@ export function expand(run) {
     return { title: run[0], list: run[1].reduce(go, []) };
 }
 
-// {title, [{type,time}]} -> {title, [{type, accTime}]}
+// {title, list:[{type,time}]} -> {title, list:[{type, time, accTime}]}
+let min = 10; // should be 60;
+
 export function dayRun2Run(dayRun) {
     let convertedData = dayRun.list.reduce(
         ({ accTime, accItems }, item) => {
-            let tmp = accTime + item.time * 60;
+            let tmp = accTime + item.time * min;
             return {
                 accTime: tmp,
-                accItems: [...accItems, { type: item.type, accTime: accTime }]
+                accItems: [...accItems, { ...item, accTime: accTime }]
             };
         },
         { accTime: 0, accItems: [] }
     );
-    return { title: dayRun.title, accTime: convertedData.accItems };
+    return { title: dayRun.title, list: convertedData.accItems };
 }
 
 // dayRun2Run({
