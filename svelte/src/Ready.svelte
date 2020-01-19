@@ -30,11 +30,13 @@
     }
 </style>
 
-<div class="summary">
+<div class="flex-row flex-center">
     <h2>{state.title}</h2>
-    {state.list
-        .filter(item => item.type == 'run')
-        .reduce((acc, item) => acc + item.time, 0)} minutes running
+    <div>
+        {state.list
+            .filter(item => item.type == 'run')
+            .reduce((acc, item) => acc + item.time, 0)} minutes running
+    </div>
 </div>
 <Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
     Start workout

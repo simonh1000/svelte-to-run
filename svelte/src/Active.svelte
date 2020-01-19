@@ -41,16 +41,6 @@
     .banner {
         position: relative;
     }
-    .flex-row {
-        display: flex;
-        flex-direction: row;
-    }
-    .flex-center {
-        align-items: center;
-    }
-    .justify-center {
-        justify-content: center;
-    }
     .type {
         position: absolute;
         left: 0;
