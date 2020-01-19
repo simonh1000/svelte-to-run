@@ -1,37 +1,23 @@
 {
-    "name": "svelte-app",
-    "version": "1.0.0",
-    "devDependencies": {
-        "@rollup/plugin-commonjs": "^11.0.0",
-        "@rollup/plugin-node-resolve": "^6.0.0",
-        "cross-env": "^6.0.3",
-        "node-sass": "^4.13.1",
-        "nollup": "^0.10.0",
-        "rollup": "^1.26.3",
-        "rollup-plugin-hot": "^0.0.8",
-        "rollup-plugin-livereload": "^1.0.0",
-        "rollup-plugin-postcss": "^2.0.3",
-        "rollup-plugin-sass": "^1.2.2",
-        "rollup-plugin-svelte": "^5.1.1",
-        "rollup-plugin-svelte-hot": "^0.1.1",
-        "rollup-plugin-terser": "^5.1.2",
-        "svelte": "~3.16.7",
-        "svelte-material-ui": "^1.0.0-beta.19",
-        "svelte-preprocess": "^3.3.0"
-    },
-    "dependencies": {
-        "postcss-node-sass": "^2.1.8",
-        "sirv-cli": "^0.4.4"
-    },
-    "scripts": {
-        "build": "rollup -c",
-        "dev:rollup": "rollup -c -w",
-        "dev:livereload": "cross-env LIVERELOAD=1 rollup -c -w",
-        "dev:nollup": "cross-env NOLLUP=1 nollup -c --hot --port 5000 --content-base ./public",
-        "dev": "npm run dev:rollup",
-        "start": "sirv public"
-    },
-    "prettier": {
-        "tabWidth": 4
-    }
+  "name": "svelte-app",
+  "version": "1.0.0",
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "css-loader": "^2.1.1",
+    "mini-css-extract-plugin": "^0.6.0",
+    "node-sass": "^4.13.1",
+    "sass-loader": "^8.0.2",
+    "serve": "^11.0.0",
+    "style-loader": "^0.23.1",
+    "svelte": "^3.0.0",
+    "svelte-loader": "2.13.3",
+    "svelte-material-ui": "^1.0.0-beta.19",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.3.1"
+  },
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --content-base public"
+  }
 }
