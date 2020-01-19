@@ -28,11 +28,21 @@ const readyModel = {
     state: READY,
     location: {}
 };
-// convertChoosingModel()
-export const choosing2Ready = function(evt) {
-    let readyModel = { ...readyModel, ...evt.detail.dayRun };
-    switch2Ready(readyModel);
+
+// PURE
+export const mkReadyModel = history => {
+    let dayRuns = runs.map(expand);
+    const nextRun = getNextRun(history, dayRuns);
+
+    const initialModel = {
+        ...readyModel,
+        title: nextRun.title,
+        list: dayRun2Run(nextRun.list)
+    };
+    return initialModel;
 };
+
+// IMPURE
 export const switch2Ready = function(readyModel) {
     console.log("Ready", readyModel);
     state.set(readyModel);
@@ -95,17 +105,3 @@ const geoCb = res => {
 };
 
 // Start
-
-let dayRuns = runs.map(expand);
-let history = getRunsData();
-const nextRun = getNextRun(history, dayRuns);
-
-const initialModel = {
-    ...readyModel,
-    title: nextRun.title,
-    list: dayRun2Run(nextRun.list)
-};
-// const initialModel = {
-// state: CHOOSING
-// };
-switch2Ready(initialModel);

@@ -18,7 +18,7 @@
         padding-bottom: 30px;
         display: flex;
         flex-direction: column;
-        /* height: 60px; */
+        width: 150px;
     }
     .item {
         margin: 5px 0;
