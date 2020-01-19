@@ -16,9 +16,9 @@ export const FINISHED = "FINISHED";
 
 export var state = writable({});
 
-// Choosing -> Ready
+// Ready
 // { title,
-//   list:[{type, time, accTime}]
+//   list:[{type, time}]
 //   state
 //   location
 // }
@@ -40,6 +40,11 @@ export const switch2Ready = function(readyModel) {
 };
 
 // Ready --> Active
+// { title,
+//   list:[{type, time, accTime}]
+//   state
+//   location
+// }
 export const ready2Active = function(evt) {
     state.update(s => {
         const list = evt.detail.warmUp

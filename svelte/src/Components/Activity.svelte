@@ -9,19 +9,19 @@
 </script>
 
 <style>
-    .activity {
+    .schema-container {
         display: flex;
-        flex-direction: column;
+        justify-content: center;
     }
     .schema-items {
+        padding-top: 30px;
+        padding-bottom: 30px;
         display: flex;
         flex-direction: column;
         /* height: 60px; */
     }
-    .schema-items div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .item {
+        margin: 5px 0;
     }
     .selected {
         font-weight: bold;
@@ -34,10 +34,12 @@
     }
 </style>
 
-<div class="schema-items">
-    {#each list as item, idx}
-        <div class={mkClass(section, item.type, idx)}>
-            {item.type} for {item.time} minute(s)
-        </div>
-    {/each}
+<div class="schema-container">
+    <div class="schema-items">
+        {#each list as item, idx}
+            <div class={'item ' + mkClass(section, item.type, idx)}>
+                {item.type} for {item.time} minute(s)
+            </div>
+        {/each}
+    </div>
 </div>

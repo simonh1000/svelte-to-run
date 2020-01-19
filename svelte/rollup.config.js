@@ -6,6 +6,7 @@ import hmr, { autoCreate } from "rollup-plugin-hot";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import postcss from "rollup-plugin-postcss";
+import svelte_preprocess_postcss from "svelte-preprocess-postcss";
 
 const spa = false;
 const nollup = !!process.env.NOLLUP;
@@ -31,6 +32,9 @@ module.exports = {
             dev: !production,
             // we'll extract any component CSS out into
             // a separate file — better for performance
+            // preprocess: {
+            //     style: svelte_preprocess_postcss()
+            // },
             ...(!hot && {
                 css: css => {
                     css.write("public/build/bundle.css");
@@ -88,18 +92,18 @@ module.exports = {
                 // Set false to prevent recreating a file that has just been
                 // deleted (Rollup watch will crash when you do that though).
                 recreate: true
-            })
+            }),
 
         // this conflicts with Material Design
-        // hmr({
-        //     public: "public",
-        //     inMemory: true,
-        //     // This is needed, otherwise Terser (in npm run build) chokes
-        //     // on import.meta. With this option, the plugin will replace
-        //     // import.meta.hot in your code with module.hot, and will do
-        //     // nothing else.
-        //     compatModuleHot: !hot
-        // })
+        hmr({
+            public: "public",
+            inMemory: true,
+            // This is needed, otherwise Terser (in npm run build) chokes
+            // on import.meta. With this option, the plugin will replace
+            // import.meta.hot in your code with module.hot, and will do
+            // nothing else.
+            compatModuleHot: !hot
+        })
     ],
     watch: {
         clearScreen: false

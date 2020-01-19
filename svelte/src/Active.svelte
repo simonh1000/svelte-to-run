@@ -38,23 +38,42 @@
 </script>
 
 <style>
-    .xlarge {
-        font-size: 48px;
+    .banner {
+        position: relative;
+    }
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+    }
+    .flex-center {
+        align-items: center;
+    }
+    .justify-center {
+        justify-content: center;
+    }
+    .type {
+        position: absolute;
+        left: 0;
+        font-size: 32px;
+    }
+    .counter {
+        font-size: 78px;
     }
 </style>
 
 <h2>Active</h2>
 
-<div class="xlarge">
-    {state.list[section].accTime - time} {state.list[section].type}
+<div class="banner flex-row flex-center justify-center">
+    <div class="type">{state.list[section].type}</div>
+    <div class="counter">{state.list[section].accTime - time}</div>
 </div>
 
 <Activity {section} list={state.list} />
 
-<div>
+<!-- <div>
     <button disabled>Pause</button>
     <button disabled>Stop</button>
-</div>
+</div> -->
 
-<div>{JSON.stringify(state.waypoints)}</div>
 <div>{state.waypoints.length + ' waypoints collected'}</div>
+<!-- <small>{JSON.stringify(state.waypoints)}</!-->

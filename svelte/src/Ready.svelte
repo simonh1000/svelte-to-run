@@ -25,22 +25,22 @@
     h2 {
         color: red;
     }
-    .activity {
-        margin-bottom: 20px;
-    }
     .debug {
         margin-top: 20px;
     }
 </style>
 
-<h2>{state.title}</h2>
-
-<Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
-    Start
-</Button>
-<div class="activity">
-    <Activity section="-1" list={state.list} />
+<div class="summary">
+    <h2>{state.title}</h2>
+    {state.list
+        .filter(item => item.type == 'run')
+        .reduce((acc, item) => acc + item.time, 0)} minutes running
 </div>
+<Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
+    Start workout
+</Button>
+
+<Activity section="-1" list={state.list} />
 
 <div class="button">
     <input type="checkbox" id="warm-up" bind:checked={warmUp} />
