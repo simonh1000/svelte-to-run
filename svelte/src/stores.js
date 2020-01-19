@@ -1,13 +1,8 @@
 import { writable } from "svelte/store";
 
-import {
-    startGeolocation,
-    runs,
-    releaseWakeLock,
-    getRunsData,
-    addLatestRun
-} from "./lib.js";
+import { runs, releaseWakeLock, getRunsData, addLatestRun } from "./lib.js";
 import { expand, dayRun2Run, getNextRun } from "./helpers.js";
+import { startGeolocation } from "./js/geolocation";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
@@ -49,11 +44,12 @@ export const switch2Ready = function(readyModel) {
     startGeolocation(geoCb);
 };
 
-// Ready --> Active
+// Active
 // { title,
 //   list:[{type, time, accTime}]
 //   state
-//   location
+//   start
+//   waypoints
 // }
 export const ready2Active = function(evt) {
     state.update(s => {

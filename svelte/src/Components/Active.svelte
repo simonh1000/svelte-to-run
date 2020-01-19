@@ -1,61 +1,70 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
-  import { requestWakeLock, say } from "../lib.js";
-  import Activity from "./Activity.svelte";
+    import { createEventDispatcher, onMount } from "svelte";
 
-  export let state;
-  let time = 0;
-  let section = 0; // array index of run
+    import { requestWakeLock, say } from "../lib.js";
+    import { stopGeolocation } from "../js/geolocation";
+    import Activity from "./Activity.svelte";
 
-  const dispatch = createEventDispatcher();
+    export let state;
+    let time = 0;
+    let section = 0; // array index of run
 
-  let interval = setInterval(() => {
-    time++;
-    if (time > state.list[section].accTime) {
-      if (section + 1 == state.list.length) {
-        console.log("FINISHED");
-        clearInterval(interval);
-        dispatch("finished");
-      } else {
-        section++;
+    const dispatch = createEventDispatcher();
+
+    let interval = setInterval(() => {
+        time++;
+        if (time > state.list[section].accTime) {
+            if (section + 1 < state.list.length) {
+                // end of section
+                section++;
+                mkAnnouncement();
+            } else {
+                // end of run
+                console.log("FINISHED");
+                stopGeolocation();
+                clearInterval(interval);
+                // persistRun({
+                //     title: state.title,
+                //     waypoints: state.waypoints
+                // })
+                dispatch("finished");
+            }
+        }
+    }, 1000);
+
+    const mkAnnouncement = () => {
+        let item = state.list[section];
+        let txt = `${item.type} for ${item.time} ${
+            item.time == 1 ? "minute" : "minutes"
+        }`;
+        say({ ...item, txt });
+    };
+
+    onMount(() => {
         mkAnnouncement();
-      }
-    }
-  }, 1000);
-
-  const mkAnnouncement = () => {
-    let item = state.list[section];
-    let txt = `${item.type} for ${item.time} ${
-      item.time == 1 ? "minute" : "minutes"
-    }`;
-    say({ ...item, txt });
-  };
-
-  onMount(() => {
-    mkAnnouncement();
-    requestWakeLock();
-  });
+        requestWakeLock();
+    });
 </script>
 
 <style>
-  .banner {
-    position: relative;
-  }
-  .type {
-    position: absolute;
-    left: 0;
-    font-size: 32px;
-  }
-  .counter {
-    font-size: 78px;
-  }
+    .banner {
+        position: relative;
+    }
+    .type {
+        position: absolute;
+        left: 0;
+        font-size: 32px;
+    }
+    .counter {
+        font-size: 78px;
+    }
 </style>
 
 <h2>Active</h2>
 
 <div class="banner flex-row flex-center justify-center">
-  <div class="type">{state.list[section].type}</div>
-  <div class="counter">{state.list[section].accTime - time}</div>
+    <div class="type">{state.list[section].type}</div>
+    <div class="counter">{state.list[section].accTime - time}</div>
 </div>
 
 <Activity {section} list={state.list} />

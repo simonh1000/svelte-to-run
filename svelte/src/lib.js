@@ -93,32 +93,6 @@ export const enableSound = function() {
     }, 100);
 };
 
-export const startGeolocation = function(cb) {
-    console.log("Starting geolocation");
-    let watchId = navigator.geolocation.watchPosition(
-        pos => {
-            cb({
-                tag: "waypoint",
-                payload: {
-                    timestamp: pos.timestamp,
-                    coords: {
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude
-                    },
-                    watchId
-                }
-            });
-        },
-        err => {
-            console.error("nav", err);
-            cb({
-                tag: "error",
-                payload: JSON.stringify(err, Object.getOwnPropertyNames(err))
-            });
-        }
-    );
-};
-
 //  wake lock
 
 // The wake lock sentinel.
