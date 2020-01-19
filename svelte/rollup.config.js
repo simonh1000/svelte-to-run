@@ -1,5 +1,3 @@
-import path from "path";
-
 import svelte from "rollup-plugin-svelte-hot";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
@@ -63,8 +61,7 @@ module.exports = {
                         includePaths: [
                             "./src",
                             "./src/styles",
-                            "./node_modules",
-                            path.resolve(__dirname, "node_modules")
+                            "./node_modules"
                         ]
                     }
                 ]
@@ -91,17 +88,18 @@ module.exports = {
                 // Set false to prevent recreating a file that has just been
                 // deleted (Rollup watch will crash when you do that though).
                 recreate: true
-            }),
+            })
 
-        hmr({
-            public: "public",
-            inMemory: true,
-            // This is needed, otherwise Terser (in npm run build) chokes
-            // on import.meta. With this option, the plugin will replace
-            // import.meta.hot in your code with module.hot, and will do
-            // nothing else.
-            compatModuleHot: !hot
-        })
+        // this conflicts with Material Design
+        // hmr({
+        //     public: "public",
+        //     inMemory: true,
+        //     // This is needed, otherwise Terser (in npm run build) chokes
+        //     // on import.meta. With this option, the plugin will replace
+        //     // import.meta.hot in your code with module.hot, and will do
+        //     // nothing else.
+        //     compatModuleHot: !hot
+        // })
     ],
     watch: {
         clearScreen: false

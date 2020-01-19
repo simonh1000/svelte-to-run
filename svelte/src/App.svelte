@@ -1,4 +1,9 @@
 <script>
+    import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
+    import Tab, { Icon, Label } from "@smui/tab";
+    import TabBar from "@smui/tab-bar";
+    import Button from "@smui/button";
+    import IconButton from "@smui/icon-button";
     import {
         state,
         choosing2Ready,
@@ -9,16 +14,19 @@
         ACTIVE,
         FINISHED
     } from "./stores";
-    import Tab, { Icon, Label } from "@smui/tab";
-    import TabBar from "@smui/tab-bar";
-    import Button from "@smui/button";
-
-    let secondaryColor = false;
-    let active = "Home";
 
     import Ready from "./Ready.svelte";
     import Active from "./Active.svelte";
     import Finished from "./Finished.svelte";
+    let tabs = [
+        { title: "Activities", state: READY },
+        { title: "Past runs", state: FINISHED }
+    ];
+    let secondaryColor = false;
+    let active = "Activities";
+    let tabClick = evt => {
+        console.log(evt);
+    };
 </script>
 
 <style>
@@ -46,32 +54,25 @@
     }
 </style>
 
+<TopAppBar variant="static" color="primary">
+    <Row>
+        <Section>
+            <Title>Start to Run</Title>
+            <Icon class="material-icons">trending_up</Icon>
+        </Section>
+    </Row>
+</TopAppBar>
+
 <div class="top-app-bar-container">
-    <div>
-        <TabBar tabs={['Home', 'Merchandise', 'About Us']} let:tab bind:active>
-            <!-- Notice that the `tab` property is required! -->
-            <Tab {tab}>
-                <Label>{tab}</Label>
-            </Tab>
-        </TabBar>
-
-        <div style="margin-top: 15px;">
-            Programmatically select:
-            {#each ['Home', 'Merchandise', 'About Us'] as tab}
-                <Button on:click={() => (active = tab)}>
-                    <Label>{tab}</Label>
-                </Button>
-            {/each}
-        </div>
-
-        <pre class="status">Selected: {active}</pre>
-    </div>
+    <TabBar {tabs} let:tab>
+        <!-- Notice that the `tab` property is required! -->
+        <Tab {tab} on:click={() => tabClick(tab.state)}>
+            <Label>{tab.title}</Label>
+        </Tab>
+    </TabBar>
 </div>
 
 <main>
-    <h1>My Running app</h1>
-
-    {#if $state.state == CHOOSING}No longer used{/if}
 
     {#if $state.state == READY}
         <Ready state={$state} on:start={ready2Active} />

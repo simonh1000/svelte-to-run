@@ -3,7 +3,7 @@
     export let section;
 
     let mkClass = function(selected, type, idx) {
-        let col = type == "run" ? "red" : "white";
+        let col = type == "run" ? "running" : "walking";
         return idx == selected ? col + " selected" : col;
     };
 </script>
@@ -15,7 +15,8 @@
     }
     .schema-items {
         display: flex;
-        height: 60px;
+        flex-direction: column;
+        /* height: 60px; */
     }
     .schema-items div {
         display: flex;
@@ -23,22 +24,20 @@
         justify-content: center;
     }
     .selected {
-        border: 2px solid blue;
+        font-weight: bold;
     }
-    .red {
-        background-color: red;
+    .running {
+        color: blue;
     }
-    .white {
-        background-color: white;
+    .walking {
+        color: deepskyblue;
     }
 </style>
 
 <div class="schema-items">
     {#each list as item, idx}
-        <div
-            class={mkClass(section, item.type, idx)}
-            style="flex-grow:{item.time}">
-            {item.time}
+        <div class={mkClass(section, item.type, idx)}>
+            {item.type} for {item.time} minute(s)
         </div>
     {/each}
 </div>

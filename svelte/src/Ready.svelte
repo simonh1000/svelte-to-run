@@ -22,35 +22,35 @@
 </script>
 
 <style>
-    .buttons {
-        display: flex;
-        align-items: stretch;
+    h2 {
+        color: red;
     }
-    .button {
-        display: flex;
-        border: 1px solid grey;
-        background-color: cornflowerblue;
-        padding: 5px;
+    .activity {
+        margin-bottom: 20px;
     }
-    .button + .button {
-        margin-left: 5px;
+    .debug {
+        margin-top: 20px;
     }
 </style>
 
-<h2>Ready to start: {state.title}</h2>
+<h2>{state.title}</h2>
 
-<Activity section="-1" list={state.list} />
+<Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
+    Start
+</Button>
+<div class="activity">
+    <Activity section="-1" list={state.list} />
+</div>
 
-<div class="buttons">
-    <div class="button">
-        <input type="checkbox" id="warm-up" bind:checked={warmUp} />
-        <label for="warm-up">Add 5 mins warm up</label>
-    </div>
-    <Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
-        Start
+<div class="button">
+    <input type="checkbox" id="warm-up" bind:checked={warmUp} />
+    <label for="warm-up">Add 5 mins warm up</label>
+</div>
+
+<div class="debug">
+    <Button id="debug-button" on:click={() => mkDispatch(10)}>
+        Debug mode
     </Button>
 </div>
 
-<Button id="debug-button" on:click={() => mkDispatch(10)}>Debug mode</Button>
-
-<div>{JSON.stringify(state.location)}</div>
+<!-- <div>{JSON.stringify(state.location)}</div> -->
