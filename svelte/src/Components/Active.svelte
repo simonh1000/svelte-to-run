@@ -3,6 +3,7 @@
 
     import { requestWakeLock, say } from "../lib.js";
     import { stopGeolocation } from "../js/geolocation";
+    import { addLatestRun } from "../js/persistence";
     import Activity from "./Activity.svelte";
 
     export let state;
@@ -23,11 +24,13 @@
                 console.log("FINISHED");
                 stopGeolocation();
                 clearInterval(interval);
-                // persistRun({
-                //     title: state.title,
-                //     waypoints: state.waypoints
-                // })
-                dispatch("finished");
+                say({ txt: "Finished, well done" });
+                let runs = addLatestRun({
+                    title: state.title,
+                    waypoints: state.waypoints
+                });
+
+                dispatch("finished", { runs });
             }
         }
     }, 1000);
@@ -59,8 +62,6 @@
         font-size: 78px;
     }
 </style>
-
-<h2>Active</h2>
 
 <div class="banner flex-row flex-center justify-center">
     <div class="type">{state.list[section].type}</div>

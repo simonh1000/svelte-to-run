@@ -5,11 +5,10 @@
     import Button from "@smui/button";
     import IconButton from "@smui/icon-button";
 
-    import { getRunsData } from "./lib.js";
+    import { getRunsData } from "./js/persistence";
     import {
         state,
         mkReadyModel,
-        switch2Ready,
         ready2Active,
         active2Finished,
         READY,
@@ -26,11 +25,10 @@
     ];
     let active = "Activities";
 
-    function initialiseReady() {
+    const initialiseReady = function() {
         let history = getRunsData();
         const initialModel = mkReadyModel(history);
-        switch2Ready(initialModel);
-    }
+    };
 
     let tabClick = nextState => {
         if (nextState == READY) {

@@ -1,8 +1,7 @@
 import { writable } from "svelte/store";
 
-import { runs, releaseWakeLock, getRunsData, addLatestRun } from "./lib.js";
-import { expand, dayRun2Run, getNextRun } from "./helpers.js";
-import { startGeolocation } from "./js/geolocation";
+import { releaseWakeLock } from "./lib.js";
+import { runs } from "./js/dayRuns";
 
 export const CHOOSING = "CHOOSING";
 export const READY = "READY";
@@ -25,23 +24,17 @@ const readyModel = {
 };
 
 // PURE
-export const mkReadyModel = history => {
-    let dayRuns = runs.map(expand);
-    const nextRun = getNextRun(history, dayRuns);
+let dayRuns = runs.map(expand);
+
+export const mkReadyModel = runsData => {
+    const nextRun = getNextRun(runsData, dayRuns);
 
     const initialModel = {
         ...readyModel,
         title: nextRun.title,
         list: dayRun2Run(nextRun.list)
     };
-    return initialModel;
-};
-
-// IMPURE
-export const switch2Ready = function(readyModel) {
-    console.log("Ready", readyModel);
-    state.set(readyModel);
-    startGeolocation(geoCb);
+    state.set(initialModel);
 };
 
 // Active
@@ -70,13 +63,12 @@ export const ready2Active = function(evt) {
 };
 
 // Active --> Finished
-export const active2Finished = function() {
+export const active2Finished = function(evt) {
     releaseWakeLock();
     state.update(s => {
-        let runs = addLatestRun({ title: s.title, waypoints: s.waypoints });
         let tmp = {
             state: FINISHED,
-            runs,
+            runs: evt.detail.runs,
             ended: new Date()
         };
         console.log("active2Finished", tmp);
@@ -100,4 +92,47 @@ const geoCb = res => {
     });
 };
 
-// Start
+// Helpers
+
+export function expand(run) {
+    let go = (acc, item) => {
+        let type = item[0] == "w" ? "walk" : "run";
+        return [...acc, { type, time: parseInt(item.slice(1)) }];
+    };
+    return { title: run[0], list: run[1].reduce(go, []) };
+}
+
+export function getNextRun(runsData, dayRuns) {
+    console.log(runsData, dayRuns);
+    if (runsData.length) {
+        let lastRun = runsData[0].title;
+        let nextRun = dayRuns.reduce(
+            (acc, r) => {
+                if (acc.prev == lastRun) {
+                    return { run: r, prev: r.title };
+                } else {
+                    return { ...acc, prev: r.title };
+                }
+            },
+            { prev: null }
+        );
+        return nextRun.run || dayRuns[0];
+    } else {
+        return dayRuns[0];
+    }
+}
+
+// [{type,time}] -> [{type, time, accTime}]
+export function dayRun2Run(list, min) {
+    let convertedData = list.reduce(
+        ({ accTime, accItems }, item) => {
+            let tmp = accTime + item.time * min;
+            return {
+                accTime: tmp,
+                accItems: [...accItems, { ...item, accTime: tmp }]
+            };
+        },
+        { accTime: 0, accItems: [] }
+    );
+    return convertedData.accItems;
+}
