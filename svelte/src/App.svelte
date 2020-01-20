@@ -1,7 +1,6 @@
 <script>
     import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
     import Tab, { Icon, Label } from "@smui/tab";
-    import TabBar from "@smui/tab-bar";
     import Button from "@smui/button";
     import IconButton from "@smui/icon-button";
 
@@ -11,30 +10,34 @@
         mkReadyModel,
         ready2Active,
         active2Finished,
+        mkPastRunsModel,
         READY,
         ACTIVE,
-        FINISHED
+        FINISHED,
+        PAST_RUNS
     } from "./stores";
 
     import Ready from "./Components/Ready.svelte";
     import Active from "./Components/Active.svelte";
     import Finished from "./Components/Finished.svelte";
-    let tabs = [
-        { title: "Activities", state: READY },
-        { title: "Past runs", state: FINISHED }
-    ];
-    let active = "Activities";
+    import PastRuns from "./Components/PastRuns.svelte";
+    import TabBar from "./Components/TabBar.svelte";
 
     const initialiseReady = function() {
         let history = getRunsData();
         const initialModel = mkReadyModel(history);
     };
 
+    const initialisePastRuns = function() {
+        let history = getRunsData();
+        const initialModel = mkPastRunsModel(history);
+    };
+
     let tabClick = nextState => {
         if (nextState == READY) {
             initialiseReady();
         } else {
-            active2Finished();
+            initialisePastRuns();
         }
     };
     initialiseReady();
@@ -53,35 +56,23 @@
             max-width: none;
         }
     }
-    section > div {
-        margin-bottom: 40px;
-    }
 </style>
 
-<TopAppBar variant="static" color="primary">
-    <Row>
-        <Section>
-            <Title>
-                <Icon class="material-icons">trending_up</Icon>
-                Start to Run
-            </Title>
-
-        </Section>
-    </Row>
-</TopAppBar>
-
-<div class="top-app-bar-container">
-    <TabBar {tabs} let:tab>
-        <!-- Notice that the `tab` property is required! -->
-        <Tab {tab} on:click={() => tabClick(tab.state)}>
-            <Label>{tab.title}</Label>
-        </Tab>
-    </TabBar>
-</div>
-
 <main>
+    <TopAppBar variant="static" color="primary">
+        <Row>
+            <Section>
+                <Title>
+                    <Icon class="material-icons">trending_up</Icon>
+                    Start to Run
+                </Title>
+
+            </Section>
+        </Row>
+    </TopAppBar>
 
     {#if $state.state == READY}
+        <TabBar {tabClick} />
         <Ready state={$state} on:start={ready2Active} />
     {/if}
 
@@ -90,6 +81,12 @@
     {/if}
 
     {#if $state.state == FINISHED}
+        <TabBar {tabClick} />
         <Finished state={$state} />
+    {/if}
+
+    {#if $state.state == PAST_RUNS}
+        <TabBar {tabClick} />
+        <PastRuns state={$state} />
     {/if}
 </main>

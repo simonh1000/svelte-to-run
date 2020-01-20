@@ -1,12 +1,11 @@
 import { writable } from "svelte/store";
 
-import { releaseWakeLock } from "./lib.js";
 import { runs } from "./js/dayRuns";
 
-export const CHOOSING = "CHOOSING";
 export const READY = "READY";
 export const ACTIVE = "ACTIVE";
 export const FINISHED = "FINISHED";
+export const PAST_RUNS = "PAST_RUNS";
 
 export var state = writable({});
 
@@ -64,12 +63,24 @@ export const ready2Active = function(evt) {
 
 // Active --> Finished
 export const active2Finished = function(evt) {
-    releaseWakeLock();
     state.update(s => {
         let tmp = {
             state: FINISHED,
             runs: evt.detail.runs,
             ended: new Date()
+        };
+        console.log("active2Finished", tmp);
+        return tmp;
+    });
+};
+
+// PAST_RUNS
+// state = {state, history}
+export const mkPastRunsModel = history => {
+    state.update(s => {
+        let tmp = {
+            state: PAST_RUNS,
+            history
         };
         console.log("active2Finished", tmp);
         return tmp;
