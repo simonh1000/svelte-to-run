@@ -2,6 +2,7 @@
     import { createEventDispatcher, onMount } from "svelte";
 
     import { requestWakeLock, say } from "../lib.js";
+    import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
     import { addLatestRun } from "../js/persistence";
     import Activity from "./Activity.svelte";
@@ -63,9 +64,11 @@
     }
 </style>
 
+<div>{ppTime(time)}</div>
+
 <div class="banner flex-row flex-center justify-center">
     <div class="type">{state.list[section].type}</div>
-    <div class="counter">{state.list[section].accTime - time}</div>
+    <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
 </div>
 
 <Activity {section} list={state.list} />
