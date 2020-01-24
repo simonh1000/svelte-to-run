@@ -32,29 +32,29 @@
     }
 </style>
 
-<div class="flex-row flex-center">
+<div class="flex-col flex-center">
     <h2>{state.title}</h2>
+
+    <Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
+        Start workout
+    </Button>
     <div>
         {state.list
             .filter(item => item.type == 'run')
             .reduce((acc, item) => acc + item.time, 0)} minutes running
     </div>
-</div>
-<Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
-    Start workout
-</Button>
 
-<Activity section="-1" list={state.list} />
+    <Activity section="-1" list={state.list} />
 
-<div class="button">
-    <input type="checkbox" id="warm-up" bind:checked={warmUp} />
-    <label for="warm-up">Add 5 mins warm up</label>
+    <div class="button">
+        <input type="checkbox" id="warm-up" bind:checked={warmUp} />
+        <label for="warm-up">Add 5 mins warm up</label>
+    </div>
 </div>
 
 <div class="debug">
     <Button id="debug-button" on:click={() => mkDispatch(10)}>
         Debug mode
     </Button>
+    <div>{JSON.stringify(state.location)}</div>
 </div>
-
-<!-- <div>{JSON.stringify(state.location)}</div> -->

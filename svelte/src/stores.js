@@ -54,7 +54,7 @@ export const ready2Active = function(evt) {
             list: dayRun2Run(list, evt.detail.minute),
             state: ACTIVE,
             start: new Date(),
-            waypoints: [s.location]
+            waypoints: s.location.hasOwnProperty("coords") ? [s.location] : []
         };
         console.log("ready2Active", newState);
         return newState;
@@ -87,9 +87,11 @@ export const mkPastRunsModel = history => {
     });
 };
 
-const geoCb = res => {
+export const geoCb = res => {
+    if (res.tag == "error") return;
+
     state.update(s => {
-        console.log("geoCb", res, s);
+        console.log("geoCb", res);
         if (s.state == READY) {
             return { ...s, location: res.payload };
         }

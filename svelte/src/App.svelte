@@ -14,8 +14,10 @@
         READY,
         ACTIVE,
         FINISHED,
-        PAST_RUNS
+        PAST_RUNS,
+        geoCb
     } from "./stores";
+    import { startGeolocation } from "./js/geolocation";
 
     import Ready from "./Components/Ready.svelte";
     import Active from "./Components/Active.svelte";
@@ -26,6 +28,7 @@
     const initialiseReady = function() {
         let history = getRunsData();
         const initialModel = mkReadyModel(history);
+        startGeolocation(geoCb);
     };
 
     const initialisePastRuns = function() {
