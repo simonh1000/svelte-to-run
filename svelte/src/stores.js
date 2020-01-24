@@ -80,7 +80,8 @@ export const mkPastRunsModel = history => {
     state.update(s => {
         let tmp = {
             state: PAST_RUNS,
-            history
+            history,
+            dayRuns
         };
         console.log("active2Finished", tmp);
         return tmp;

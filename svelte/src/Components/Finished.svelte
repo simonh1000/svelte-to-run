@@ -1,7 +1,7 @@
 <script>
-  import { onMount } from "svelte";
+    import { onMount } from "svelte";
 
-  export let state;
+    export let state;
 </script>
 
 <h2>Finished</h2>

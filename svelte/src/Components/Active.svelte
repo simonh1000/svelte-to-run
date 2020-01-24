@@ -26,12 +26,12 @@
                 stopGeolocation();
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
-                let runs = addLatestRun({
+                let run = addLatestRun({
                     title: state.title,
                     waypoints: state.waypoints
                 });
 
-                dispatch("finished", { runs });
+                dispatch("finished", { run });
             }
         }
     }, 1000);
