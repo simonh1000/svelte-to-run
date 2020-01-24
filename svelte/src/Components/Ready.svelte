@@ -3,7 +3,7 @@
 
     import Button from "@smui/button";
     import { startGeolocation } from "../js/geolocation";
-    import { enableSound } from "../lib.js";
+    import { enableSound } from "../js/lib.js";
     import Activity from "./Activity.svelte";
 
     export let state;

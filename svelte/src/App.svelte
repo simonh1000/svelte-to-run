@@ -22,7 +22,7 @@
     import Ready from "./Components/Ready.svelte";
     import Active from "./Components/Active.svelte";
     import Finished from "./Components/Finished.svelte";
-    import PastRuns from "./Components/PastRuns.svelte";
+    import PastRuns from "./PastRuns/PastRuns.svelte";
     import TabBar from "./Components/TabBar.svelte";
 
     const initialiseReady = function() {

@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
 
-    import { requestWakeLock, say } from "../lib.js";
+    import { requestWakeLock, say } from "../js/lib.js";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
     import { addLatestRun } from "../js/persistence";
