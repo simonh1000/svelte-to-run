@@ -11,8 +11,7 @@ export const startGeolocation = function(cb) {
                     coords: {
                         latitude: pos.coords.latitude,
                         longitude: pos.coords.longitude
-                    },
-                    watchId
+                    }
                 }
             });
         },
