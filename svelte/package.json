@@ -22,5 +22,8 @@
     },
     "prettier": {
         "tabWidth": 4
+    },
+    "dependencies": {
+        "svelte-material-icons": "^1.0.2"
     }
 }

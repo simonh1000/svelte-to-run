@@ -19,11 +19,12 @@
     } from "./stores";
     import { startGeolocation } from "./js/geolocation";
 
-    import Ready from "./Components/Ready.svelte";
-    import Active from "./Components/Active.svelte";
-    import Finished from "./Components/Finished.svelte";
-    import PastRuns from "./PastRuns/PastRuns.svelte";
+    import Header from "./Components/Header.svelte";
     import TabBar from "./Components/TabBar.svelte";
+    import Ready from "./NextRun/Ready.svelte";
+    import Active from "./NextRun/Active.svelte";
+    import Finished from "./NextRun/Finished.svelte";
+    import PastRuns from "./PastRuns/PastRuns.svelte";
 
     const initialiseReady = function() {
         let history = getRunsData();
@@ -63,17 +64,7 @@
 </style>
 
 <main>
-    <TopAppBar variant="static" color="primary">
-        <Row>
-            <Section>
-                <Title>
-                    <Icon class="material-icons">trending_up</Icon>
-                    Start to Run
-                </Title>
-
-            </Section>
-        </Row>
-    </TopAppBar>
+    <Header />
 
     {#if $state.state == READY}
         <TabBar state={$state.state} {tabClick} />
