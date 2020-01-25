@@ -1,15 +1,13 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
-
     import Button from "@smui/button";
-    import { startGeolocation } from "../js/geolocation";
+
     import { enableSound } from "../js/lib.js";
     import Activity from "./Activity.svelte";
 
     export let state;
 
     let warmUp = false;
-    let active = true;
 
     const dispatch = createEventDispatcher();
     const mkDispatch = minute => {
@@ -27,6 +25,9 @@
     h2 {
         color: red;
     }
+    .summary {
+        margin: 10px 0;
+    }
     .debug {
         margin-top: 20px;
     }
@@ -35,26 +36,29 @@
 <div class="flex-col flex-center">
     <h2>{state.title}</h2>
 
-    <Button id="start-button" variant="raised" on:click={() => mkDispatch(60)}>
-        Start workout
+    <Button
+        id="start-button"
+        variant="raised"
+        on:click={() => mkDispatch(60)}
+        style="padding: 20px; min-width: 36px; height: auto">
+        <span class="start-button">Start workout</span>
     </Button>
-    <div>
+
+    <section class="summary">
         {state.list
             .filter(item => item.type == 'run')
             .reduce((acc, item) => acc + item.time, 0)} minutes running
-    </div>
+    </section>
 
-    <Activity section="-1" list={state.list} />
-
-    <div class="button">
+    <div>
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />
         <label for="warm-up">Add 5 mins warm up</label>
     </div>
+
+    <Activity section="-1" list={state.list} />
 </div>
 
-<div class="debug">
-    <Button id="debug-button" on:click={() => mkDispatch(10)}>
-        Debug mode
-    </Button>
-    <div>{JSON.stringify(state.location)}</div>
+<div class="debug flex-row">
+    <Button on:click={() => mkDispatch(10)}>Debug mode</Button>
+    <div style="overflow: hidden">{JSON.stringify(state.location)}</div>
 </div>
