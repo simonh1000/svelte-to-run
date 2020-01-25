@@ -76,7 +76,7 @@
     </TopAppBar>
 
     {#if $state.state == READY}
-        <TabBar {tabClick} />
+        <TabBar state={$state.state} {tabClick} />
         <Ready state={$state} on:start={ready2Active} />
     {/if}
 
@@ -85,12 +85,12 @@
     {/if}
 
     {#if $state.state == FINISHED}
-        <TabBar {tabClick} />
+        <TabBar state={$state.state} {tabClick} />
         <Finished state={$state} />
     {/if}
 
     {#if $state.state == PAST_RUNS}
-        <TabBar {tabClick} />
+        <TabBar state={$state.state} {tabClick} />
         <PastRuns state={$state} />
     {/if}
 </main>
