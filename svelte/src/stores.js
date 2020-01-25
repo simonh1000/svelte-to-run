@@ -50,7 +50,7 @@ export const ready2Active = function(evt) {
             : s.list;
 
         let newState = {
-            ...s,
+            title: s.title,
             list: dayRun2Run(list, evt.detail.minute),
             state: ACTIVE,
             start: new Date(),
@@ -61,12 +61,20 @@ export const ready2Active = function(evt) {
     });
 };
 
-// Active --> Finished
+// Active
+// { title,
+//   list:[{type, time, accTime}]
+//   state
+//   ended
+//   start
+//   waypoints
+// }
 export const active2Finished = function(evt) {
     state.update(s => {
         let tmp = {
+            ...s,
             state: FINISHED,
-            runs: evt.detail.runs,
+            waypoints: evt.detail.waypoints,
             ended: new Date()
         };
         console.log("active2Finished", tmp);

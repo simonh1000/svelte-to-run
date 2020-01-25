@@ -59,6 +59,8 @@
 </div>
 
 <div class="debug flex-row">
-    <Button on:click={() => mkDispatch(10)}>Debug mode</Button>
+    <Button id="debug-button" on:click={() => mkDispatch(10)}>
+        Debug mode
+    </Button>
     <div style="overflow: hidden">{JSON.stringify(state.location)}</div>
 </div>

@@ -4,7 +4,6 @@
     import { requestWakeLock, say } from "../js/lib.js";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
-    import { addLatestRun } from "../js/persistence";
     import Activity from "./Activity.svelte";
 
     export let state;
@@ -26,12 +25,8 @@
                 stopGeolocation();
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
-                let run = addLatestRun({
-                    title: state.title,
-                    waypoints: state.waypoints
-                });
-
-                dispatch("finished", { run });
+                // this returns the ful list of runs, but we don't need it at present
+                dispatch("finished", { waypoints: state.waypoints });
             }
         }
     }, 1000);

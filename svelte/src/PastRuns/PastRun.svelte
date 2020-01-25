@@ -10,13 +10,13 @@
         0
     );
 
-    let dst;
+    let distance;
     if (run.distance) {
-        dst = run.distance;
+        distance = run.distance;
     } else if (run.waypoints && run.waypoints.length > 1) {
-        dst = pathDistance(run.waypoints);
+        distance = pathDistance(run.waypoints);
     } else {
-        dst = "unknown";
+        distance = "unknown";
     }
 </script>
 
@@ -30,6 +30,6 @@
 <tr>
     <td>{run.title}</td>
     <td>{minsRunning}</td>
-    <td>{dst}</td>
+    <td>{distance}</td>
 </tr>
 <!-- {JSON.stringify(run)} -->
