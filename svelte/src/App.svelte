@@ -77,7 +77,7 @@
 
     {#if $state.state == FINISHED}
         <TabBar state={$state.state} {tabClick} />
-        <Finished state={$state} />
+        <Finished state={$state} onSaveDistance={initialisePastRuns} />
     {/if}
 
     {#if $state.state == PAST_RUNS}

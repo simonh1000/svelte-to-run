@@ -7,6 +7,8 @@
     import Activity from "./Activity.svelte";
 
     export let state;
+    export let onSaveDistance;
+
     let distance =
         state.waypoints && state.waypoints.length > 1
             ? pathDistance(state.waypoints)
@@ -20,7 +22,8 @@
             end: state.end
         };
         console.log("save distance", run);
-        addLatestRun(run);
+        const history = addLatestRun(run);
+        onSaveDistance();
     };
 </script>
 
