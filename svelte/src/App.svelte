@@ -1,9 +1,4 @@
 <script>
-    import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
-    import Tab, { Icon, Label } from "@smui/tab";
-    import Button from "@smui/button";
-    import IconButton from "@smui/icon-button";
-
     import { getRunsData } from "./js/persistence";
     import {
         state,

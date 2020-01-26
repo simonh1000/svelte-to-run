@@ -1,6 +1,8 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
     import Button from "@smui/button";
+    import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
+    import Run from "svelte-material-icons/Run.svelte";
 
     import { enableSound } from "../js/lib.js";
     import Activity from "./Activity.svelte";
@@ -31,9 +33,6 @@
     .ready {
         margin-top: 15px;
     }
-    h2 {
-        color: red;
-    }
     .summary {
         margin: 15px 0;
     }
@@ -62,9 +61,14 @@
     <Activity section="-1" list={state.list} />
 </div>
 
-<div class="debug flex-row">
+<div class="debug flex-row flex-spread">
     <Button id="debug-button" on:click={() => mkDispatch(10)}>
         Debug mode
     </Button>
-    <div style="overflow: hidden">{JSON.stringify(state.location)}</div>
+    {#if state.location.coords}
+        <span class="icon-container">
+            <CrosshairsGps />
+        </span>
+    {/if}
 </div>
+<!-- {JSON.stringify(state.location)} -->

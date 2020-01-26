@@ -1,16 +1,17 @@
 <script>
     import TopAppBar, { Row, Section, Title } from "@smui/top-app-bar";
-    import Tab, { Icon, Label } from "@smui/tab";
+    import Run from "svelte-material-icons/Run.svelte";
 </script>
 
 <TopAppBar variant="static" color="primary">
     <Row>
         <Section>
-            <Title>
-                <Icon class="material-icons">trending_up</Icon>
+            <Title class="flex-row flex-center">
+                <span class="icon-container">
+                    <Run />
+                </span>
                 Start to Run
             </Title>
-
         </Section>
     </Row>
 </TopAppBar>
