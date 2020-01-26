@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-import { runs, getNextRun, expand, dayRun2Run } from "./js/dayRuns";
+import { dayRuns, getNextRun, dayRun2Run } from "./js/dayRuns";
 
 export const READY = "READY";
 export const ACTIVE = "ACTIVE";
@@ -23,15 +23,13 @@ const readyModel = {
 };
 
 // PURE
-let dayRuns = runs.map(expand);
-
 export const mkReadyModel = runsData => {
-    const nextRun = getNextRun(runsData, dayRuns);
+    const nextRun = getNextRun(runsData);
 
     const initialModel = {
         ...readyModel,
-        title: nextRun.title,
-        list: dayRun2Run(nextRun.list)
+        title: nextRun,
+        list: dayRuns[nextRun]
     };
     state.set(initialModel);
 };
@@ -89,8 +87,7 @@ export const mkPastRunsModel = history => {
     state.update(s => {
         let tmp = {
             state: PAST_RUNS,
-            history,
-            dayRuns
+            history
         };
         console.log("active2Finished", tmp);
         return tmp;

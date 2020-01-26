@@ -1,12 +1,14 @@
 <script>
     import { onMount } from "svelte";
+
+    import { dayRuns } from "../js/dayRuns";
     import RunSummary from "./PastRun";
     export let state;
 
-    const dayRuns = state.dayRuns.reduce((acc, dayRun) => {
-        acc[dayRun.title] = dayRun.list;
-        return acc;
-    }, {});
+    // const tmp = dayRuns.reduce((acc, dayRun) => {
+    //     acc[dayRun.title] = dayRun.list;
+    //     return acc;
+    // }, {});
     // onMount(() => {
     //     var mymap = L.map("mapid").setView([51.505, -0.09], 13);
     //     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {

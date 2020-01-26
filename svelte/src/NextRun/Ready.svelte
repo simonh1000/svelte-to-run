@@ -34,7 +34,7 @@
 </style>
 
 <div class="flex-col flex-center">
-    <h2>{state.title}</h2>
+    <h2>Day {state.title + 1}</h2>
 
     <Button
         id="start-button"

@@ -29,9 +29,7 @@
 
 <tr>
     <td>{run.start.toLocaleDateString('en-GB')}</td>
-    <td>
-        {run.start.toLocaleTimeString('en-GB')} - {run.end.toLocaleTimeString('en-GB')}
-    </td>
+    <td>{run.start.toLocaleTimeString('en-GB')}</td>
     <td>{minsRunning}</td>
     <td>{distance}</td>
 </tr>

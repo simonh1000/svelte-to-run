@@ -1,6 +1,7 @@
 <script>
     import Button from "@smui/button";
 
+    import { dayRuns } from "../js/dayRuns";
     import { pathDistance } from "../js/view-helpers";
     import { addLatestRun } from "../js/persistence";
 
@@ -13,11 +14,13 @@
         state.waypoints && state.waypoints.length > 1
             ? pathDistance(state.waypoints)
             : 0;
+
     const saveDistance = () => {
         let run = {
             title: state.title,
             waypoints: state.waypoints,
-            distance,
+            // binding distance to input turns it into a string
+            distance: parseFloat(distance),
             start: state.start,
             end: state.end
         };
