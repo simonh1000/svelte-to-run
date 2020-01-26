@@ -14,6 +14,12 @@
         dispatch("start", { minute, warmUp });
     };
 
+    const distance = state.list
+        .filter(item => item.type == "run")
+        .reduce((acc, item) => acc + item.time, 0);
+
+    const time = state.list.reduce((acc, item) => acc + item.time, 0);
+
     // the sound will not work on some systems unless it is triggered by a user action
     // attach a listener (this could be done in svelte?)
     onMount(() => {
@@ -22,33 +28,31 @@
 </script>
 
 <style>
+    .ready {
+        margin-top: 15px;
+    }
     h2 {
         color: red;
     }
     .summary {
-        margin: 10px 0;
+        margin: 15px 0;
     }
     .debug {
-        margin-top: 20px;
+        margin-top: 15px;
     }
 </style>
 
-<div class="flex-col flex-center">
-    <h2>Day {state.title + 1}</h2>
+<div class="ready flex-col flex-center">
 
     <Button
         id="start-button"
         variant="raised"
         on:click={() => mkDispatch(60)}
         style="padding: 20px; min-width: 36px; height: auto">
-        <span class="start-button">Start workout</span>
+        <span class="start-button">Start workout {state.title + 1}</span>
     </Button>
 
-    <section class="summary">
-        {state.list
-            .filter(item => item.type == 'run')
-            .reduce((acc, item) => acc + item.time, 0)} minutes running
-    </section>
+    <section class="summary">{distance} mins running, {time} total</section>
 
     <div>
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />

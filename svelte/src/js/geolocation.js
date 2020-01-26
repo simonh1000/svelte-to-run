@@ -26,5 +26,6 @@ export const startGeolocation = function(cb) {
 };
 
 export const stopGeolocation = function() {
+    console.log("Stopping geolocation");
     navigator.geolocation.clearWatch(watchId);
 };

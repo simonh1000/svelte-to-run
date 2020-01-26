@@ -17,7 +17,7 @@
         PAST_RUNS,
         geoCb
     } from "./stores";
-    import { startGeolocation } from "./js/geolocation";
+    import { startGeolocation, stopGeolocation } from "./js/geolocation";
 
     import Header from "./Components/Header.svelte";
     import TabBar from "./Components/TabBar.svelte";
@@ -27,12 +27,13 @@
     import PastRuns from "./PastRuns/PastRuns.svelte";
 
     const initialiseReady = function() {
+        startGeolocation(geoCb);
         let history = getRunsData();
         const initialModel = mkReadyModel(history);
-        startGeolocation(geoCb);
     };
 
     const initialisePastRuns = function() {
+        stopGeolocation();
         let history = getRunsData();
         const initialModel = mkPastRunsModel(history);
     };
@@ -45,21 +46,12 @@
         }
     };
     initialiseReady();
-    // initialisePastRuns();
 </script>
 
 <style>
     main {
-        /* text-align: center; */
-        padding: 1em;
         max-width: 840px;
         margin: 0 auto;
-    }
-
-    @media (min-width: 640px) {
-        main {
-            max-width: none;
-        }
     }
 </style>
 
