@@ -2,7 +2,13 @@
 const key = "running-app";
 
 export const getRunsData = () => {
-    return JSON.parse(localStorage.getItem(key)) || [];
+    let tmp = JSON.parse(localStorage.getItem(key)) || [];
+    tmp.map(run => {
+        run.start = new Date(run.start);
+        run.end = new Date(run.end);
+        return run;
+    });
+    return tmp;
 };
 
 export const addLatestRun = run => {

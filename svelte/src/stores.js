@@ -65,8 +65,8 @@ export const ready2Active = function(evt) {
 // { title,
 //   list:[{type, time, accTime}]
 //   state
-//   ended
 //   start
+//   end
 //   waypoints
 // }
 export const active2Finished = function(evt) {
@@ -75,7 +75,7 @@ export const active2Finished = function(evt) {
             ...s,
             state: FINISHED,
             waypoints: evt.detail.waypoints,
-            ended: new Date()
+            end: new Date()
         };
         console.log("active2Finished", tmp);
         return tmp;
@@ -84,6 +84,7 @@ export const active2Finished = function(evt) {
 
 // PAST_RUNS
 // state = {state, history}
+// history = {title, start, end, waypoints}
 export const mkPastRunsModel = history => {
     state.update(s => {
         let tmp = {

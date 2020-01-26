@@ -31,7 +31,8 @@
 
 <table>
     <thead>
-        <th>Day</th>
+        <th>Date</th>
+        <th>Time</th>
         <th>Running (mins)</th>
         <th>Distance (km)</th>
     </thead>

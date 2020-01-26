@@ -16,8 +16,8 @@
             title: state.title,
             waypoints: state.waypoints,
             distance,
-            started: state.started,
-            ended: state.ended
+            start: state.start,
+            end: state.end
         };
         console.log("save distance", run);
         addLatestRun(run);
@@ -51,7 +51,10 @@
     </Button>
 
     <div>
-        {state.start}{state.ended}
+        <span>{state.start.toLocaleDateString('en-GB')}</span>
+        <span>
+            {state.start.toLocaleTimeString('en-GB')} - {state.end.toLocaleTimeString('en-GB')}
+        </span>
         <Activity section="-1" list={state.list} />
     </div>
 
