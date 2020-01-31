@@ -20,8 +20,14 @@
 </script>
 
 <style>
+    .container {
+        padding: 0 10px;
+    }
     table {
         width: 100%;
+        margin-top: 20px;
+        margin-left: -10px;
+        margin-right: -10px;
     }
     th {
         padding: 2px 10px;
@@ -29,16 +35,16 @@
     }
 </style>
 
-<h2>Past Runs</h2>
-
-<table>
-    <thead>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Running (mins)</th>
-        <th>Distance (km)</th>
-    </thead>
-    {#each state.history as run}
-        <RunSummary {run} dayRun={dayRuns[run.title]} />
-    {/each}
-</table>
+<div class="container">
+    <table>
+        <thead>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Running (mins)</th>
+            <th>Distance (km)</th>
+        </thead>
+        {#each state.history as run}
+            <RunSummary {run} dayRun={dayRuns[run.title]} />
+        {/each}
+    </table>
+</div>

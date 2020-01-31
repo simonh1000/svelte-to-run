@@ -3,6 +3,7 @@
     import Button from "@smui/button";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
     import Run from "svelte-material-icons/Run.svelte";
+    import Timer from "svelte-material-icons/Timer.svelte";
 
     import { enableSound } from "../js/lib.js";
     import Activity from "./Activity.svelte";
@@ -39,6 +40,9 @@
     .debug {
         margin-top: 15px;
     }
+    .day-no {
+        font-size: 24pt;
+    }
 </style>
 
 <div class="ready flex-col flex-center">
@@ -48,10 +52,20 @@
         variant="raised"
         on:click={() => mkDispatch(60)}
         style="padding: 20px; min-width: 36px; height: auto">
-        <span class="start-button">Start workout {state.title + 1}</span>
+        <span class="start-button">
+            Start workout
+            <span class="smui-button--color-secondary day-no">
+                {state.title + 1}
+            </span>
+        </span>
     </Button>
 
-    <section class="summary">{distance} mins running, {time} total</section>
+    <section class="summary">
+        <Run />
+        {distance}
+        <Timer class="" />
+        {time}
+    </section>
 
     <div>
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />

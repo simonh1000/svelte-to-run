@@ -1,8 +1,8 @@
 {
     "name": "StartToRun",
     "short_name": "Start to run",
-    "theme_color": "#2196f3",
-    "background_color": "#2196f3",
+    "theme_color": "#475da3",
+    "background_color": "#475da3",
     "display": "standalone",
     "orientation": "portrait",
     "Scope": "/",
