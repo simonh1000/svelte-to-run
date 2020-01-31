@@ -21,7 +21,7 @@
         width: 150px;
     }
     .item {
-        margin: 5px 0;
+        margin-bottom: 5px;
     }
     .selected {
         font-weight: bold;

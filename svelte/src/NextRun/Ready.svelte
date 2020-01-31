@@ -42,7 +42,7 @@
     }
 </style>
 
-<div class="ready flex-col flex-center">
+<div class="ready flex flex-col items-center">
 
     <Button
         id="start-button"
@@ -57,7 +57,7 @@
         </span>
     </Button>
 
-    <section class="m-4 flex-row items-center">
+    <section class="m-4 flex flex-row items-center">
         <Run />
         <span class="ml-1 mr-4">{distance}</span>
         <Timer />
@@ -72,7 +72,7 @@
     <Activity section="-1" list={state.list} />
 </div>
 
-<div class="debug flex-row flex-spread">
+<div class="debug flex flex-row flex-spread">
     <Button id="debug-button" on:click={() => mkDispatch(10)}>
         Debug mode
     </Button>

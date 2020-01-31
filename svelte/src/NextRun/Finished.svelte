@@ -41,7 +41,7 @@
     }
 </style>
 
-<div class="flex-col flex-center">
+<div class="flex flex-col items-center">
 
     <h2>Well done! Completed {state.title}</h2>
 

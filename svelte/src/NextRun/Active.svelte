@@ -59,19 +59,22 @@
     }
 </style>
 
-<div>{ppTime(time)}</div>
+<div class="m-3">
+    <div>{ppTime(time)}</div>
 
-<div class="banner flex-row flex-center justify-center">
-    <div class="type">{state.list[section].type}</div>
-    <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
-</div>
+    <div class="banner flex flex-row items-center justify-center">
+        <div class="type">{state.list[section].type}</div>
+        <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
+    </div>
 
-<Activity {section} list={state.list} />
+    <Activity {section} list={state.list} />
 
-<!-- <div>
+    <!-- <div>
     <button disabled>Pause</button>
     <button disabled>Stop</button>
 </div> -->
 
-<div>{state.waypoints.length + ' waypoints collected'}</div>
-<!-- <small>{JSON.stringify(state.waypoints)}</!-->
+    <div>{state.waypoints.length + ' waypoints collected'}</div>
+    <!-- <small>{JSON.stringify(state.waypoints)}</!-->
+
+</div>

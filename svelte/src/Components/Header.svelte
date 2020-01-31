@@ -6,7 +6,7 @@
 <TopAppBar variant="static" color="primary">
     <Row>
         <Section>
-            <Title class="flex-row flex-center">
+            <Title class="flex flex-row items-center">
                 <span class="icon-container">
                     <Run />
                 </span>
