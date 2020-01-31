@@ -43,7 +43,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(sa|sc|c)ss$/,
+                test: /\.(sa|sc)ss$/,
                 use: [
                     "style-loader",
                     MiniCssExtractPlugin.loader,
@@ -56,6 +56,14 @@ module.exports = {
                             }
                         }
                     }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "postcss-loader"
                 ]
             }
         ]

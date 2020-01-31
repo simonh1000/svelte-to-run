@@ -34,9 +34,6 @@
     .ready {
         margin-top: 15px;
     }
-    .summary {
-        margin: 15px 0;
-    }
     .debug {
         margin-top: 15px;
     }
@@ -60,11 +57,11 @@
         </span>
     </Button>
 
-    <section class="summary">
+    <section class="m-4 flex-row items-center">
         <Run />
-        {distance}
-        <Timer class="" />
-        {time}
+        <span class="ml-1 mr-4">{distance}</span>
+        <Timer />
+        <span class="ml-1">{time}</span>
     </section>
 
     <div>
