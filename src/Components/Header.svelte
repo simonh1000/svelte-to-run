@@ -3,7 +3,7 @@
     import Run from "svelte-material-icons/Run.svelte";
 </script>
 
-<TopAppBar variant="static" color="primary">
+<TopAppBar class="flex-shrink-0" variant="static" color="primary">
     <Row>
         <Section>
             <Title class="flex flex-row items-center">

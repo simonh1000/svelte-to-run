@@ -1,6 +1,9 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
+    import EyeCheckOutline from "svelte-material-icons/EyeCheckOutline.svelte";
+    import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
 
+    import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
@@ -40,16 +43,13 @@
         say({ ...item, txt });
     };
 
-    const handleWakeLock = evt => {
-        console.log(evt.tag, evt.payload);
-    };
     const onVisibleAgain = () => {
-        requestWakeLock(handleWakeLock);
+        requestWakeLock(wakelockCb);
     };
 
     onMount(() => {
         mkAnnouncement();
-        requestWakeLock(handleWakeLock);
+        requestWakeLock(wakelockCb);
         monitorVisibility(onVisibleAgain);
     });
 </script>
@@ -68,7 +68,7 @@
     }
 </style>
 
-<div class="m-3">
+<div class="m-3 flex flex-col flex-grow">
     <div>{ppTime(time)}</div>
 
     <div class="banner flex flex-row items-center justify-center">
@@ -77,13 +77,18 @@
     </div>
 
     <Activity {section} list={state.list} />
-
-    <!-- <div>
-    <button disabled>Pause</button>
-    <button disabled>Stop</button>
-</div> -->
-
-    <div>{state.waypoints.length + ' waypoints collected'}</div>
-    <!-- <small>{JSON.stringify(state.waypoints)}</!-->
-
 </div>
+
+<footer class="debug flex flex-row justify-between flex-shrink-0">
+    <div>{state.waypoints.length + ' waypoints collected'}</div>
+    {#if state.wakeLock}
+        <span class="icon-container">
+            <EyeCheckOutline />
+        </span>
+    {/if}
+    {#if state.waypoints}
+        <span class="icon-container">
+            <CrosshairsGps />
+        </span>
+    {/if}
+</footer>

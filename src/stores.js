@@ -34,13 +34,15 @@ export const mkReadyModel = runsData => {
     state.set(initialModel);
 };
 
-// Active
-// { title,
-//   list:[{type, time, accTime}]
-//   state
-//   start
-//   waypoints
-// }
+/*
+Active:
+  title: String
+  list:[{type, time, accTime}]
+  state: Date
+  start: Date
+  wakeLock: Bool
+  waypoints
+*/
 export const ready2Active = function(evt) {
     state.update(s => {
         const list = evt.detail.warmUp
@@ -52,6 +54,7 @@ export const ready2Active = function(evt) {
             list: dayRun2Run(list, evt.detail.minute),
             state: ACTIVE,
             start: new Date(),
+            wakeLock: false,
             waypoints: s.location.hasOwnProperty("coords") ? [s.location] : []
         };
         console.log("ready2Active", newState);
@@ -108,6 +111,24 @@ export const geoCb = res => {
             return {
                 ...s,
                 waypoints: [...s.waypoints, res.payload]
+            };
+        }
+        return s;
+    });
+};
+
+// helps keep track that the wake lock is working
+export const wakelockCb = res => {
+    if (res.tag == "error") {
+        console.error("wakeLock", res);
+        return;
+    }
+
+    state.update(s => {
+        if (s.state == ACTIVE) {
+            return {
+                ...s,
+                wakeLock: res.payload
             };
         }
         return s;

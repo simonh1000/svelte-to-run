@@ -42,8 +42,7 @@
     }
 </style>
 
-<div class="ready flex flex-col items-center">
-
+<div class="ready flex flex-col flex-grow items-center overflow-auto">
     <Button
         id="start-button"
         variant="raised"
@@ -72,14 +71,14 @@
     <Activity section="-1" list={state.list} />
 </div>
 
-<div class="debug flex flex-row flex-spread">
-    <Button id="debug-button" on:click={() => mkDispatch(10)}>
+<footer class="debug flex flex-row justify-between flex-shrink-0">
+    <button id="debug-button" on:click={() => mkDispatch(10)}>
         Debug mode
-    </Button>
+    </button>
     {#if state.location.coords}
         <span class="icon-container">
             <CrosshairsGps />
         </span>
     {/if}
-</div>
+</footer>
 <!-- {JSON.stringify(state.location)} -->

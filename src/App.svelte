@@ -44,18 +44,21 @@
 </script>
 
 <style>
-    main {
+    .main {
         max-width: 840px;
         margin: 0 auto;
     }
 </style>
 
-<main>
+<div class="flex flex-col h-screen main">
     <Header />
 
     {#if $state.state == READY}
         <TabBar state={$state.state} {tabClick} />
-        <Ready state={$state} on:start={ready2Active} />
+        <Ready
+            class="flex-grow flex flex-col"
+            state={$state}
+            on:start={ready2Active} />
     {/if}
 
     {#if $state.state == ACTIVE}
@@ -71,4 +74,4 @@
         <TabBar state={$state.state} {tabClick} />
         <PastRuns state={$state} />
     {/if}
-</main>
+</div>

@@ -18,11 +18,9 @@
     });
 </script>
 
-<div class="top-app-bar-container">
-    <TabBar {tabs} let:tab {active}>
-        <!-- Notice that the `tab` property is required! -->
-        <Tab {tab} on:click={() => tabClick(tab.state)}>
-            <Label>{tab.title}</Label>
-        </Tab>
-    </TabBar>
-</div>
+<TabBar class="flex-shrink-0" {tabs} let:tab {active}>
+    <!-- Notice that the `tab` property is required! -->
+    <Tab {tab} on:click={() => tabClick(tab.state)}>
+        <Label>{tab.title}</Label>
+    </Tab>
+</TabBar>

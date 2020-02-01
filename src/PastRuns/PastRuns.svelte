@@ -39,7 +39,7 @@
     <table>
         <thead>
             <th>Date</th>
-            <th>Time</th>
+            <th>Start</th>
             <th>Running (mins)</th>
             <th>Distance (km)</th>
         </thead>
