@@ -120,7 +120,7 @@ export const geoCb = res => {
 // helps keep track that the wake lock is working
 export const wakelockCb = res => {
     if (res.tag == "error") {
-        console.error("wakeLock", res);
+        console.log("wakeLock", res.payload);
         return;
     }
 
