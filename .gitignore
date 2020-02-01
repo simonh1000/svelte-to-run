@@ -18,21 +18,13 @@ yarn.lock
 # Optional REPL history
 .node_repl_history
 
-# elm-package generated files
-elm-stuff/
 # elm-repl generated files
 repl-temp-*
 
 .DS_Store
-example/dist
 
 ignore
-dist
-tests/VerifyExamples
+public/build
 package-lock.json
-ignore
-
-sound-creator
-tilt
-smui
-webpack
+public/bundle.*
+public/*.wav
