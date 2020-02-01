@@ -16,6 +16,7 @@ body {
 
 footer.debug {
     background-color: #eee;
+    padding: 3px 15px;
 }
 .icon-container {
     display: flex;

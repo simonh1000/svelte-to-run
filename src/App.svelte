@@ -47,10 +47,14 @@
     .main {
         max-width: 840px;
         margin: 0 auto;
+        /* ensure debug shows on mobile above fold */
+        min-height: -moz-available; /* WebKit-based browsers will ignore this. */
+        min-height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+        min-height: fill-available;
     }
 </style>
 
-<div class="flex flex-col h-screen main">
+<div class="flex flex-col main">
     <Header />
 
     {#if $state.state == READY}
