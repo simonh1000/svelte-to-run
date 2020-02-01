@@ -1,7 +1,8 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
 
-    import { requestWakeLock, say } from "../js/lib.js";
+    import { say } from "../js/lib.js";
+    import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
     import Activity from "./Activity.svelte";
@@ -39,9 +40,17 @@
         say({ ...item, txt });
     };
 
+    const handleWakeLock = evt => {
+        console.log(evt.tag, evt.payload);
+    };
+    const onVisibleAgain = () => {
+        requestWakeLock(handleWakeLock);
+    };
+
     onMount(() => {
         mkAnnouncement();
-        requestWakeLock();
+        requestWakeLock(handleWakeLock);
+        monitorVisibility(onVisibleAgain);
     });
 </script>
 

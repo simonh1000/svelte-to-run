@@ -60,38 +60,3 @@ export const enableSound = function() {
             .addEventListener("click", evtHandler);
     }, 100);
 };
-
-//  wake lock
-
-// The wake lock sentinel.
-let wakeLock = null;
-
-// Function that attempts to request a wake lock.
-export const requestWakeLock = async cb => {
-    try {
-        wakeLock = await navigator.wakeLock.request("screen");
-        wakeLock.addEventListener("release", () => {
-            console.log("Wake Lock was released");
-        });
-        console.log("Wake Lock is active");
-    } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-        cb({
-            tag: "error",
-            payload: "wakeLock not supported"
-        });
-    }
-};
-
-// Function that attempts to release the wake lock.
-export const releaseWakeLock = async () => {
-    if (!wakeLock) {
-        return;
-    }
-    try {
-        await wakeLock.release();
-        wakeLock = null;
-    } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-    }
-};
