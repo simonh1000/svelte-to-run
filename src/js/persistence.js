@@ -10,7 +10,7 @@ export const getRunsData = () => {
     if (needsMigration(data)) {
         history = migrate(data);
         // save as soon as migrated
-        // setRunsData(history);
+        setRunsData(history);
     } else {
         history = data;
     }
@@ -29,12 +29,12 @@ export const addLatestRun = run => {
         run.waypoints = contractWPs(run.waypoints);
         return run;
     });
-    console.log("About to persist", newRuns);
     setRunsData(newRuns);
     return newRuns;
 };
 
 const setRunsData = newRuns => {
+    console.log("About to persist", newRuns);
     localStorage.setItem(key, JSON.stringify(newRuns));
 };
 
@@ -58,17 +58,12 @@ function contractWPs(waypoints) {
 
 function needsMigration(data) {
     const ret =
-        data.length > 0 &&
-        !data.every(r => {
-            typeof r.total !== "undefined";
-        });
-    console.log("needsMigration?", data, ret);
+        data.length > 0 && data.some(r => typeof r.total === "undefined");
+    // console.log("needsMigration?", data, ret);
     return ret;
 }
 
 function migrate(data) {
-    console.log("migrate", dayRuns);
-    console.log("migrate", data);
     return data.map(r => {
         // console.log(r);
         let tmp = summarise(dayRuns[r.title]);
