@@ -35,7 +35,7 @@
     }
 </style>
 
-<div class="container">
+<div class="container flex-grow">
     <table>
         <thead>
             <th>Date</th>
@@ -48,3 +48,11 @@
         {/each}
     </table>
 </div>
+
+<footer class="debug flex flex-row justify-between flex-shrink-0">
+    <a
+        download="backup.json"
+        href="data:application/json,{JSON.stringify(state.history)}">
+        Backup
+    </a>
+</footer>
