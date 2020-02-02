@@ -59,10 +59,7 @@
 
     {#if $state.state == READY}
         <TabBar state={$state.state} {tabClick} />
-        <Ready
-            class="flex-grow flex flex-col"
-            state={$state}
-            on:start={ready2Active} />
+        <Ready state={$state} on:start={ready2Active} />
     {/if}
 
     {#if $state.state == ACTIVE}
