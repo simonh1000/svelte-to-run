@@ -1,22 +1,9 @@
 <script>
     import { onMount } from "svelte";
 
-    import { dayRuns } from "../js/dayRuns";
     import RunSummary from "./PastRun";
-    export let state;
 
-    // const tmp = dayRuns.reduce((acc, dayRun) => {
-    //     acc[dayRun.title] = dayRun.list;
-    //     return acc;
-    // }, {});
-    // onMount(() => {
-    //     var mymap = L.map("mapid").setView([51.505, -0.09], 13);
-    //     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-    //         attribution:
-    //             '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributor'
-    //         //other attributes.
-    //     }).addTo(mymap);
-    // });
+    export let state;
 </script>
 
 <style>
@@ -41,10 +28,10 @@
             <th>Date</th>
             <th>Start</th>
             <th>Running (mins)</th>
-            <th>Distance (km)</th>
+            <th>Km</th>
         </thead>
         {#each state.history as run}
-            <RunSummary {run} dayRun={dayRuns[run.title]} />
+            <RunSummary {run} />
         {/each}
     </table>
 </div>

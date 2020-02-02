@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-import { dayRuns, getNextRun, dayRun2Run } from "./js/dayRuns";
+import { dayRuns, getNextRun, dayRun2Run, summarise } from "./js/dayRuns";
 
 export const READY = "READY";
 export const ACTIVE = "ACTIVE";
@@ -10,24 +10,18 @@ export const PAST_RUNS = "PAST_RUNS";
 export var state = writable({});
 
 // Ready
-// { title,
+//   state: String
+//   title,
 //   list:[{type, time}]
-//   state
 //   location
-// }
-const readyModel = {
-    title: "",
-    list: [],
-    state: READY,
-    location: {}
-};
-
-// PURE
-export const mkReadyModel = runsData => {
-    const nextRun = getNextRun(runsData);
+export const mkReadyModel = history => {
+    const nextRun = getNextRun(history);
 
     const initialModel = {
-        ...readyModel,
+        title: "",
+        list: [],
+        state: READY,
+        location: {},
         title: nextRun,
         list: dayRuns[nextRun]
     };
@@ -36,6 +30,7 @@ export const mkReadyModel = runsData => {
 
 /*
 Active:
+  state: String
   title: String
   list:[{type, time, accTime}]
   state: Date
@@ -62,10 +57,10 @@ export const ready2Active = function(evt) {
     });
 };
 
-// Active
-// { title,
-//   list:[{type, time, accTime}]
+// Finished
 //   state
+//   title,
+//   list:[{type, time, accTime}]
 //   start
 //   end
 //   waypoints
@@ -85,7 +80,7 @@ export const active2Finished = function(evt) {
 
 // PAST_RUNS
 // state = {state, history}
-// history = {title, start, end, waypoints}
+// history = [{title, start, end, waypoints, running:Int, total: Int}]
 export const mkPastRunsModel = history => {
     state.update(s => {
         let tmp = {

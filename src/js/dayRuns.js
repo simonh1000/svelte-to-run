@@ -1,14 +1,19 @@
 // Helpers
 
+const RUN = "run";
+const WALK = "walk";
+
 export function expand(run) {
     let go = (acc, item) => {
-        let type = item[0] == "w" ? "walk" : "run";
+        let type = item[0] == "w" ? WALK : RUN;
         return [...acc, { type, time: parseInt(item.slice(1)) }];
     };
     return run.reduce(go, []);
 }
 
 // [{type,time}] -> [{type, time, accTime}]
+// time is in mins
+// accTime in seconds
 export function dayRun2Run(list, min) {
     let convertedData = list.reduce(
         ({ accTime, accItems }, item) => {
@@ -23,11 +28,29 @@ export function dayRun2Run(list, min) {
     return convertedData.accItems;
 }
 
+// prepares final totals for persistence
+export function summarise(list) {
+    let tmp = list.reduce(
+        ({ total, run }, { type, time }) => {
+            return {
+                total: total + time,
+                run: type == RUN ? run + time : run
+            };
+        },
+        { total: 0, run: 0 }
+    );
+    return {
+        total: tmp.total,
+        run: tmp.run
+    };
+}
 export function getNextRun(history) {
     // console.log(history, dayRuns);
     if (history[0]) {
         const lastRun = history[0].title;
-        return lastRun && lastRun < dayRuns.length ? lastRun + 1 : 0;
+        return typeof lastRun !== "undefined" && lastRun < dayRuns.length
+            ? lastRun + 1
+            : 0;
     }
     return 0;
 }
