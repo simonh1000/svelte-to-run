@@ -26,8 +26,7 @@
     <table>
         <thead>
             <th>Date</th>
-            <th>Start</th>
-            <th>Running (mins)</th>
+            <th>Run (mins)</th>
             <th>Km</th>
         </thead>
         {#each state.history as run}

@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { pathDistance } from "../js/view-helpers";
+    import { dateFormat } from "../js/date-format";
 
     export let run;
 
@@ -10,7 +11,7 @@
     } else if (run.waypoints && run.waypoints.length > 1) {
         distance = pathDistance(run.waypoints);
     } else {
-        distance = "unknown";
+        distance = "";
     }
     // onMount(() => {
     //     var mymap = L.map("mapid").setView([51.505, -0.09], 13);
@@ -20,6 +21,9 @@
     //         //other attributes.
     //     }).addTo(mymap);
     // });
+    const pDate = d => {
+        return dateFormat(d, "%m-%d %H:%M", false);
+    };
 </script>
 
 <style>
@@ -30,8 +34,7 @@
 </style>
 
 <tr>
-    <td>{run.start.toLocaleDateString('en-GB')}</td>
-    <td>{run.start.toLocaleTimeString('en-GB')}</td>
+    <td>{pDate(run.start)}</td>
     <td>
         {run.run}
         <small>({run.total})</small>
