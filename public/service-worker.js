@@ -7,10 +7,13 @@ workbox.routing.registerRoute(
     // Cache CSS files.
     /\.css$/,
     // Use cache but update in the background.
-    new workbox.strategies.StaleWhileRevalidate({
-        // Use a custom cache name.
-        cacheName: "css-cache"
-    })
+    // new workbox.strategies.StaleWhileRevalidate({
+    //     // Use a custom cache name.
+    //     cacheName: "css-cache"
+    // })
+
+    // ensure we always have fresh css
+    new workbox.strategies.NetworkFirst()
 );
 
 workbox.routing.registerRoute(

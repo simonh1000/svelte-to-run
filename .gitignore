@@ -28,3 +28,4 @@ public/build
 package-lock.json
 public/bundle.*
 public/*.wav
+migration
