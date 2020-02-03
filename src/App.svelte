@@ -30,16 +30,16 @@
         const initialModel = mkReadyModel(history);
     };
 
-    const initialisePastRuns = function() {
+    const initialisePastRuns = function(hs) {
         stopGeolocation();
-        const initialModel = mkPastRunsModel(history);
+        const initialModel = mkPastRunsModel(hs);
     };
 
     let tabClick = nextState => {
         if (nextState == READY) {
             initialiseReady();
         } else {
-            initialisePastRuns();
+            initialisePastRuns(history);
         }
     };
     if (history.length > 0) {

@@ -28,8 +28,10 @@
             ...runMeta
         };
         console.log("save distance", run);
+        // save and returns with new full list of runs
+        // which we want to pass to pastRuns
         const history = addLatestRun(run);
-        onSaveDistance();
+        onSaveDistance(history);
     };
     onMount(() => {
         document.querySelector("#distance").focus();
