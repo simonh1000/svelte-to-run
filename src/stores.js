@@ -2,12 +2,13 @@ import { writable } from "svelte/store";
 
 import { dayRuns, getNextRun, dayRun2Run, summarise } from "./js/dayRuns";
 
+export const SPLASH = "SPLASH";
 export const READY = "READY";
 export const ACTIVE = "ACTIVE";
 export const FINISHED = "FINISHED";
 export const PAST_RUNS = "PAST_RUNS";
 
-export var state = writable({});
+export var state = writable({ state: SPLASH });
 
 // Ready
 //   state: String
