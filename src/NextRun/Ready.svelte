@@ -21,7 +21,7 @@
         .filter(item => item.type == "run")
         .reduce((acc, item) => acc + item.time, 0);
 
-    const time = state.list.reduce((acc, item) => acc + item.time, 0);
+    let time = state.list.reduce((acc, item) => acc + item.time, 0);
 
     // the sound will not work on some systems unless it is triggered by a user action
     // attach a listener (this could be done in svelte?)
@@ -56,19 +56,19 @@
         </span>
     </Button>
 
-    <section class="m-4 flex flex-row items-center">
-        <Run />
-        <span class="ml-1 mr-4">{distance}</span>
-        <Timer />
-        <span class="ml-1">{time}</span>
-    </section>
-
-    <div>
+    <div class="mt-5 mb-2">
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />
         <label for="warm-up">Add 5 mins warm up</label>
     </div>
 
     <Activity section="-1" list={state.list} />
+
+    <section class="m-2 flex flex-row items-center">
+        <Run />
+        <span class="ml-1 mr-4">{distance}</span>
+        <Timer />
+        <span class="ml-1">{time + (warmUp ? 5 : 0)}</span>
+    </section>
 </div>
 
 <footer class="debug flex flex-row justify-between flex-shrink-0">
