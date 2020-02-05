@@ -55,6 +55,7 @@ export function getNextRun(history) {
     return 0;
 }
 
-const rawData = require("../dayRuns.json");
+let rawData = require("../dayRuns.json");
+rawData = [["r2", "w1", "r1"], ...rawData];
 export const dayRuns = rawData.map(expand);
 // console.log("dayRuns", dayRuns);
