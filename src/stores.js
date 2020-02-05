@@ -20,7 +20,6 @@ export const mkReadyModel = history => {
 
     const initialModel = {
         title: "",
-        list: [],
         state: READY,
         location: {},
         title: nextRun,
