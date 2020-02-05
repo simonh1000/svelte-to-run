@@ -15,6 +15,7 @@ export const getRunsData = () => {
         history = data;
     }
 
+    console.log("history", history);
     return history.map(run => {
         run.start = new Date(run.start);
         run.end = new Date(run.end);
@@ -57,24 +58,14 @@ function contractWPs(waypoints) {
 //  Migration
 
 function needsMigration(data) {
-    const ret =
-        data.length > 0 && data.some(r => typeof r.total === "undefined");
-    // console.log("needsMigration?", data, ret);
-    return ret;
+    return window.location.pathname == "/migrate";
 }
 
 function migrate(data) {
-    return data.map(r => {
-        // console.log(r);
-        let tmp = summarise(dayRuns[r.title]);
-        let res = {
-            ...r,
-            run: tmp.run,
-            // here we add the 5 minutes of walking beforehand
-            total: tmp.total + 5
-        };
-        // console.log("res", res);
-        // calculate distance and total from that data and add 5 mins walking at beginning
-        return res;
+    console.log("before migration", data);
+    const tmp = data.map(run => {
+        run.title = run.title + 1;
+        return run;
     });
+    return tmp;
 }

@@ -77,6 +77,7 @@ module.exports = {
     devtool: prod ? false : "source-map",
     devServer: {
         contentBase: "public",
+        historyApiFallback: true,
         hot: true,
         overlay: true
     }

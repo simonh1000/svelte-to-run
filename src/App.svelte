@@ -61,7 +61,7 @@
 
 <Header />
 <div class="flex flex-col main">
-    {#if $state.state != ACTIVE}
+    {#if $state.state != ACTIVE && $state.state != SPLASH}
         <TabBar state={$state.state} {tabClick} />
     {/if}
 
