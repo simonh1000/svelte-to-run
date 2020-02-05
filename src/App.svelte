@@ -61,13 +61,15 @@
 
 <Header />
 <div class="flex flex-col main">
+    {#if $state.state != ACTIVE}
+        <TabBar state={$state.state} {tabClick} />
+    {/if}
 
     {#if $state.state == SPLASH}
         <Splash onAccept={initialiseReady} />
     {/if}
 
     {#if $state.state == READY}
-        <TabBar state={$state.state} {tabClick} />
         <Ready state={$state} on:start={ready2Active} />
     {/if}
 
@@ -76,12 +78,10 @@
     {/if}
 
     {#if $state.state == FINISHED}
-        <TabBar state={$state.state} {tabClick} />
         <Finished state={$state} onSaveDistance={initialisePastRuns} />
     {/if}
 
     {#if $state.state == PAST_RUNS}
-        <TabBar state={$state.state} {tabClick} />
         <PastRuns state={$state} />
     {/if}
 </div>
