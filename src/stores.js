@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-import { dayRuns, getNextRun, dayRun2Run, summarise } from "./js/dayRuns";
+import { dayRuns, getNextRun, dayRun2Run } from "./js/dayRuns";
 
 export const SPLASH = "SPLASH";
 export const READY = "READY";
@@ -8,24 +8,29 @@ export const ACTIVE = "ACTIVE";
 export const FINISHED = "FINISHED";
 export const PAST_RUNS = "PAST_RUNS";
 
-export var state = writable({ state: SPLASH });
+export var state = writable({ state: SPLASH, history: [] });
 
+export const setHistory = history => {
+    state.update(s => ({ ...s, history: history }));
+};
 // Ready
 //   state: String
+//   history: [Runs] - not used on this screen
 //   title,
 //   list:[{type, time}]
 //   location
-export const mkReadyModel = history => {
-    const nextRun = getNextRun(history);
-
-    const initialModel = {
-        title: "",
-        state: READY,
-        location: {},
-        title: nextRun,
-        list: dayRuns[nextRun]
-    };
-    state.set(initialModel);
+export const mkReadyModel = nextRun => {
+    state.update(s => {
+        return {
+            state: READY,
+            history: s.history,
+            title: "",
+            location: {},
+            title: nextRun,
+            list: dayRuns[nextRun]
+        };
+    });
+    // state.set(initialModel);
 };
 
 /*
@@ -45,9 +50,10 @@ export const ready2Active = function(evt) {
             : s.list;
 
         let newState = {
+            state: ACTIVE,
+            history: s.history,
             title: s.title,
             list: dayRun2Run(list, evt.detail.minute),
-            state: ACTIVE,
             start: new Date(),
             wakeLock: false,
             waypoints: s.location.hasOwnProperty("coords") ? [s.location] : []
@@ -81,11 +87,11 @@ export const active2Finished = function(evt) {
 // PAST_RUNS
 // state = {state, history}
 // history = [{title, start, end, waypoints, running:Int, total: Int}]
-export const mkPastRunsModel = history => {
+export const mkPastRunsModel = () => {
     state.update(s => {
         let tmp = {
             state: PAST_RUNS,
-            history
+            history: s.history
         };
         console.log("active2Finished", tmp);
         return tmp;

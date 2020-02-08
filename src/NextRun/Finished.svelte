@@ -9,7 +9,7 @@
     import Activity from "./Activity.svelte";
 
     export let state;
-    export let onSaveDistance;
+    export let onRunCompleted;
 
     let distance =
         state.waypoints && state.waypoints.length > 1
@@ -30,8 +30,7 @@
         console.log("save distance", run);
         // save and returns with new full list of runs
         // which we want to pass to pastRuns
-        const history = addLatestRun(run);
-        onSaveDistance(history);
+        onRunCompleted(run);
     };
     onMount(() => {
         document.querySelector("#distance").focus();

@@ -55,9 +55,14 @@ export function getNextRun(history) {
     return 0;
 }
 
-let rawData = require("../dayRuns.json");
-rawData =
+let fileContent;
+try {
+    fileContent = require("../dayRuns.json");
+} catch (e) {
+    fileContent = [];
+}
+let rawData =
     window.location.pathname == "/debug"
-        ? [["r2", "w1", "r1"], ...rawData]
-        : rawData;
+        ? [["r2", "w1", "r1"], ...fileContent]
+        : fileContent;
 export const dayRuns = rawData.map(expand);

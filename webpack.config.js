@@ -5,6 +5,8 @@ const mode = process.env.NODE_ENV || "development";
 const prod = mode === "production";
 const dev = !prod;
 
+var port = process.env.PORT || 5000;
+
 module.exports = {
     entry: {
         bundle: ["./src/main.js"]
@@ -77,6 +79,7 @@ module.exports = {
     devtool: prod ? false : "source-map",
     devServer: {
         contentBase: "public",
+        port,
         historyApiFallback: true,
         hot: true,
         overlay: true
