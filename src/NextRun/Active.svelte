@@ -2,6 +2,7 @@
     import { createEventDispatcher, onMount } from "svelte";
     import EyeCheckOutline from "svelte-material-icons/EyeCheckOutline.svelte";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
+    import Timer from "svelte-material-icons/Timer.svelte";
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
@@ -58,21 +59,24 @@
     .banner {
         position: relative;
     }
-    .type {
-        position: absolute;
-        left: 0;
-        font-size: 32px;
-    }
     .counter {
         font-size: 78px;
+    }
+    .elapsed {
+        min-width: 4ch;
     }
 </style>
 
 <div class="m-3 flex flex-col flex-grow">
-    <div>{ppTime(time)}</div>
+    <div class="flex flex-row items-center justify-between text-2xl">
+        <div class="capitalize">{state.list[section].type}</div>
+        <div class="flex flex-row items-center">
+            <Timer />
+            <span class="elapsed ml-2">{ppTime(time)}</span>
+        </div>
+    </div>
 
     <div class="banner flex flex-row items-center justify-center">
-        <div class="type">{state.list[section].type}</div>
         <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
     </div>
 
