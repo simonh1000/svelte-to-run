@@ -11,7 +11,10 @@ export const PAST_RUNS = "PAST_RUNS";
 export var state = writable({ state: SPLASH, history: [] });
 
 export const setHistory = history => {
-    state.update(s => ({ ...s, history: history }));
+    state.update(s => ({ ...s, history }));
+};
+export const setDebug = debug => {
+    state.update(s => ({ ...s, debug }));
 };
 // Ready
 //   state: String
@@ -24,6 +27,7 @@ export const mkReadyModel = nextRun => {
         return {
             state: READY,
             history: s.history,
+            debug: s.debug,
             title: "",
             location: {},
             title: nextRun,
@@ -57,6 +61,7 @@ export const ready2Active = function(evt) {
         let newState = {
             state: ACTIVE,
             history: s.history,
+            debug: s.debug,
             title: s.title,
             list: dayRun2Run(list, evt.detail.minute),
             start: new Date(),
@@ -96,7 +101,8 @@ export const mkPastRunsModel = () => {
     state.update(s => {
         let tmp = {
             state: PAST_RUNS,
-            history: s.history
+            history: s.history,
+            debug: s.debug
         };
         console.log("active2Finished", tmp);
         return tmp;

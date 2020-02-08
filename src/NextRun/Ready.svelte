@@ -85,14 +85,15 @@
     <Activity section="-1" list={state.list} />
 </div>
 
-<footer class="debug flex flex-row justify-between flex-shrink-0">
-    <button id="debug-button" on:click={() => mkDispatch(10)}>
-        Debug mode
-    </button>
-    {#if state.location.coords}
-        <span class="icon-container">
-            <CrosshairsGps />
-        </span>
-    {/if}
-</footer>
-<!-- {JSON.stringify(state.location)} -->
+{#if state.debug}
+    <footer class="debug flex flex-row justify-between flex-shrink-0">
+        <button id="debug-button" on:click={() => mkDispatch(10)}>
+            Debug mode
+        </button>
+        {#if state.location.coords}
+            <span class="icon-container">
+                <CrosshairsGps />
+            </span>
+        {/if}
+    </footer>
+{/if}

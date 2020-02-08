@@ -22,7 +22,7 @@
     }
 </style>
 
-<div class="container flex-grow">
+<div class="container flex flex-col flex-grow">
     {#if state.history.length > 0}
         <table>
             <thead>
@@ -34,13 +34,17 @@
                 <RunSummary {run} />
             {/each}
         </table>
-    {:else}No runs yet{/if}
+    {:else}
+        <h3 class="text-xl text-center font-bold mt-6">No runs yet</h3>
+    {/if}
 </div>
 
-<footer class="debug flex flex-row justify-between flex-shrink-0">
-    <a
-        download="backup.json"
-        href="data:application/json,{JSON.stringify(state.history)}">
-        Backup
-    </a>
-</footer>
+{#if state.debug}
+    <footer class="debug flex flex-row justify-between flex-shrink-0">
+        <a
+            download="backup.json"
+            href="data:application/json,{JSON.stringify(state.history)}">
+            Backup
+        </a>
+    </footer>
+{/if}

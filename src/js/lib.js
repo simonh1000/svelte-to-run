@@ -55,8 +55,8 @@ export const enableSound = function() {
         document
             .querySelector("#start-button")
             .addEventListener("click", evtHandler);
-        document
-            .querySelector("#debug-button")
-            .addEventListener("click", evtHandler);
+
+        const debugBtn = document.querySelector("#debug-button");
+        if (debugBtn) debugBtn.addEventListener("click", evtHandler);
     }, 100);
 };

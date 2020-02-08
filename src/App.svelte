@@ -1,10 +1,11 @@
 <script>
     import { getRunsData, addLatestRun } from "./js/persistence";
-    import { dayRuns, getNextRun, dayRun2Run, summarise } from "./js/dayRuns";
-
+    import { dayRuns, getNextRun } from "./js/dayRuns";
+    import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,
         setHistory,
+        setDebug,
         mkReadyModel,
         ready2Active,
         active2Finished,
@@ -16,18 +17,20 @@
         PAST_RUNS,
         geoCb
     } from "./stores";
-    import { startGeolocation, stopGeolocation } from "./js/geolocation";
 
     import Header from "./Components/Header.svelte";
     import TabBar from "./Components/TabBar.svelte";
     import Splash from "./Components/Splash.svelte";
+
     import Ready from "./NextRun/Ready.svelte";
     import Active from "./NextRun/Active.svelte";
     import Finished from "./NextRun/Finished.svelte";
+
     import PastRuns from "./PastRuns/PastRuns.svelte";
 
     // load past runs from localstorage, and put in state
     setHistory(getRunsData());
+    setDebug(window.location.pathname == "/debug");
 
     // state changes
 
@@ -77,9 +80,8 @@
 
 <style>
     .main {
-        max-width: 840px;
+        max-width: 640px;
         margin: 0 auto;
-        padding: 0 15px;
         /* ensure debug shows on mobile above fold */
         height: -moz-available; /* WebKit-based browsers will ignore this. */
         height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
@@ -89,10 +91,10 @@
 
 <div class="flex flex-col main">
     <Header />
-    <div class="flex flex-col flex-grow">
-        {#if $state.state != ACTIVE && $state.state != SPLASH && !checkAllDone($state.history)}
-            <TabBar state={$state.state} {tabClick} />
-        {/if}
+    {#if $state.state != ACTIVE && $state.state != SPLASH && !checkAllDone($state.history)}
+        <TabBar state={$state.state} {tabClick} />
+    {/if}
+    <div class="flex flex-col flex-grow pl-2 pr-2">
 
         {#if $state.state == SPLASH}
             <Splash onAccept={initialiseReady} />

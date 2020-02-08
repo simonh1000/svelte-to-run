@@ -60,7 +60,7 @@
         position: relative;
     }
     .counter {
-        font-size: 78px;
+        font-size: 90px;
     }
     .elapsed {
         min-width: 4ch;
@@ -83,16 +83,18 @@
     <Activity {section} list={state.list} />
 </div>
 
-<footer class="debug flex flex-row justify-between flex-shrink-0">
-    <div>{state.waypoints.length + ' waypoints collected'}</div>
-    {#if state.wakeLock}
-        <span class="icon-container">
-            <EyeCheckOutline />
-        </span>
-    {/if}
-    {#if state.waypoints}
-        <span class="icon-container">
-            <CrosshairsGps />
-        </span>
-    {/if}
-</footer>
+{#if state.debug}
+    <footer class="debug flex flex-row justify-between flex-shrink-0">
+        <div>{state.waypoints.length + ' waypoints collected'}</div>
+        {#if state.wakeLock}
+            <span class="icon-container">
+                <EyeCheckOutline />
+            </span>
+        {/if}
+        {#if state.waypoints}
+            <span class="icon-container">
+                <CrosshairsGps />
+            </span>
+        {/if}
+    </footer>
+{/if}
