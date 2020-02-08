@@ -5,12 +5,22 @@
     import Run from "svelte-material-icons/Run.svelte";
     import Timer from "svelte-material-icons/Timer.svelte";
 
+    import { addWarmUp, removeWarmUp } from "../stores";
     import { enableSound } from "../js/lib.js";
     import Activity from "./Activity.svelte";
 
     export let state;
 
     let warmUp = false;
+    const toggleWarmUp = evt => {
+        if (warmUp) {
+            // remove warm up
+            removeWarmUp();
+        } else {
+            addWarmUp();
+        }
+        warmUp = !warmUp;
+    };
 
     const dispatch = createEventDispatcher();
     const mkDispatch = minute => {
@@ -57,11 +67,13 @@
     </Button>
 
     <div class="mt-5 mb-2">
-        <input type="checkbox" id="warm-up" bind:checked={warmUp} />
+        <input
+            id="warm-up"
+            type="checkbox"
+            checked={warmUp}
+            on:change={toggleWarmUp} />
         <label for="warm-up">Optionally add 5 mins warm up</label>
     </div>
-
-    <Activity section="-1" list={state.list} />
 
     <section class="m-2 flex flex-row items-center">
         <Run />
@@ -69,6 +81,8 @@
         <Timer />
         <span class="ml-1">{time + (warmUp ? 5 : 0)}</span>
     </section>
+
+    <Activity section="-1" list={state.list} />
 </div>
 
 <footer class="debug flex flex-row justify-between flex-shrink-0">

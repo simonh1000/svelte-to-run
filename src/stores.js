@@ -30,9 +30,14 @@ export const mkReadyModel = nextRun => {
             list: dayRuns[nextRun]
         };
     });
-    // state.set(initialModel);
 };
 
+export const addWarmUp = () => {
+    state.update(s => ({ ...s, list: [{ type: "walk", time: 5 }, ...s.list] }));
+};
+export const removeWarmUp = () => {
+    state.update(s => ({ ...s, list: s.list.slice(1) }));
+};
 /*
 Active:
   state: String
