@@ -26,26 +26,20 @@
     import Finished from "./NextRun/Finished.svelte";
     import PastRuns from "./PastRuns/PastRuns.svelte";
 
-    // load past runs from localstorage
+    // load past runs from localstorage, and put in state
     setHistory(getRunsData());
 
-    // $: nextRun = getNextRun($state.history);
-    // $: allRunsCompleted = nextRun >= dayRuns.length;
-
-    const checkAllDone = hs => getNextRun(hs) >= dayRuns.length;
-
-    // console.log("nextRun", nextRun);
-    // console.log("allRunsCompleted", allRunsCompleted);
+    // state changes
 
     const initialiseReady = function() {
         let nextRun = getNextRun($state.history);
 
-        if (nextRun >= dayRuns.length) {
-            console.error("No more runs available");
-            initialisePastRuns();
-        } else {
+        if (nextRun < dayRuns.length) {
             startGeolocation(geoCb);
             mkReadyModel(nextRun);
+        } else {
+            // there are no more runs left to offer user
+            initialisePastRuns();
         }
     };
 
@@ -54,11 +48,17 @@
         mkPastRunsModel();
     };
 
+    // Called by Finish
     const onRunCompleted = run => {
         const history = addLatestRun(run);
         setHistory(history);
         initialisePastRuns();
     };
+
+    // helpers for view.
+
+    // Feels like there should be a better way based on ractive variables
+    const checkAllDone = hs => getNextRun(hs) >= dayRuns.length;
 
     let tabClick = nextState => {
         if (nextState == READY) {
@@ -111,7 +111,7 @@
 
     {#if $state.state == PAST_RUNS}
         {#if checkAllDone($state.history)}
-            <h3>All Runs completed</h3>
+            <h3 class="text-xl">All Runs completed</h3>
         {/if}
         <PastRuns state={$state} />
     {/if}
