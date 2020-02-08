@@ -10,7 +10,7 @@
                 <span class="icon-container">
                     <Run />
                 </span>
-                Start to Run
+                Svelte to Run
             </Title>
         </Section>
     </Row>

@@ -23,16 +23,18 @@
 </style>
 
 <div class="container flex-grow">
-    <table>
-        <thead>
-            <th>Date</th>
-            <th>Run (mins)</th>
-            <th>Km</th>
-        </thead>
-        {#each state.history as run}
-            <RunSummary {run} />
-        {/each}
-    </table>
+    {#if state.history.length > 0}
+        <table>
+            <thead>
+                <th>Date</th>
+                <th>Run (mins)</th>
+                <th>Km</th>
+            </thead>
+            {#each state.history as run}
+                <RunSummary {run} />
+            {/each}
+        </table>
+    {:else}No runs yet{/if}
 </div>
 
 <footer class="debug flex flex-row justify-between flex-shrink-0">

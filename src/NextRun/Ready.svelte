@@ -58,7 +58,7 @@
 
     <div class="mt-5 mb-2">
         <input type="checkbox" id="warm-up" bind:checked={warmUp} />
-        <label for="warm-up">Add 5 mins warm up</label>
+        <label for="warm-up">Optionally add 5 mins warm up</label>
     </div>
 
     <Activity section="-1" list={state.list} />

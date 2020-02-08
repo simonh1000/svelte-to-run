@@ -70,7 +70,7 @@
 
     // if we have some runs, the user must have passed via SPLASH already
     // so let's switch to that
-    if (history.length > 0) {
+    if ($state.history.length > 0) {
         initialiseReady();
     }
 </script>
