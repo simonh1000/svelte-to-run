@@ -81,38 +81,40 @@
         margin: 0 auto;
         padding: 0 15px;
         /* ensure debug shows on mobile above fold */
-        min-height: -moz-available; /* WebKit-based browsers will ignore this. */
-        min-height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
-        min-height: fill-available;
+        height: -moz-available; /* WebKit-based browsers will ignore this. */
+        height: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+        height: fill-available;
     }
 </style>
 
-<Header />
 <div class="flex flex-col main">
-    {#if $state.state != ACTIVE && $state.state != SPLASH && !checkAllDone($state.history)}
-        <TabBar state={$state.state} {tabClick} />
-    {/if}
-
-    {#if $state.state == SPLASH}
-        <Splash onAccept={initialiseReady} />
-    {/if}
-
-    {#if $state.state == READY}
-        <Ready state={$state} on:start={ready2Active} />
-    {/if}
-
-    {#if $state.state == ACTIVE}
-        <Active state={$state} on:finished={active2Finished} />
-    {/if}
-
-    {#if $state.state == FINISHED}
-        <Finished state={$state} {onRunCompleted} />
-    {/if}
-
-    {#if $state.state == PAST_RUNS}
-        {#if checkAllDone($state.history)}
-            <h3 class="text-xl">All Runs completed</h3>
+    <Header />
+    <div class="flex flex-col flex-grow">
+        {#if $state.state != ACTIVE && $state.state != SPLASH && !checkAllDone($state.history)}
+            <TabBar state={$state.state} {tabClick} />
         {/if}
-        <PastRuns state={$state} />
-    {/if}
+
+        {#if $state.state == SPLASH}
+            <Splash onAccept={initialiseReady} />
+        {/if}
+
+        {#if $state.state == READY}
+            <Ready state={$state} on:start={ready2Active} />
+        {/if}
+
+        {#if $state.state == ACTIVE}
+            <Active state={$state} on:finished={active2Finished} />
+        {/if}
+
+        {#if $state.state == FINISHED}
+            <Finished state={$state} {onRunCompleted} />
+        {/if}
+
+        {#if $state.state == PAST_RUNS}
+            {#if checkAllDone($state.history)}
+                <h3 class="text-xl">All Runs completed</h3>
+            {/if}
+            <PastRuns state={$state} />
+        {/if}
+    </div>
 </div>

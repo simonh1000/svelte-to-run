@@ -27,9 +27,9 @@
     </li>
     <li class="mb-2 font-small">
         <span class="font-bold">Disclaimer</span>
-        Seek advice about starting to run, on stretching, and on taking breaks
-        between runs. The app collects no personal data - your running data is
-        stored on your phone. But it does use Google Analytics - see their
+        Seek appropriate health advice before starting to run. The app collects
+        no personal data - running data is stored on your phone. But it does use
+        Google Analytics - see their
         <a href="https://policies.google.com/technologies/partner-sites">
             privacy policy
         </a>

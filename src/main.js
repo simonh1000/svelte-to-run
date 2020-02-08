@@ -6,7 +6,9 @@ if ("serviceWorker" in navigator) {
     });
 }
 
+// Material design
 import "./App.scss";
+// Tailwind
 import "./styles.css";
 import App from "./App.svelte";
 
