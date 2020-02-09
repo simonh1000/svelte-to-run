@@ -36,9 +36,10 @@
 <tr>
     <td>{pDate(run.start)}</td>
     <td>
-        {run.run}
-        <small>({run.total})</small>
+        <div class="flex flex-row justify-between pl-1 pr-6">
+            {run.run}
+            <small>({run.total})</small>
+        </div>
     </td>
     <td>{distance}</td>
 </tr>
-<!-- {JSON.stringify(run)} -->

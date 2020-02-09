@@ -1,7 +1,5 @@
 # Start to Run
 
-Based on
-
 ## Privacy
 
 The app records location, but all the data is saved to your brower's local storage and nowhere else!
