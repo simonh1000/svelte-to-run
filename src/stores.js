@@ -54,16 +54,12 @@ Active:
 */
 export const ready2Active = function(evt) {
     state.update(s => {
-        const list = evt.detail.warmUp
-            ? [{ type: "walk", time: 5 }, ...s.list]
-            : s.list;
-
         let newState = {
             state: ACTIVE,
             history: s.history,
             debug: s.debug,
             title: s.title,
-            list: dayRun2Run(list, evt.detail.minute),
+            list: dayRun2Run(s.list, evt.detail.minute),
             start: new Date(),
             wakeLock: false,
             waypoints: s.location.hasOwnProperty("coords") ? [s.location] : []
@@ -104,7 +100,7 @@ export const mkPastRunsModel = () => {
             history: s.history,
             debug: s.debug
         };
-        console.log("active2Finished", tmp);
+        // console.log("active2Finished", tmp);
         return tmp;
     });
 };
@@ -115,7 +111,7 @@ export const geoCb = res => {
     if (res.tag == "error") return;
 
     state.update(s => {
-        console.log("geoCb", res);
+        // console.log("geoCb", res);
         if (s.state == READY) {
             return { ...s, location: res.payload };
         }

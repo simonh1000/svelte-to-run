@@ -1,6 +1,6 @@
 {
     "name": "svelte-app",
-    "version": "0.9.0",
+    "version": "1.0.1",
     "devDependencies": {
         "autoprefixer": "^9.7.4",
         "cross-env": "^5.2.0",
