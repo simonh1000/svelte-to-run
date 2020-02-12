@@ -97,4 +97,9 @@
             </span>
         {/if}
     </footer>
+{:else}
+    <footer class="bg-red-200 mb-5 p-3">
+        The spoken announcements require the phone to stay on. Leave this
+        browser window visible and do not press the sleep button.
+    </footer>
 {/if}
