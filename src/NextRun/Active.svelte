@@ -6,6 +6,7 @@
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
+    import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
@@ -16,6 +17,7 @@
     let section = 0; // array index of run
 
     const dispatch = createEventDispatcher();
+    let runMeta = summarise(state.list);
 
     let interval = setInterval(() => {
         time++;
@@ -23,6 +25,7 @@
             if (section + 1 < state.list.length) {
                 // end of section
                 section++;
+                doBackup();
                 mkAnnouncement();
             } else {
                 // end of run
@@ -35,6 +38,17 @@
             }
         }
     }, 1000);
+
+    const doBackup = () => {
+        let run = {
+            title: state.title,
+            waypoints: state.waypoints,
+            start: state.start,
+            backup: new Date(),
+            ...runMeta
+        };
+        backupRun(run);
+    };
 
     const mkAnnouncement = () => {
         let item = state.list[section];

@@ -4,7 +4,6 @@
 
     import { dayRuns, summarise } from "../js/dayRuns";
     import { pathDistance } from "../js/view-helpers";
-    import { addLatestRun } from "../js/persistence";
 
     import Activity from "./Activity.svelte";
 

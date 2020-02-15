@@ -1,10 +1,9 @@
-import { dayRuns, summarise } from "./dayRuns";
-
 // Local storage
-const key = "running-app";
+const STORAGE_KEY = "running-app";
+const BACKUP = "run-backup";
 
 export const getRunsData = () => {
-    let data = JSON.parse(localStorage.getItem(key)) || [];
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
     let history;
     if (needsMigration(data)) {
@@ -34,11 +33,28 @@ export const addLatestRun = run => {
     return newRuns;
 };
 
-const setRunsData = newRuns => {
-    console.log("About to persist", newRuns);
-    localStorage.setItem(key, JSON.stringify(newRuns));
+export const saveRunHistory = history => {
+    let newRuns = history.map(run => {
+        run.waypoints = contractWPs(run.waypoints);
+        return run;
+    });
+    setRunsData(newRuns);
+    clearBackup();
 };
 
+const setRunsData = newRuns => {
+    console.log("About to persist", newRuns);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newRuns));
+};
+
+export const backupRun = run => {
+    console.log("About to backup", run);
+    localStorage.setItem(BACKUP, JSON.stringify(run));
+};
+const clearBackup = () => {
+    console.log("Removing backup");
+    localStorage.removeItem(BACKUP);
+};
 // Helpers
 
 function expandWPs(waypoints) {

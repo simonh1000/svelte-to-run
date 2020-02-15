@@ -1,5 +1,5 @@
 <script>
-    import { getRunsData, addLatestRun } from "./js/persistence";
+    import { getRunsData, saveRunHistory } from "./js/persistence";
     import { dayRuns, getNextRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
@@ -34,7 +34,7 @@
 
     // state changes
 
-    const initialiseReady = function() {
+    const initialiseReady = () => {
         let nextRun = getNextRun($state.history);
 
         if (nextRun < dayRuns.length) {
@@ -53,7 +53,8 @@
 
     // Called by Finish
     const onRunCompleted = run => {
-        const history = addLatestRun(run);
+        const history = [run, ...$state.history];
+        saveRunHistory(history);
         setHistory(history);
         initialisePastRuns();
     };
