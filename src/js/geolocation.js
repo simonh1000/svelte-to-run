@@ -2,6 +2,9 @@ var watchId;
 
 export const startGeolocation = function(cb) {
     console.log("Starting geolocation");
+    const options = {
+        enableHighAccuracy: true
+    };
     watchId = navigator.geolocation.watchPosition(
         pos => {
             cb({
@@ -21,7 +24,8 @@ export const startGeolocation = function(cb) {
                 tag: "error",
                 payload: JSON.stringify(err, Object.getOwnPropertyNames(err))
             });
-        }
+        },
+        options
     );
 };
 

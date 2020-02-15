@@ -25,3 +25,4 @@ The app records location, but all the data is saved to your brower's local stora
 ## Changelog
 
 1.1 - add warning about not turning off phone
+1.1.1 - use enableHighAccuracy for geolocation
