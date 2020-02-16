@@ -46,13 +46,22 @@ export function summarise(list) {
 }
 export function getNextRun(history) {
     // console.log(history, dayRuns);
-    if (history[0]) {
-        const lastRun = history[0].title;
-        return typeof lastRun !== "undefined" && lastRun < dayRuns.length
-            ? lastRun + 1
-            : 0;
-    }
-    return 0;
+    let tmp = history.reduce((acc, run) => {
+        // if we already have the latest run then keep returning that
+        if (acc) return acc;
+        // otherwise if we completed a run then
+        if (run.completed && typeof run.title === "number") return run.title;
+        return acc;
+    }, null);
+
+    // if (history[0]) {
+    //     const lastRun = history[0].title;
+    //     return typeof lastRun !== "undefined" && lastRun < dayRuns.length
+    //         ? lastRun + 1
+    //         : 0;
+    // }
+    // return 0;
+    return tmp ? tmp + 1 : 0;
 }
 
 let fileContent;

@@ -1,11 +1,13 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
+    import Button, { Label } from "@smui/button";
     import EyeCheckOutline from "svelte-material-icons/EyeCheckOutline.svelte";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
     import Timer from "svelte-material-icons/Timer.svelte";
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
+    import { summarise } from "../js/dayRuns";
     import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
@@ -34,7 +36,10 @@
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
                 // this returns the ful list of runs, but we don't need it at present
-                dispatch("finished", { waypoints: state.waypoints });
+                dispatch("finished", {
+                    waypoints: state.waypoints,
+                    completed: true
+                });
             }
         }
     }, 1000);
@@ -48,6 +53,14 @@
             ...runMeta
         };
         backupRun(run);
+    };
+
+    const abandon = () => {
+        console.error("abandon");
+        stopGeolocation();
+        clearInterval(interval);
+        say({ txt: "Run abandoned" });
+        dispatch("finished", { waypoints: state.waypoints, completed: false });
     };
 
     const mkAnnouncement = () => {
@@ -74,27 +87,38 @@
         position: relative;
     }
     .counter {
-        font-size: 90px;
+        font-size: 120px;
     }
     .elapsed {
         min-width: 4ch;
     }
 </style>
 
-<div class="m-3 flex flex-col flex-grow">
-    <div class="flex flex-row items-center justify-between text-2xl">
-        <div class="capitalize">{state.list[section].type}</div>
-        <div class="flex flex-row items-center">
-            <Timer />
-            <span class="elapsed ml-2">{ppTime(time)}</span>
+<div class="m-3 flex flex-col flex-grow justify-between">
+    <div class="flex flex-col">
+        <div class="flex flex-row items-center justify-between text-2xl">
+            <div class="capitalize">{state.list[section].type}</div>
+            <div class="flex flex-row items-center">
+                <Timer />
+                <span class="elapsed ml-2">{ppTime(time)}</span>
+            </div>
         </div>
+
+        <div class="banner flex flex-row items-center justify-center">
+            <div class="counter">
+                {ppTime(state.list[section].accTime - time)}
+            </div>
+        </div>
+
+        <Activity {section} list={state.list} />
     </div>
 
-    <div class="banner flex flex-row items-center justify-center">
-        <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
+    <div class="self-center">
+        <Button variant="raised" class="danger" on:click={abandon}>
+            <Label>Abandon</Label>
+        </Button>
+        <span>Your workout so far will be saved</span>
     </div>
-
-    <Activity {section} list={state.list} />
 </div>
 
 {#if state.debug}

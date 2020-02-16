@@ -81,8 +81,8 @@ export const active2Finished = function(evt) {
     state.update(s => {
         let tmp = {
             ...s,
+            ...evt.detail,
             state: FINISHED,
-            waypoints: evt.detail.waypoints,
             end: new Date()
         };
         console.log("active2Finished", tmp);

@@ -34,6 +34,9 @@
 </style>
 
 <tr>
+    <td class={run.completed ? 'text-green-600' : 'text-red-600'}>
+        {run.title + 1}
+    </td>
     <td>{pDate(run.start)}</td>
     <td>
         <div class="flex flex-row justify-between pl-1 pr-6">

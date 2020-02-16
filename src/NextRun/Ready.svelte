@@ -1,6 +1,6 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
-    import Button from "@smui/button";
+    import Button, { Label } from "@smui/button";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
     import Run from "svelte-material-icons/Run.svelte";
     import Timer from "svelte-material-icons/Timer.svelte";

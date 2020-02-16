@@ -1,5 +1,5 @@
 <script>
-    import { getRunsData, saveRunHistory } from "./js/persistence";
+    import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
     import { dayRuns, getNextRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
@@ -36,6 +36,7 @@
 
     const initialiseReady = () => {
         let nextRun = getNextRun($state.history);
+        getBackup();
 
         if (nextRun < dayRuns.length) {
             startGeolocation(geoCb);

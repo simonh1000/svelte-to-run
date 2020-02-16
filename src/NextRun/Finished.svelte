@@ -20,6 +20,7 @@
         let run = {
             title: state.title,
             waypoints: state.waypoints,
+            completed: state.completed,
             // binding distance to input turns it into a string
             distance: parseFloat(distance),
             start: state.start,

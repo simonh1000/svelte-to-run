@@ -9,12 +9,12 @@ export const getRunsData = () => {
     if (needsMigration(data)) {
         history = migrate(data);
         // save as soon as migrated
-        setRunsData(history);
+        // setRunsData(history);
     } else {
         history = data;
     }
 
-    console.log("history", history);
+    // console.log("history", history);
     return history.map(run => {
         run.start = new Date(run.start);
         run.end = new Date(run.end);
@@ -51,10 +51,18 @@ export const backupRun = run => {
     console.log("About to backup", run);
     localStorage.setItem(BACKUP, JSON.stringify(run));
 };
+
+export const getBackup = () => {
+    let run = localStorage.getItem(BACKUP);
+    console.log("getBackup", run);
+    return run;
+};
+
 const clearBackup = () => {
     console.log("Removing backup");
     localStorage.removeItem(BACKUP);
 };
+
 // Helpers
 
 function expandWPs(waypoints) {
@@ -73,15 +81,17 @@ function contractWPs(waypoints) {
 
 //  Migration
 
-function needsMigration(data) {
-    return window.location.pathname == "/migrate";
+function needsMigration(history) {
+    // return window.location.pathname == "/migrate";
+    let res = typeof history[0].completed;
+    console.log("needs migration?", res === "undefined");
+    return res === "undefined";
+    // return window.location.pathname == "/migrate";
 }
 
-function migrate(data) {
-    console.log("before migration", data);
-    const tmp = data.map(run => {
-        run.title = run.title + 1;
-        return run;
+function migrate(history) {
+    console.log("before migration", history);
+    return history.map(run => {
+        return { ...run, completed: true };
     });
-    return tmp;
 }
