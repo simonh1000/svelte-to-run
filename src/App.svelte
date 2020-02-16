@@ -1,6 +1,6 @@
 <script>
     import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
-    import { dayRuns, getNextRun } from "./js/dayRuns";
+    import { dayRuns, getLastRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,
@@ -35,8 +35,13 @@
     // state changes
 
     const initialiseReady = () => {
-        let nextRun = getNextRun($state.history);
-        getBackup();
+        let nextRun = getLastRun($state.history) + 1;
+        console.log(
+            `[App] next run has index ${nextRun} which for the user is run ${nextRun +
+                1}`
+        );
+
+        // getBackup();
 
         if (nextRun < dayRuns.length) {
             startGeolocation(geoCb);
@@ -62,8 +67,8 @@
 
     // helpers for view.
 
-    // Feels like there should be a better way based on ractive variables
-    const checkAllDone = hs => getNextRun(hs) >= dayRuns.length;
+    // Feels like there should be a better way based on reactive variables
+    const checkAllDone = hs => getLastRun(hs) >= dayRuns.length;
 
     let tabClick = nextState => {
         if (nextState == READY) {

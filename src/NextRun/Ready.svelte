@@ -26,7 +26,7 @@
     const mkDispatch = minute => {
         dispatch("start", { minute, warmUp });
     };
-    console.log("****", state.list);
+
     const distance = state.list.reduce((acc, item) => {
         return item.type == "run" ? acc + item.time : acc;
     }, 0);

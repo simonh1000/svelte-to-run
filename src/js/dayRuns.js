@@ -44,8 +44,9 @@ export function summarise(list) {
         run: tmp.run
     };
 }
-export function getNextRun(history) {
-    // console.log(history, dayRuns);
+
+// gets last completed run
+export function getLastRun(history) {
     let tmp = history.reduce((acc, run) => {
         // if we already have the latest run then keep returning that
         if (acc) return acc;
@@ -53,8 +54,8 @@ export function getNextRun(history) {
         if (run.completed && typeof run.title === "number") return run.title;
         return acc;
     }, 0);
-
-    return tmp + 1;
+    // console.log("last run ", tmp);
+    return tmp;
 }
 
 let fileContent;

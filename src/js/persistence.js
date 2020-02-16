@@ -2,6 +2,7 @@
 const STORAGE_KEY = "running-app";
 const BACKUP = "run-backup";
 
+// gets data and expands waypoints before retuning data
 export const getRunsData = () => {
     let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
@@ -9,6 +10,7 @@ export const getRunsData = () => {
     if (needsMigration(data)) {
         history = migrate(data);
         // save as soon as migrated
+        console.log("** SKIPPING migration");
         // setRunsData(history);
     } else {
         history = data;
@@ -23,16 +25,7 @@ export const getRunsData = () => {
     });
 };
 
-// export const addLatestRun = run => {
-//     let runs = getRunsData();
-//     let newRuns = [run, ...runs].map(run => {
-//         run.waypoints = contractWPs(run.waypoints);
-//         return run;
-//     });
-//     setRunsData(newRuns);
-//     return newRuns;
-// };
-
+// contracts waypoints before persisting
 export const saveRunHistory = history => {
     let newRuns = history.map(run => {
         run.waypoints = contractWPs(run.waypoints);
