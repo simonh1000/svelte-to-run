@@ -50,7 +50,9 @@
 
 <div class="flex flex-col items-center">
 
-    <h2 class="mt-3 mb-3">Well done! Completed {state.title}</h2>
+    {#if state.completed}
+        <h2 class="mt-3 mb-3 text-xl">Well done! Completed {state.title}</h2>
+    {/if}
 
     <div class="input-container mb-3">
         <input id="distance" type="number" bind:value={distance} />
@@ -63,7 +65,7 @@
         <span class="start-button">Record distance</span>
     </Button>
 
-    <div class="mt-3">
+    <div class="mt-6">
         <span>{state.start.toLocaleDateString('en-GB')}</span>
         <span>
             {state.start.toLocaleTimeString('en-GB')} - {state.end.toLocaleTimeString('en-GB')}

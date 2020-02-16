@@ -82,11 +82,14 @@ function contractWPs(waypoints) {
 //  Migration
 
 function needsMigration(history) {
-    // return window.location.pathname == "/migrate";
-    let res = typeof history[0].completed;
-    console.log("needs migration?", res === "undefined");
-    return res === "undefined";
-    // return window.location.pathname == "/migrate";
+    if (history.length) {
+        // return window.location.pathname == "/migrate";
+        let res = typeof history[0].completed;
+        console.log("needs migration?", res === "undefined");
+        return res === "undefined";
+        // return window.location.pathname == "/migrate";
+    }
+    return false;
 }
 
 function migrate(history) {
