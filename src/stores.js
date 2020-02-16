@@ -111,20 +111,29 @@ export const geoCb = res => {
     if (res.tag == "error") return;
 
     state.update(s => {
-        // console.log("geoCb", res);
+        console.log("geoCb", res);
         if (s.state == READY) {
-            return { ...s, location: res.payload };
+            return { ...s, location: convertGeoPayload(res.payload) };
         }
         if (s.state == ACTIVE) {
             return {
                 ...s,
-                waypoints: [...s.waypoints, res.payload]
+                waypoints: [...s.waypoints, convertGeoPayload(res.payload)]
             };
         }
         return s;
     });
 };
 
+function convertGeoPayload(payload) {
+    return {
+        timestamp: payload.timestamp,
+        coords: {
+            latitude: payload.coords.latitude,
+            longitude: payload.coords.longitude
+        }
+    };
+}
 // helps keep track that the wake lock is working
 export const wakelockCb = res => {
     if (res.tag == "error") {

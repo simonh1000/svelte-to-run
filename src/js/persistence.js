@@ -23,15 +23,15 @@ export const getRunsData = () => {
     });
 };
 
-export const addLatestRun = run => {
-    let runs = getRunsData();
-    let newRuns = [run, ...runs].map(run => {
-        run.waypoints = contractWPs(run.waypoints);
-        return run;
-    });
-    setRunsData(newRuns);
-    return newRuns;
-};
+// export const addLatestRun = run => {
+//     let runs = getRunsData();
+//     let newRuns = [run, ...runs].map(run => {
+//         run.waypoints = contractWPs(run.waypoints);
+//         return run;
+//     });
+//     setRunsData(newRuns);
+//     return newRuns;
+// };
 
 export const saveRunHistory = history => {
     let newRuns = history.map(run => {

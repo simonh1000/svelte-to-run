@@ -52,16 +52,9 @@ export function getNextRun(history) {
         // otherwise if we completed a run then
         if (run.completed && typeof run.title === "number") return run.title;
         return acc;
-    }, null);
+    }, 0);
 
-    // if (history[0]) {
-    //     const lastRun = history[0].title;
-    //     return typeof lastRun !== "undefined" && lastRun < dayRuns.length
-    //         ? lastRun + 1
-    //         : 0;
-    // }
-    // return 0;
-    return tmp ? tmp + 1 : 0;
+    return tmp + 1;
 }
 
 let fileContent;

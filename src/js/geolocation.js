@@ -6,13 +6,7 @@ export const startGeolocation = function(cb) {
         pos => {
             cb({
                 tag: "waypoint",
-                payload: {
-                    timestamp: pos.timestamp,
-                    coords: {
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude
-                    }
-                }
+                payload: pos
             });
         },
         err => {

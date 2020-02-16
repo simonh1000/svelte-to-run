@@ -26,10 +26,10 @@
     const mkDispatch = minute => {
         dispatch("start", { minute, warmUp });
     };
-
-    const distance = state.list
-        .filter(item => item.type == "run")
-        .reduce((acc, item) => acc + item.time, 0);
+    console.log("****", state.list);
+    const distance = state.list.reduce((acc, item) => {
+        return item.type == "run" ? acc + item.time : acc;
+    }, 0);
 
     let time = state.list.reduce((acc, item) => acc + item.time, 0);
 

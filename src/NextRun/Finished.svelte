@@ -48,13 +48,13 @@
     }
 </style>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center pt-6">
 
     {#if state.completed}
-        <h2 class="mt-3 mb-3 text-xl">Well done! Completed {state.title}</h2>
+        <h2 class="mb-3 text-xl">Well done! Completed {state.title}</h2>
     {/if}
 
-    <div class="input-container mb-3">
+    <div class="input-container mb-6 border-2 border-gray-300 border-solid">
         <input id="distance" type="number" bind:value={distance} />
     </div>
 
@@ -74,4 +74,3 @@
     </div>
 
 </div>
-<!-- {JSON.stringify(state)} -->

@@ -1,5 +1,5 @@
 // Check that service workers are supported
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && window.location.hostname !== "localhost") {
     // Use the window load event to keep the page load performant
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("/service-worker.js");

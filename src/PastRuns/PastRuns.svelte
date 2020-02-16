@@ -4,6 +4,8 @@
     import RunSummary from "./PastRun";
 
     export let state;
+    console.log("PastRuns", state.history);
+    onMount(() => {});
 </script>
 
 <style>

@@ -35,7 +35,6 @@
                 stopGeolocation();
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
-                // this returns the ful list of runs, but we don't need it at present
                 dispatch("finished", {
                     waypoints: state.waypoints,
                     completed: true
@@ -48,6 +47,7 @@
         let run = {
             title: state.title,
             waypoints: state.waypoints,
+            completed: false,
             start: state.start,
             backup: new Date(),
             ...runMeta
@@ -56,7 +56,6 @@
     };
 
     const abandon = () => {
-        console.error("abandon");
         stopGeolocation();
         clearInterval(interval);
         say({ txt: "Run abandoned" });
