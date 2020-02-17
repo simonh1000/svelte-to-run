@@ -22,6 +22,7 @@ export const pathDistance = path => {
         );
         return (res.dst / 1000).toFixed(2);
     }
+    // if no waypoints, distance is 0
     return 0;
 };
 

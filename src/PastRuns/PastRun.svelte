@@ -7,7 +7,7 @@
 
     let distance;
     if (run.distance) {
-        distance = run.distance;
+        distance = Number.parseFloat(run.distance).toFixed(2);
     } else if (run.waypoints && run.waypoints.length > 1) {
         distance = pathDistance(run.waypoints);
     } else {

@@ -58,12 +58,12 @@
         variant="raised"
         on:click={() => mkDispatch(60)}
         style="padding: 20px; min-width: 36px; height: auto">
-        <span class="start-button">
+        <Label>
             Start workout
             <span class="smui-button--color-secondary day-no">
                 {state.title + 1}
             </span>
-        </span>
+        </Label>
     </Button>
 
     <div class="mt-5 mb-2">
