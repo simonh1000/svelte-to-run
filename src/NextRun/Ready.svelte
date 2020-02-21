@@ -1,6 +1,6 @@
 <script>
     import { onMount, createEventDispatcher } from "svelte";
-    import Button from "@smui/button";
+    import Button, { Label } from "@smui/button";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
     import Run from "svelte-material-icons/Run.svelte";
     import Timer from "svelte-material-icons/Timer.svelte";
@@ -27,9 +27,9 @@
         dispatch("start", { minute, warmUp });
     };
 
-    const distance = state.list
-        .filter(item => item.type == "run")
-        .reduce((acc, item) => acc + item.time, 0);
+    const distance = state.list.reduce((acc, item) => {
+        return item.type == "run" ? acc + item.time : acc;
+    }, 0);
 
     let time = state.list.reduce((acc, item) => acc + item.time, 0);
 
@@ -58,12 +58,12 @@
         variant="raised"
         on:click={() => mkDispatch(60)}
         style="padding: 20px; min-width: 36px; height: auto">
-        <span class="start-button">
+        <Label>
             Start workout
             <span class="smui-button--color-secondary day-no">
                 {state.title + 1}
             </span>
-        </span>
+        </Label>
     </Button>
 
     <div class="mt-5 mb-2">

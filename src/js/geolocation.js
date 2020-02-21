@@ -1,7 +1,7 @@
 var watchId;
 
 export const startGeolocation = function(cb) {
-    console.log("Starting geolocation");
+    // console.log("Starting geolocation");
     const options = {
         enableHighAccuracy: true
     };
@@ -9,13 +9,7 @@ export const startGeolocation = function(cb) {
         pos => {
             cb({
                 tag: "waypoint",
-                payload: {
-                    timestamp: pos.timestamp,
-                    coords: {
-                        latitude: pos.coords.latitude,
-                        longitude: pos.coords.longitude
-                    }
-                }
+                payload: pos
             });
         },
         err => {
@@ -30,6 +24,6 @@ export const startGeolocation = function(cb) {
 };
 
 export const stopGeolocation = function() {
-    console.log("Stopping geolocation");
+    // console.log("Stopping geolocation");
     navigator.geolocation.clearWatch(watchId);
 };

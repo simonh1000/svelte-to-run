@@ -1,6 +1,6 @@
 <script>
-    import { getRunsData, addLatestRun } from "./js/persistence";
-    import { dayRuns, getNextRun } from "./js/dayRuns";
+    import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
+    import { dayRuns, getLastRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,
@@ -34,12 +34,16 @@
 
     // state changes
 
-    const initialiseReady = function() {
-        let nextRun = getNextRun($state.history);
+    const initialiseReady = () => {
+        // uses 1-based indexing
+        let lastUserRun = getLastRun($state.history) + 1;
+        // console.log(
+        //     `[App] last run was ${lastUserRun}, next run is ${lastUserRun + 1}`
+        // );
 
-        if (nextRun < dayRuns.length) {
+        if (lastUserRun < dayRuns.length) {
             startGeolocation(geoCb);
-            mkReadyModel(nextRun);
+            mkReadyModel(lastUserRun);
         } else {
             // there are no more runs left to offer user
             initialisePastRuns();
@@ -53,15 +57,16 @@
 
     // Called by Finish
     const onRunCompleted = run => {
-        const history = addLatestRun(run);
+        const history = [run, ...$state.history];
+        saveRunHistory(history);
         setHistory(history);
         initialisePastRuns();
     };
 
     // helpers for view.
 
-    // Feels like there should be a better way based on ractive variables
-    const checkAllDone = hs => getNextRun(hs) >= dayRuns.length;
+    // Feels like there should be a better way based on reactive variables
+    const checkAllDone = hs => getLastRun(hs) >= dayRuns.length;
 
     let tabClick = nextState => {
         if (nextState == READY) {

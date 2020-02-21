@@ -26,6 +26,7 @@
     {#if state.history.length > 0}
         <table>
             <thead>
+                <th />
                 <th>Date</th>
                 <th>Run (mins)</th>
                 <th>Km</th>

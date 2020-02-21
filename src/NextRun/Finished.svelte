@@ -4,7 +4,6 @@
 
     import { dayRuns, summarise } from "../js/dayRuns";
     import { pathDistance } from "../js/view-helpers";
-    import { addLatestRun } from "../js/persistence";
 
     import Activity from "./Activity.svelte";
 
@@ -17,15 +16,16 @@
             : 0;
 
     const saveDistance = () => {
-        let runMeta = summarise(state.list);
         let run = {
             title: state.title,
             waypoints: state.waypoints,
-            // binding distance to input turns it into a string
-            distance: parseFloat(distance),
+            completed: state.completed,
+            total: state.total,
+            run: state.run,
             start: state.start,
             end: state.end,
-            ...runMeta
+            // binding distance to input turns it into a string
+            distance: parseFloat(distance)
         };
         console.log("save distance", run);
         // save and returns with new full list of runs
@@ -48,11 +48,13 @@
     }
 </style>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center pt-6">
 
-    <h2 class="mt-3 mb-3">Well done! Completed {state.title}</h2>
+    {#if state.completed}
+        <h2 class="mb-3 text-xl">Well done! Completed {state.title}</h2>
+    {/if}
 
-    <div class="input-container mb-3">
+    <div class="input-container mb-6 border-2 border-gray-300 border-solid">
         <input id="distance" type="number" bind:value={distance} />
     </div>
 
@@ -63,7 +65,7 @@
         <span class="start-button">Record distance</span>
     </Button>
 
-    <div class="mt-3">
+    <div class="mt-6">
         <span>{state.start.toLocaleDateString('en-GB')}</span>
         <span>
             {state.start.toLocaleTimeString('en-GB')} - {state.end.toLocaleTimeString('en-GB')}
@@ -72,4 +74,3 @@
     </div>
 
 </div>
-<!-- {JSON.stringify(state)} -->

@@ -1,21 +1,22 @@
-import { dayRuns, summarise } from "./dayRuns";
-
 // Local storage
-const key = "running-app";
+const STORAGE_KEY = "running-app";
+const BACKUP = "run-backup";
 
+// gets data and expands waypoints before retuning data
 export const getRunsData = () => {
-    let data = JSON.parse(localStorage.getItem(key)) || [];
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
     let history;
     if (needsMigration(data)) {
         history = migrate(data);
         // save as soon as migrated
+        // console.log("** SKIPPING migration");
         setRunsData(history);
     } else {
         history = data;
     }
 
-    console.log("history", history);
+    // console.log("history", history);
     return history.map(run => {
         run.start = new Date(run.start);
         run.end = new Date(run.end);
@@ -24,19 +25,34 @@ export const getRunsData = () => {
     });
 };
 
-export const addLatestRun = run => {
-    let runs = getRunsData();
-    let newRuns = [run, ...runs].map(run => {
-        run.waypoints = contractWPs(run.waypoints);
-        return run;
-    });
+// contracts waypoints before persisting
+export const saveRunHistory = history => {
+    let newRuns = history.map(run =>
+        Object.assign({}, run, { waypoints: contractWPs(run.waypoints) })
+    );
     setRunsData(newRuns);
-    return newRuns;
+    clearBackup();
 };
 
 const setRunsData = newRuns => {
-    console.log("About to persist", newRuns);
-    localStorage.setItem(key, JSON.stringify(newRuns));
+    // console.log("About to persist", newRuns);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newRuns));
+};
+
+export const backupRun = run => {
+    // console.log("About to backup", run);
+    localStorage.setItem(BACKUP, JSON.stringify(run));
+};
+
+export const getBackup = () => {
+    // console.log("getBackup", run);
+    let run = localStorage.getItem(BACKUP);
+    return run;
+};
+
+const clearBackup = () => {
+    // console.log("Removing backup");
+    localStorage.removeItem(BACKUP);
 };
 
 // Helpers
@@ -49,23 +65,29 @@ function expandWPs(waypoints) {
 }
 
 function contractWPs(waypoints) {
-    return waypoints.map(wp => {
-        wp.coords = [wp.coords.latitude, wp.coords.longitude];
-        return wp;
-    });
+    return waypoints.map(wp =>
+        Object.assign({}, wp, {
+            coords: [wp.coords.latitude, wp.coords.longitude]
+        })
+    );
 }
 
 //  Migration
 
-function needsMigration(data) {
-    return window.location.pathname == "/migrate";
+function needsMigration(history) {
+    if (history.length) {
+        // return window.location.pathname == "/migrate";
+        let res = typeof history[0].completed;
+        console.log("needs migration?", res === "undefined");
+        return res === "undefined";
+        // return window.location.pathname == "/migrate";
+    }
+    return false;
 }
 
-function migrate(data) {
-    console.log("before migration", data);
-    const tmp = data.map(run => {
-        run.title = run.title + 1;
-        return run;
+function migrate(history) {
+    console.log("before migration", history);
+    return history.map(run => {
+        return { ...run, completed: true };
     });
-    return tmp;
 }

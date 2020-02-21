@@ -1,11 +1,14 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
+    import Button, { Label } from "@smui/button";
     import EyeCheckOutline from "svelte-material-icons/EyeCheckOutline.svelte";
     import CrosshairsGps from "svelte-material-icons/CrosshairsGps.svelte";
     import Timer from "svelte-material-icons/Timer.svelte";
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
+    import { summarise, summariseUpto } from "../js/dayRuns";
+    import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
@@ -23,18 +26,51 @@
             if (section + 1 < state.list.length) {
                 // end of section
                 section++;
+                doBackup();
                 mkAnnouncement();
             } else {
                 // end of run
-                console.log("FINISHED");
+                let runMeta = summarise(state.list);
+                let tmp = {
+                    waypoints: state.waypoints,
+                    completed: true,
+                    ...runMeta
+                };
+                console.log("FINISHED", tmp);
                 stopGeolocation();
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
-                // this returns the ful list of runs, but we don't need it at present
-                dispatch("finished", { waypoints: state.waypoints });
+                dispatch("finished", tmp);
             }
         }
     }, 1000);
+
+    const doBackup = () => {
+        let runMeta = summariseUpto(state.list, time / 60);
+        let run = {
+            title: state.title,
+            waypoints: state.waypoints,
+            completed: false,
+            start: state.start,
+            backup: new Date(),
+            ...runMeta
+        };
+        backupRun(run);
+    };
+
+    const abandon = () => {
+        let runMeta = summariseUpto(state.list, time / 60);
+        let tmp = {
+            waypoints: state.waypoints,
+            completed: false,
+            ...runMeta
+        };
+        console.log("Abandon", tmp);
+        stopGeolocation();
+        clearInterval(interval);
+        say({ txt: "Run abandoned" });
+        dispatch("finished", tmp);
+    };
 
     const mkAnnouncement = () => {
         let item = state.list[section];
@@ -51,6 +87,7 @@
     onMount(() => {
         mkAnnouncement();
         requestWakeLock(wakelockCb);
+        // install an event listener for visibility (so that we can recreate the wake lock)
         monitorVisibility(onVisibleAgain);
     });
 </script>
@@ -60,27 +97,38 @@
         position: relative;
     }
     .counter {
-        font-size: 90px;
+        font-size: 120px;
     }
     .elapsed {
         min-width: 4ch;
     }
 </style>
 
-<div class="m-3 flex flex-col flex-grow">
-    <div class="flex flex-row items-center justify-between text-2xl">
-        <div class="capitalize">{state.list[section].type}</div>
-        <div class="flex flex-row items-center">
-            <Timer />
-            <span class="elapsed ml-2">{ppTime(time)}</span>
+<div class="m-3 flex flex-col flex-grow justify-between">
+    <div class="flex flex-col">
+        <div class="flex flex-row items-center justify-between text-2xl">
+            <div class="capitalize">{state.list[section].type}</div>
+            <div class="flex flex-row items-center">
+                <Timer />
+                <span class="elapsed ml-2">{ppTime(time)}</span>
+            </div>
         </div>
+
+        <div class="banner flex flex-row items-center justify-center">
+            <div class="counter">
+                {ppTime(state.list[section].accTime - time)}
+            </div>
+        </div>
+
+        <Activity {section} list={state.list} />
     </div>
 
-    <div class="banner flex flex-row items-center justify-center">
-        <div class="counter">{ppTime(state.list[section].accTime - time)}</div>
+    <div class="self-center">
+        <Button variant="raised" class="danger" on:click={abandon}>
+            <Label>Abandon</Label>
+        </Button>
+        <span>Your workout will be saved</span>
     </div>
-
-    <Activity {section} list={state.list} />
 </div>
 
 {#if state.debug}
@@ -99,7 +147,7 @@
     </footer>
 {:else}
     <footer class="bg-red-200 mb-5 p-3">
-        The spoken announcements require the phone to stay on. Leave this
-        browser window visible and do not press the sleep button.
+        Spoken announcements require the phone to stay on. Leave this app
+        visible and do not press your phone's sleep button.
     </footer>
 {/if}

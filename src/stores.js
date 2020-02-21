@@ -11,6 +11,7 @@ export const PAST_RUNS = "PAST_RUNS";
 export var state = writable({ state: SPLASH, history: [] });
 
 export const setHistory = history => {
+    // console.log("set history", history);
     state.update(s => ({ ...s, history }));
 };
 export const setDebug = debug => {
@@ -81,11 +82,11 @@ export const active2Finished = function(evt) {
     state.update(s => {
         let tmp = {
             ...s,
+            ...evt.detail,
             state: FINISHED,
-            waypoints: evt.detail.waypoints,
             end: new Date()
         };
-        console.log("active2Finished", tmp);
+        // console.log("active2Finished", tmp);
         return tmp;
     });
 };
@@ -113,22 +114,31 @@ export const geoCb = res => {
     state.update(s => {
         // console.log("geoCb", res);
         if (s.state == READY) {
-            return { ...s, location: res.payload };
+            return { ...s, location: convertGeoPayload(res.payload) };
         }
         if (s.state == ACTIVE) {
             return {
                 ...s,
-                waypoints: [...s.waypoints, res.payload]
+                waypoints: [...s.waypoints, convertGeoPayload(res.payload)]
             };
         }
         return s;
     });
 };
 
+function convertGeoPayload(payload) {
+    return {
+        timestamp: payload.timestamp,
+        coords: {
+            latitude: payload.coords.latitude,
+            longitude: payload.coords.longitude
+        }
+    };
+}
 // helps keep track that the wake lock is working
 export const wakelockCb = res => {
     if (res.tag == "error") {
-        console.log("wakeLock", res.payload);
+        // console.log("wakeLock", res.payload);
         return;
     }
 

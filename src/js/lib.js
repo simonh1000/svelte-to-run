@@ -46,7 +46,7 @@ export const beep = function(x) {
 // a hack to enable sounds on iOS
 export const enableSound = function() {
     let evtHandler = () => {
-        console.log("Enabling audio");
+        // console.log("Enabling audio");
         var tmp = new Audio();
         tmp.src = beeep;
         tmp.play().catch(err => console.error("init", err));

@@ -1,6 +1,12 @@
 # Start to Run
 
-A PWA running app writeen in Svelte - try it at https://svelte-to-run.netlify.com/
+A PWA Start-to-Run app written in Svelte - try it at https://svelte-to-run.netlify.com/
+
+Uses the following browser apis:
+
+    - Geolocation
+    - SpeechSynthesis
+    - WakeLock
 
 ## Get started
 
@@ -27,9 +33,12 @@ npm run build
 ## Privacy
 
 The app records location, but all the data is saved to your brower's local storage and nowhere else!
+To export your data go to https://svelte-to-run.netlify.com/debug, switch to Past Runs and click on the link in the footer.
 
 ## Changelog
 
-1.1 - add warning about not turning off phone
-1.1.1 - use enableHighAccuracy for geolocation
+1.2.0 - add abilty to abandon a run but record data
 1.1.2 - Fix typos in running data
+1.1.1 - use enableHighAccuracy for geolocation
+1.1.0 - add warning about not turning off phone
+1.0.0 - initial release
