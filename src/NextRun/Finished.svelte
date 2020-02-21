@@ -33,7 +33,6 @@
         onRunCompleted(run);
     };
     onMount(() => {
-        console.log("**finished", state);
         document.querySelector("#distance").focus();
     });
 </script>

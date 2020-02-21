@@ -11,7 +11,7 @@ export const PAST_RUNS = "PAST_RUNS";
 export var state = writable({ state: SPLASH, history: [] });
 
 export const setHistory = history => {
-    console.log("set history", history);
+    // console.log("set history", history);
     state.update(s => ({ ...s, history }));
 };
 export const setDebug = debug => {
@@ -86,7 +86,7 @@ export const active2Finished = function(evt) {
             state: FINISHED,
             end: new Date()
         };
-        console.log("active2Finished", tmp);
+        // console.log("active2Finished", tmp);
         return tmp;
     });
 };
@@ -112,7 +112,7 @@ export const geoCb = res => {
     if (res.tag == "error") return;
 
     state.update(s => {
-        console.log("geoCb", res);
+        // console.log("geoCb", res);
         if (s.state == READY) {
             return { ...s, location: convertGeoPayload(res.payload) };
         }
@@ -138,7 +138,7 @@ function convertGeoPayload(payload) {
 // helps keep track that the wake lock is working
 export const wakelockCb = res => {
     if (res.tag == "error") {
-        console.log("wakeLock", res.payload);
+        // console.log("wakeLock", res.payload);
         return;
     }
 

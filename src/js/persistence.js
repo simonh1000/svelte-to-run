@@ -10,8 +10,8 @@ export const getRunsData = () => {
     if (needsMigration(data)) {
         history = migrate(data);
         // save as soon as migrated
-        console.log("** SKIPPING migration");
-        // setRunsData(history);
+        // console.log("** SKIPPING migration");
+        setRunsData(history);
     } else {
         history = data;
     }
@@ -35,23 +35,23 @@ export const saveRunHistory = history => {
 };
 
 const setRunsData = newRuns => {
-    console.log("About to persist", newRuns);
+    // console.log("About to persist", newRuns);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newRuns));
 };
 
 export const backupRun = run => {
-    console.log("About to backup", run);
+    // console.log("About to backup", run);
     localStorage.setItem(BACKUP, JSON.stringify(run));
 };
 
 export const getBackup = () => {
+    // console.log("getBackup", run);
     let run = localStorage.getItem(BACKUP);
-    console.log("getBackup", run);
     return run;
 };
 
 const clearBackup = () => {
-    console.log("Removing backup");
+    // console.log("Removing backup");
     localStorage.removeItem(BACKUP);
 };
 

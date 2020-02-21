@@ -8,7 +8,7 @@ export const ppTime = time => {
 // {"timestamp":1579892595364,"coords":{"latitude":50.8628808,"longitude":4.4971837},"watchId":1}]
 
 export const pathDistance = path => {
-    console.log("pathtodist", path);
+    // console.log("pathtodist", path);
     if (path.length > 1) {
         let res = path.slice(1).reduce(
             (acc, pt) => {

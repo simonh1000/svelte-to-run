@@ -7,7 +7,7 @@
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
-    import { summariseUpto } from "../js/dayRuns";
+    import { summarise, summariseUpto } from "../js/dayRuns";
     import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";

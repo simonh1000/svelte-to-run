@@ -35,17 +35,15 @@
     // state changes
 
     const initialiseReady = () => {
-        let nextRun = getLastRun($state.history) + 1;
-        console.log(
-            `[App] next run has index ${nextRun} which for the user is run ${nextRun +
-                1}`
-        );
+        // uses 1-based indexing
+        let lastUserRun = getLastRun($state.history) + 1;
+        // console.log(
+        //     `[App] last run was ${lastUserRun}, next run is ${lastUserRun + 1}`
+        // );
 
-        // getBackup();
-
-        if (nextRun < dayRuns.length) {
+        if (lastUserRun < dayRuns.length) {
             startGeolocation(geoCb);
-            mkReadyModel(nextRun);
+            mkReadyModel(lastUserRun);
         } else {
             // there are no more runs left to offer user
             initialisePastRuns();
