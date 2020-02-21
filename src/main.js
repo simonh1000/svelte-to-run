@@ -5,6 +5,8 @@ if ("serviceWorker" in navigator && window.location.hostname !== "localhost") {
         navigator.serviceWorker.register("/service-worker.js");
     });
 }
+import { initBackButton } from "./js/popstate";
+initBackButton();
 
 // Material design
 import "./App.scss";

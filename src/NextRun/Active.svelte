@@ -6,10 +6,11 @@
     import Timer from "svelte-material-icons/Timer.svelte";
 
     import { wakelockCb } from "../stores";
-    import { say } from "../js/lib.js";
     import { summarise, summariseUpto } from "../js/dayRuns";
+    import { say } from "../js/sound.js";
     import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
+    import { preventBackButton, enableBackButton } from "../js/popstate";
     import { ppTime } from "../js/view-helpers";
     import { stopGeolocation } from "../js/geolocation";
     import Activity from "./Activity.svelte";
@@ -37,8 +38,10 @@
                     ...runMeta
                 };
                 console.log("FINISHED", tmp);
+                // TODO do this for abandon
                 stopGeolocation();
                 clearInterval(interval);
+                enableBackButton();
                 say({ txt: "Finished, well done" });
                 dispatch("finished", tmp);
             }
@@ -87,6 +90,7 @@
     onMount(() => {
         mkAnnouncement();
         requestWakeLock(wakelockCb);
+        preventBackButton();
         // install an event listener for visibility (so that we can recreate the wake lock)
         monitorVisibility(onVisibleAgain);
     });

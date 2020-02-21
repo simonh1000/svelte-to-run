@@ -6,7 +6,7 @@
     import Timer from "svelte-material-icons/Timer.svelte";
 
     import { addWarmUp, removeWarmUp } from "../stores";
-    import { enableSound } from "../js/lib.js";
+    import { enableSound } from "../js/sound.js";
     import Activity from "./Activity.svelte";
 
     export let state;
