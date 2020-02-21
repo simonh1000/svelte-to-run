@@ -37,8 +37,8 @@ To export your data go to https://svelte-to-run.netlify.com/debug, switch to Pas
 
 ## Changelog
 
-1.2.0 - add abilty to abandon a run but record data
-1.1.2 - Fix typos in running data
-1.1.1 - use enableHighAccuracy for geolocation
-1.1.0 - add warning about not turning off phone
-1.0.0 - initial release
+-   1.2.0 - add abilty to abandon a run but record data
+-   1.1.2 - Fix typos in running data
+-   1.1.1 - use enableHighAccuracy for geolocation
+-   1.1.0 - add warning about not turning off phone
+-   1.0.0 - initial release
