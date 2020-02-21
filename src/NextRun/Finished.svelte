@@ -16,16 +16,16 @@
             : 0;
 
     const saveDistance = () => {
-        let runMeta = summarise(state.list);
         let run = {
             title: state.title,
             waypoints: state.waypoints,
             completed: state.completed,
-            // binding distance to input turns it into a string
-            distance: parseFloat(distance),
+            total: state.total,
+            run: state.run,
             start: state.start,
             end: state.end,
-            ...runMeta
+            // binding distance to input turns it into a string
+            distance: parseFloat(distance)
         };
         console.log("save distance", run);
         // save and returns with new full list of runs
@@ -33,6 +33,7 @@
         onRunCompleted(run);
     };
     onMount(() => {
+        console.log("**finished", state);
         document.querySelector("#distance").focus();
     });
 </script>

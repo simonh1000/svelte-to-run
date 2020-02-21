@@ -27,10 +27,9 @@ export const getRunsData = () => {
 
 // contracts waypoints before persisting
 export const saveRunHistory = history => {
-    let newRuns = history.map(run => {
-        run.waypoints = contractWPs(run.waypoints);
-        return run;
-    });
+    let newRuns = history.map(run =>
+        Object.assign({}, run, { waypoints: contractWPs(run.waypoints) })
+    );
     setRunsData(newRuns);
     clearBackup();
 };
@@ -66,10 +65,11 @@ function expandWPs(waypoints) {
 }
 
 function contractWPs(waypoints) {
-    return waypoints.map(wp => {
-        wp.coords = [wp.coords.latitude, wp.coords.longitude];
-        return wp;
-    });
+    return waypoints.map(wp =>
+        Object.assign({}, wp, {
+            coords: [wp.coords.latitude, wp.coords.longitude]
+        })
+    );
 }
 
 //  Migration

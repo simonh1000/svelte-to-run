@@ -39,9 +39,36 @@ export function summarise(list) {
         },
         { total: 0, run: 0 }
     );
+    return tmp;
+}
+
+export function summariseUpto(list, elapsed) {
+    let tmp = list.reduce(
+        ({ total, run }, { type, time }) => {
+            let newTotal = total + time;
+            if (elapsed > newTotal) {
+                // we have completed this part of the run
+                return {
+                    total: newTotal,
+                    run: type == RUN ? run + time : run
+                };
+            } else if (elapsed > total) {
+                // we are midway through this run
+                let partCompleted = elapsed - total;
+                return {
+                    total: total + partCompleted,
+                    run: type == RUN ? run + partCompleted : run
+                };
+            } else {
+                // we have not reached this part yet
+                return { total, run };
+            }
+        },
+        { total: 0, run: 0 }
+    );
     return {
-        total: tmp.total,
-        run: tmp.run
+        total: Math.round(tmp.total),
+        run: Math.round(tmp.run)
     };
 }
 

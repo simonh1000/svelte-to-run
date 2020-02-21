@@ -7,7 +7,7 @@
 
     import { wakelockCb } from "../stores";
     import { say } from "../js/lib.js";
-    import { summarise } from "../js/dayRuns";
+    import { summariseUpto } from "../js/dayRuns";
     import { backupRun } from "../js/persistence";
     import { requestWakeLock, monitorVisibility } from "../js/wakelock.js";
     import { ppTime } from "../js/view-helpers";
@@ -19,7 +19,6 @@
     let section = 0; // array index of run
 
     const dispatch = createEventDispatcher();
-    let runMeta = summarise(state.list);
 
     let interval = setInterval(() => {
         time++;
@@ -31,19 +30,23 @@
                 mkAnnouncement();
             } else {
                 // end of run
-                console.log("FINISHED");
+                let runMeta = summarise(state.list);
+                let tmp = {
+                    waypoints: state.waypoints,
+                    completed: true,
+                    ...runMeta
+                };
+                console.log("FINISHED", tmp);
                 stopGeolocation();
                 clearInterval(interval);
                 say({ txt: "Finished, well done" });
-                dispatch("finished", {
-                    waypoints: state.waypoints,
-                    completed: true
-                });
+                dispatch("finished", tmp);
             }
         }
     }, 1000);
 
     const doBackup = () => {
+        let runMeta = summariseUpto(state.list, time / 60);
         let run = {
             title: state.title,
             waypoints: state.waypoints,
@@ -56,10 +59,17 @@
     };
 
     const abandon = () => {
+        let runMeta = summariseUpto(state.list, time / 60);
+        let tmp = {
+            waypoints: state.waypoints,
+            completed: false,
+            ...runMeta
+        };
+        console.log("Abandon", tmp);
         stopGeolocation();
         clearInterval(interval);
         say({ txt: "Run abandoned" });
-        dispatch("finished", { waypoints: state.waypoints, completed: false });
+        dispatch("finished", tmp);
     };
 
     const mkAnnouncement = () => {
@@ -77,6 +87,7 @@
     onMount(() => {
         mkAnnouncement();
         requestWakeLock(wakelockCb);
+        // install an event listener for visibility (so that we can recreate the wake lock)
         monitorVisibility(onVisibleAgain);
     });
 </script>
@@ -116,7 +127,7 @@
         <Button variant="raised" class="danger" on:click={abandon}>
             <Label>Abandon</Label>
         </Button>
-        <span>Your workout so far will be saved</span>
+        <span>Your workout will be saved</span>
     </div>
 </div>
 
@@ -136,7 +147,7 @@
     </footer>
 {:else}
     <footer class="bg-red-200 mb-5 p-3">
-        The spoken announcements require the phone to stay on. Leave this
-        browser window visible and do not press the sleep button.
+        Spoken announcements require the phone to stay on. Leave this app
+        visible and do not press your phone's sleep button.
     </footer>
 {/if}

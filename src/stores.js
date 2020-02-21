@@ -11,6 +11,7 @@ export const PAST_RUNS = "PAST_RUNS";
 export var state = writable({ state: SPLASH, history: [] });
 
 export const setHistory = history => {
+    console.log("set history", history);
     state.update(s => ({ ...s, history }));
 };
 export const setDebug = debug => {
