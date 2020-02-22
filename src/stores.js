@@ -24,7 +24,7 @@ export const setDebug = debug => {
 //   list:[{type, time}]
 //   location
 export const mkReadyModel = nextRun => {
-    console.log("mkReady", nextRun);
+    // console.log("mkReady", nextRun);
     state.update(s => {
         return {
             state: READY,

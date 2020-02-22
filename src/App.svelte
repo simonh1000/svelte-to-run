@@ -79,7 +79,7 @@
         if (nextState == READY) {
             initialiseReady();
         } else {
-            initialisePastRuns(history);
+            initialisePastRuns();
         }
     };
 

@@ -19,7 +19,9 @@
         "svelte": "^3.0.0",
         "svelte-loader-hot": "^0.1.1",
         "svelte-material-ui": "^1.0.0-beta.20",
+        "svelte-type-checker": "^0.1.4",
         "tailwindcss": "^1.1.4",
+        "typescript": "^3.8.2",
         "webpack": "^4.30.0",
         "webpack-cli": "^3.3.0",
         "webpack-dev-server": "^3.3.1"
