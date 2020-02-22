@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import Button from "@smui/button";
 
-    import { dayRuns, summarise } from "../js/dayRuns";
+    import { summarise } from "../js/dayRuns";
     import { pathDistance } from "../js/view-helpers";
 
     import Activity from "./Activity.svelte";

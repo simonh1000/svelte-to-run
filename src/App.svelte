@@ -1,6 +1,6 @@
 <script>
     import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
-    import { dayRuns, getLastRun } from "./js/dayRuns";
+    import { getDayRuns, getLastRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,
@@ -31,19 +31,26 @@
     // load past runs from localstorage, and put in state
     setHistory(getRunsData());
     setDebug(window.location.pathname == "/debug");
-
+    let dayRuns = getDayRuns(window.location.pathname == "/debug");
     // state changes
 
     const initialiseReady = () => {
-        // uses 1-based indexing
-        let lastUserRun = getLastRun($state.history) + 1;
-        // console.log(
-        //     `[App] last run was ${lastUserRun}, next run is ${lastUserRun + 1}`
-        // );
+        // gets the lats run from user's history. It is 0-based
+        let lastUserRunZeroBased = getLastRun($state.history);
+        let nextUserRunZeroBased = lastUserRunZeroBased + 1;
+        console.log(
+            `[App] User's last run was ${lastUserRunZeroBased +
+                1}, next run is ${nextUserRunZeroBased + 1}`
+        );
 
-        if (lastUserRun < dayRuns.length) {
+        if (nextUserRunZeroBased < dayRuns.length) {
             startGeolocation(geoCb);
-            mkReadyModel(lastUserRun);
+            // title is zeroBased
+            let nextRun = {
+                title: nextUserRunZeroBased,
+                list: dayRuns[nextUserRunZeroBased]
+            };
+            mkReadyModel(nextRun);
         } else {
             // there are no more runs left to offer user
             initialisePastRuns();
@@ -72,7 +79,7 @@
         if (nextState == READY) {
             initialiseReady();
         } else {
-            initialisePastRuns(history);
+            initialisePastRuns();
         }
     };
 

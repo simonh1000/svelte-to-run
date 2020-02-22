@@ -6,7 +6,7 @@
     import Timer from "svelte-material-icons/Timer.svelte";
 
     import { addWarmUp, removeWarmUp } from "../stores";
-    import { enableSound } from "../js/lib.js";
+    import { enableSound } from "../js/sound.js";
     import Activity from "./Activity.svelte";
 
     export let state;
@@ -60,7 +60,7 @@
         style="padding: 20px; min-width: 36px; height: auto">
         <Label>
             Start workout
-            <span class="smui-button--color-secondary day-no">
+            <span class="smui-button--color-secondary day-no ml-3">
                 {state.title + 1}
             </span>
         </Label>

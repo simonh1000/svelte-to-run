@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import { pathDistance } from "../js/view-helpers";
-    import { dateFormat } from "../js/date-format";
+    import { pathDistance, dateFormat } from "../js/view-helpers";
 
     export let run;
 

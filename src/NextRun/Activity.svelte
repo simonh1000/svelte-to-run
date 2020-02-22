@@ -3,8 +3,7 @@
     export let section;
 
     let mkClass = function(selected, type, idx) {
-        let col = type == "run" ? "running" : "walking";
-        return idx == selected ? col + " selected" : col;
+        return idx == selected ? type + " selected" : type;
     };
 </script>
 
@@ -26,10 +25,10 @@
     .selected {
         font-weight: bold;
     }
-    .running {
+    .run {
         color: var(--mdc-theme-primary, #475da3);
     }
-    .walking {
+    .walk {
         color: rgb(177, 178, 243);
     }
 </style>

@@ -1,7 +1,5 @@
 <script>
-    import { onMount } from "svelte";
-
-    import RunSummary from "./PastRun";
+    import RunSummary from "./PastRun.svelte";
 
     export let state;
 </script>
