@@ -35,17 +35,20 @@
     // state changes
 
     const initialiseReady = () => {
-        // uses 1-based indexing
-        let lastUserRun = getLastRun($state.history) + 1;
-        // console.log(
-        //     `[App] last run was ${lastUserRun}, next run is ${lastUserRun + 1}`
-        // );
+        // gets the lats run from user's history. It is 0-based
+        let lastUserRunZeroBased = getLastRun($state.history);
+        let nextUserRunZeroBased = lastUserRunZeroBased + 1;
+        console.log(
+            `[App] User's last run was ${lastUserRunZeroBased +
+                1}, next run is ${nextUserRunZeroBased + 1}`
+        );
 
-        if (lastUserRun < dayRuns.length) {
+        if (nextUserRunZeroBased < dayRuns.length) {
             startGeolocation(geoCb);
+            // title is zeroBased
             let nextRun = {
-                title: lastUserRun + 1,
-                list: dayRuns[lastUserRun]
+                title: nextUserRunZeroBased,
+                list: dayRuns[nextUserRunZeroBased]
             };
             mkReadyModel(nextRun);
         } else {

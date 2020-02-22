@@ -60,7 +60,7 @@
         style="padding: 20px; min-width: 36px; height: auto">
         <Label>
             Start workout
-            <span class="smui-button--color-secondary day-no">
+            <span class="smui-button--color-secondary day-no ml-3">
                 {state.title + 1}
             </span>
         </Label>

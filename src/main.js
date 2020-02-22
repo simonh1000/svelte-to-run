@@ -1,3 +1,5 @@
+import { initBackButton } from "./js/popstate";
+
 // Check that service workers are supported
 if ("serviceWorker" in navigator && window.location.hostname !== "localhost") {
     // Use the window load event to keep the page load performant
@@ -5,7 +7,8 @@ if ("serviceWorker" in navigator && window.location.hostname !== "localhost") {
         navigator.serviceWorker.register("/service-worker.js");
     });
 }
-import { initBackButton } from "./js/popstate";
+
+// pushes to history to support blocking later
 initBackButton();
 
 // Material design
