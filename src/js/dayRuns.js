@@ -93,8 +93,8 @@ try {
 } catch (e) {
     fileContent = [];
 }
-let rawData =
-    window.location.pathname == "/debug"
-        ? [["r2", "w1", "r1"], ...fileContent]
-        : fileContent;
-export const dayRuns = rawData.map(expand);
+
+export function getDayRuns(debug) {
+    let rawData = debug ? [["r2", "w1", "r1"], ...fileContent] : fileContent;
+    return rawData.map(expand);
+}

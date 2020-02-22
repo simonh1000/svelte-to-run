@@ -1,6 +1,6 @@
 <script>
     import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
-    import { dayRuns, getLastRun } from "./js/dayRuns";
+    import { getDayRuns, getLastRun } from "./js/dayRuns";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,
@@ -31,7 +31,7 @@
     // load past runs from localstorage, and put in state
     setHistory(getRunsData());
     setDebug(window.location.pathname == "/debug");
-
+    let dayRuns = getDayRuns(window.location.pathname == "/debug");
     // state changes
 
     const initialiseReady = () => {
@@ -43,7 +43,11 @@
 
         if (lastUserRun < dayRuns.length) {
             startGeolocation(geoCb);
-            mkReadyModel(lastUserRun);
+            let nextRun = {
+                title: lastUserRun + 1,
+                list: dayRuns[lastUserRun]
+            };
+            mkReadyModel(nextRun);
         } else {
             // there are no more runs left to offer user
             initialisePastRuns();

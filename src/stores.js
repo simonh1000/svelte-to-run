@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-import { dayRuns, getNextRun, dayRun2Run } from "./js/dayRuns";
+import { dayRun2Run } from "./js/dayRuns";
 
 export const SPLASH = "SPLASH";
 export const READY = "READY";
@@ -24,6 +24,7 @@ export const setDebug = debug => {
 //   list:[{type, time}]
 //   location
 export const mkReadyModel = nextRun => {
+    console.log("mkReady", nextRun);
     state.update(s => {
         return {
             state: READY,
@@ -31,8 +32,8 @@ export const mkReadyModel = nextRun => {
             debug: s.debug,
             title: "",
             location: {},
-            title: nextRun,
-            list: dayRuns[nextRun]
+            title: nextRun.title,
+            list: nextRun.list
         };
     });
 };
