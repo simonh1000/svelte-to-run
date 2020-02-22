@@ -1,6 +1,7 @@
 <script>
     import { getRunsData, saveRunHistory, getBackup } from "./js/persistence";
-    import { getDayRuns, getLastRun } from "./js/dayRuns";
+    import { getDayRuns } from "./js/dayRuns";
+    import { getLastRun } from "./js/history";
     import { startGeolocation, stopGeolocation } from "./js/geolocation";
     import {
         state,

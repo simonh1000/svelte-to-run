@@ -37,6 +37,7 @@ To export your data go to https://svelte-to-run.netlify.com/debug, switch to Pas
 
 ## Changelog
 
+-   1.3.1 - Convert day runs to js data structure
 -   1.3.0 - Block back button while running (to prevent loss of data)
 -   1.2.0 - add abilty to abandon a run but record data
 -   1.1.2 - Fix typos in running data
