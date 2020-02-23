@@ -7,6 +7,7 @@ export const READY = "READY";
 export const ACTIVE = "ACTIVE";
 export const FINISHED = "FINISHED";
 export const PAST_RUNS = "PAST_RUNS";
+export const RECOVER = "RECOVER";
 
 export var state = writable({ state: SPLASH, history: [] });
 
@@ -103,6 +104,20 @@ export const mkPastRunsModel = () => {
             debug: s.debug
         };
         // console.log("active2Finished", tmp);
+        return tmp;
+    });
+};
+
+// RECOVER
+export const mkRecoverModel = recoveredData => {
+    state.update(s => {
+        let tmp = {
+            state: RECOVER,
+            history: s.history,
+            debug: s.debug,
+            ...recoveredData
+        };
+        console.log("RECOVER", tmp);
         return tmp;
     });
 };

@@ -11,8 +11,10 @@
         ready2Active,
         active2Finished,
         mkPastRunsModel,
-        READY,
+        mkRecoverModel,
         SPLASH,
+        RECOVER,
+        READY,
         ACTIVE,
         FINISHED,
         PAST_RUNS,
@@ -26,17 +28,24 @@
     import Ready from "./NextRun/Ready.svelte";
     import Active from "./NextRun/Active.svelte";
     import Finished from "./NextRun/Finished.svelte";
+    import Recover from "./NextRun/Recover.svelte";
 
     import PastRuns from "./PastRuns/PastRuns.svelte";
 
-    // load past runs from localstorage, and put in state
+    // Handle possible debug mode
+    let debugMode = window.location.pathname == "/debug";
+    setDebug(debugMode);
+    // load the schedules
+    let dayRuns = getDayRuns(debugMode);
+    // get user's data from local starage and put into state
     setHistory(getRunsData());
-    setDebug(window.location.pathname == "/debug");
-    let dayRuns = getDayRuns(window.location.pathname == "/debug");
+    let recoveredRun = getBackup();
+    console.log("recovered", recoveredRun, typeof recoveredRun);
+
     // state changes
 
     const initialiseReady = () => {
-        // gets the lats run from user's history. It is 0-based
+        // gets the last run from user's history. It is 0-based
         let lastUserRunZeroBased = getLastRun($state.history);
         let nextUserRunZeroBased = lastUserRunZeroBased + 1;
         console.log(
@@ -66,7 +75,9 @@
     // Called by Finish
     const onRunCompleted = run => {
         const history = [run, ...$state.history];
+        // persist new history
         saveRunHistory(history);
+        // update local state
         setHistory(history);
         initialisePastRuns();
     };
@@ -86,7 +97,9 @@
 
     // if we have some runs, the user must have passed via SPLASH already
     // so let's switch to that
-    if ($state.history.length > 0) {
+    if (recoveredRun !== null && typeof recoveredRun === "object") {
+        mkRecoverModel(recoveredRun);
+    } else if ($state.history.length > 0) {
         initialiseReady();
     }
 </script>
@@ -111,6 +124,10 @@
 
         {#if $state.state == SPLASH}
             <Splash onAccept={initialiseReady} />
+        {/if}
+
+        {#if $state.state == RECOVER}
+            <Recover state={$state} />
         {/if}
 
         {#if $state.state == READY}
