@@ -3,6 +3,7 @@
     import { pathDistance, dateFormat } from "../js/view-helpers";
 
     export let run;
+    console.log(run);
 
     let distance;
     if (run.distance) {

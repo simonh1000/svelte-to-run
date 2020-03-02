@@ -28,8 +28,8 @@
     import Ready from "./NextRun/Ready.svelte";
     import Active from "./NextRun/Active.svelte";
     import Finished from "./NextRun/Finished.svelte";
-    import Recover from "./NextRun/Recover.svelte";
 
+    import Recover from "./PastRuns/Recover.svelte";
     import PastRuns from "./PastRuns/PastRuns.svelte";
 
     // Handle possible debug mode
@@ -117,7 +117,7 @@
 
 <div class="flex flex-col main">
     <Header />
-    {#if $state.state != ACTIVE && $state.state != SPLASH && !checkAllDone($state.history)}
+    {#if [READY, ACTIVE, FINISHED, PAST_RUNS].includes($state.state) && !checkAllDone($state.history)}
         <TabBar state={$state.state} {tabClick} />
     {/if}
     <div class="flex flex-col flex-grow pl-2 pr-2">

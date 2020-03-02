@@ -117,7 +117,7 @@ export const mkRecoverModel = recoveredData => {
             debug: s.debug,
             ...recoveredData
         };
-        console.log("RECOVER", tmp);
+        // console.log("RECOVER", tmp);
         return tmp;
     });
 };

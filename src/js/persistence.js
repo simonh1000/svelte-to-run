@@ -17,14 +17,15 @@ export const getRunsData = () => {
     }
 
     // console.log("history", history);
-    return history.map(run => {
-        run.start = new Date(run.start);
-        run.end = new Date(run.end);
-        run.waypoints = expandWPs(run.waypoints);
-        return run;
-    });
+    return history.map(decodeRun);
 };
 
+function decodeRun(run) {
+    run.start = new Date(run.start);
+    run.end = new Date(run.end);
+    run.waypoints = expandWPs(run.waypoints);
+    return run;
+}
 // contracts waypoints before persisting
 export const saveRunHistory = history => {
     let newRuns = history.map(run =>
@@ -45,9 +46,10 @@ export const backupRun = run => {
 };
 
 export const getBackup = () => {
+    let run = JSON.parse(localStorage.getItem(BACKUP));
     // console.log("getBackup", run);
-    let run = localStorage.getItem(BACKUP);
-    return run;
+
+    return run ? decodeRun(run) : run;
 };
 
 const clearBackup = () => {
